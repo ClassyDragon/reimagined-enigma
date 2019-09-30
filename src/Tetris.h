@@ -3,14 +3,35 @@
 #include <iostream>
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include "Tetramino.h"
 
-class Tetramino {
+class TetrisGame {
     public:
-        // Default Constructor:
-        Tetramino();
 
-        // Default Destructor:
-        ~Tetramino();
+        // CONSTRUCTORS AND DESTRUCTORS:
+        // Default constructor:
+        TetrisGame();
+        // Constructor with window size:
+        TetrisGame(int width, int height, std::string title);
+        // Default destructor:
+        ~TetrisGame();
 
-    protected:
+        // MAIN GAME LOOP:
+        void run();
+
+        // UPDATE FUNCTIONS:
+        void update();
+        void updateEvent();
+
+        // RENDER FUNCTIONS:
+        void render();
+
+    private:
+        // Pointer to application window:
+        // This pointer will be passed to different objects as a target
+        // for rendering.
+        sf::RenderWindow* window;
+
+        // Window event tracker:
+        sf::Event event;
 };

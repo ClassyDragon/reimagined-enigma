@@ -1,9 +1,14 @@
 
-Tetris: source.o Tetris.o
-	g++ source.o Tetris.o -o Tetris -lsfml-graphics -lsfml-window -lsfml-audio
+lib = -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system
+
+Tetris: source.o Tetris.o Tetramino.o
+	g++ *.o -o Tetris $(lib)
 
 source.o: source.cpp
-	g++ source.cpp -c -lsfml-graphics -lsfml-window -lsfml-audio
+	g++ source.cpp -c $(lib) 
 
 Tetris.o: Tetris.cpp Tetris.h
-	g++ Tetris.cpp -c -lsfml-graphics -lsfml-window -lsfml-audio
+	g++ Tetris.cpp -c $(lib)
+
+Tetramino.o: Tetramino.cpp Tetramino.h
+	g++ Tetramino.cpp -c $(lib)
