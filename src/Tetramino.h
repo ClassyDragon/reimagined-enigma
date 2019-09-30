@@ -9,6 +9,9 @@ class Tetramino {
         // Default Constructor:
         Tetramino();
 
+        // Constructor with type:
+        Tetramino(char type);
+
         // Default Destructor:
         ~Tetramino();
 
