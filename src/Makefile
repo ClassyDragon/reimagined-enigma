@@ -1,7 +1,7 @@
 
 lib = -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system
 
-Tetris: source.o Tetris.o Tetramino.o
+Tetris: source.o Tetris.o Tetramino.o Field.o Block.o
 	g++ *.o -o Tetris $(lib)
 
 source.o: source.cpp
@@ -12,3 +12,9 @@ Tetris.o: Tetris.cpp Tetris.h
 
 Tetramino.o: Tetramino.cpp Tetramino.h
 	g++ Tetramino.cpp -c $(lib)
+
+Block.o: Block.cpp Block.h
+	g++ Block.cpp -c $(lib)
+
+Field.o: Field.*
+	g++ Field.cpp -c $(lib)

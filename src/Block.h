@@ -8,7 +8,7 @@ class Block {
     public:
         Block();
         ~Block();
-        void setTexture(sf::Texture& texture);
+        void setTexture(sf::Texture* texture);
     private:
         sf::RectangleShape sprite;
         sf::Texture* texture;
