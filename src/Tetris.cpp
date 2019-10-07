@@ -1,6 +1,5 @@
 
 #include "Tetris.h"
-#include "Tetramino.h"
 
 // default constructor:
 TetrisGame::TetrisGame() {

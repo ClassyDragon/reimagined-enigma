@@ -4,6 +4,8 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "Tetramino.h"
+#include "Field.h"
+#include "Block.h"
 
 class TetrisGame {
     public:
