@@ -24,11 +24,13 @@ Field::Field(sf::RenderWindow* window) : window(window) {
     for (int i = 0; i < field_width; i++)
         for (int j = 0; j < field_height; j++) {
             blocks[i][j] = new Block();
-            blocks[i][j]->setTexture(textures['o']);
-        }
-    for (int i = 0; i < field_width; i++) 
-        for (int j = 0; j < field_height; j++)
+            blocks[i][j]->setTexture(textures['w']);
             blocks[i][j]->setPosition(sf::Vector2f(50 + (50 * i), 50 + (50 * j)));
+        }
+
+    init_rng();
+
+    generate_piece(rng_bag[0]);    
 }
 
 Field::~Field() {
@@ -37,10 +39,58 @@ Field::~Field() {
     for (int i = 0; i < field_width; i++)
         for (int j = 0; j < field_height; j++)
             delete blocks[i][j];
+    delete current_piece;
+}
+
+void Field::init_rng() {
+    srand(time(NULL));
+    std::vector<int> temp_bag;
+    for (int i = 0; i < 7; i++) {
+        temp_bag.push_back(i);
+    }
+
+    int tempint;
+    while (!temp_bag.empty()) {
+        tempint = rand() % temp_bag.size();
+        rng_bag.push_back(temp_bag[tempint]);
+        temp_bag.erase(temp_bag.begin() + tempint);
+    }
+    for (auto& i : rng_bag)
+        std::cout << i << std::endl;
 }
 
 void Field::render() {
     for (int i = 0; i < field_width; i++)
         for (int j = 0; j < field_height; j++)
             blocks[i][j]->render(window);
+    current_piece->render(window);
+}
+
+void Field::generate_piece(int type) {
+    switch (type) {
+        case 0: {
+                    current_piece = new Tetramino('S', textures['r']);
+                }
+        case 1: {
+                    current_piece = new Tetramino('T', textures['p']);
+                }
+        case 2: {
+                    current_piece = new Tetramino('J', textures['b']);
+                }
+        case 3: {
+                    current_piece = new Tetramino('L', textures['o']);
+                }
+        case 4: {
+                    current_piece = new Tetramino('Z', textures['g']);
+                }
+        case 5: {
+                    current_piece = new Tetramino('O', textures['y']);
+                }
+        case 6: {
+                    current_piece = new Tetramino('I', textures['c']);
+                }
+        default: {
+                    current_piece = new Tetramino('I', textures['c']);
+                 }
+    }
 }

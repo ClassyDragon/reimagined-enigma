@@ -2,16 +2,26 @@
 #include "Tetramino.h"
 
 // Default Constructor:
-//Tetramino::Tetramino() {
+Tetramino::Tetramino() {
 //    std::cout << "Constructed Tetramino\n";
-//}
+}
 
 // Constructor with type:
-Tetramino::Tetramino(char type) {
+Tetramino::Tetramino(char type, sf::Texture* texture) : tetramino_type(type) {
     // Initial Rotation Value:
     current_rotation = 0;
 
-    switch (type) {
+    initBlockLayout();
+    initBlockPositions(texture);
+}
+
+// Default Destructor:
+Tetramino::~Tetramino() {
+}
+
+// Initialize Positions of blocks:
+void Tetramino::initBlockLayout() {
+    switch (tetramino_type) {
         case 'I': {
                       init_pos.resize(16);
                       init_pos = {
@@ -20,6 +30,7 @@ Tetramino::Tetramino(char type) {
                           '_', '_', 'X', '_',
                           '_', '_', 'X', '_' 
                       };
+                      block_positions = {2, 6, 10, 14};
                       break;
                   }
         case 'T': {
@@ -28,7 +39,8 @@ Tetramino::Tetramino(char type) {
                           '_', 'X', '_',
                           'X', 'X', 'X',
                           '_', '_', '_' 
-                      };
+                      }; 
+                      block_positions = {1, 3, 4, 5};
                       break;
                   }
         case 'J': {
@@ -37,8 +49,10 @@ Tetramino::Tetramino(char type) {
                           'X', '_', '_',
                           'X', 'X', 'X',
                           '_', '_', '_'
-                      };
+                      }; 
+                      block_positions = {0, 3, 4, 5};
                       break;
+                  }
         case 'L': { 
                       init_pos.resize(9);
                       init_pos = {
@@ -46,6 +60,7 @@ Tetramino::Tetramino(char type) {
                           'X', 'X', 'X',
                           '_', '_', '_'
                       };
+                      block_positions = {2, 3, 4, 5};
                       break;
                   }
         case 'O': {
@@ -55,7 +70,8 @@ Tetramino::Tetramino(char type) {
                           '_', 'X', 'X', '_',
                           '_', 'X', 'X', '_',
                           '_', '_', '_', '_'
-                      };
+                      }; 
+                      block_positions = {5, 6, 9, 10};
                       break;
                   }
         case 'S': {
@@ -64,7 +80,8 @@ Tetramino::Tetramino(char type) {
                           '_', 'X', 'X',
                           'X', 'X', '_',
                           '_', '_', '_'
-                      };
+                      }; 
+                      block_positions = {1, 2, 3, 4};
                       break;
                   }
         case 'Z': {
@@ -73,7 +90,8 @@ Tetramino::Tetramino(char type) {
                           'X', 'X', '_',
                           '_', 'X', 'X',
                           '_', '_', '_'
-                      };
+                      }; 
+                      block_positions = {0, 1, 4, 5};
                       break;
                   }
         default: {
@@ -82,14 +100,43 @@ Tetramino::Tetramino(char type) {
                           'X', 'X', '_',
                           '_', 'X', 'X',
                           '_', '_', '_'
-                     };
+                     }; 
+                     block_positions = {0, 1, 4, 5};
                  }
+    }
+}
+
+void Tetramino::initBlockPositions(sf::Texture* texture) {
+
+    for (int i = 0; i < 4; i++) {
+        blocks.emplace_back(new Block());
+    }
+    for (auto& block : blocks) {
+        block->setTexture(texture);
+    }
+
+    // Place Tetramino at the top-center of the field:
+    vertical_position = 0;
+    horizontal_position = field_width / 2;
+
+    switch (init_pos.size()) {
+        case 9 : {
+                     for (int i = 0; i < 4; i++) {
+                         blocks[i]->setPosition(sf::Vector2f(horizontal_offset + 50 * (block_positions[i] % 3), vertical_offset + 50 * (block_positions[i] / 3)));
+                     }
+                 }
+        case 16 : {
+                      for (int i = 0; i < 4; i++) {
+                         blocks[i]->setPosition(sf::Vector2f(horizontal_offset + 50 * (block_positions[i] % 4), vertical_offset + 50 * (block_positions[i] / 4)));
+                      }
                   }
     }
 }
 
-// Default Destructor:
-Tetramino::~Tetramino() {
+// Render Tetramino:
+void Tetramino::render(sf::RenderWindow* window) {
+    for (auto& i : blocks)
+        i->render(window);
 }
 
 // Return character at the rotated index:
@@ -142,4 +189,9 @@ void Tetramino::rotate_cw() {
 
 void Tetramino::rotate_ccw() {
     current_rotation = (current_rotation + 3) % 4;
+}
+
+// Positional:
+void Tetramino::move(sf::Vector2f offset) {
+    
 }

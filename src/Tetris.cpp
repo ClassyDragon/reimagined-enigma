@@ -10,9 +10,11 @@ TetrisGame::TetrisGame(int width, int height, std::string title) {
     // Initialize Window:
     this->window = new sf::RenderWindow(sf::VideoMode(width, height), title);
 
+//    std::cout << "Window" << std::endl;
     // Initialize field:
     this->field = new Field(window);
 
+//    std::cout << "Field" << std::endl;
     // Initialize Background:
     this->bg_texture = new sf::Texture;
     this->background = new sf::RectangleShape;
