@@ -16,5 +16,5 @@ Tetramino.o: Tetramino.cpp Tetramino.h
 Block.o: Block.cpp Block.h
 	g++ Block.cpp -c $(lib)
 
-Field.o: Field.*
+Field.o: Field.cpp Field.h
 	g++ Field.cpp -c $(lib)

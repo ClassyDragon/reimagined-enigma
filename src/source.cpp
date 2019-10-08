@@ -4,6 +4,8 @@
 #include "Tetris.h"
 
 int main() {
-    std::cout << "Hello World!" << std::endl;
+    TetrisGame* tetris;
+    tetris = new TetrisGame(1600, 1200, "Tetris");
+    tetris->run();
     return 0;
 }
