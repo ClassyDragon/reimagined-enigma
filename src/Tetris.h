@@ -36,4 +36,11 @@ class TetrisGame {
 
         // Window event tracker:
         sf::Event event;
+
+        // Field:
+        Field* field;
+
+        // Background:
+        sf::RectangleShape* background;
+        sf::Texture* bg_texture;
 };
