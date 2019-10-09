@@ -55,8 +55,6 @@ void Field::init_rng() {
         rng_bag.push_back(temp_bag[tempint]);
         temp_bag.erase(temp_bag.begin() + tempint);
     }
-    for (auto& i : rng_bag)
-        std::cout << i << std::endl;
 }
 
 void Field::render() {
@@ -70,27 +68,35 @@ void Field::generate_piece(int type) {
     switch (type) {
         case 0: {
                     current_piece = new Tetramino('S', textures['r']);
+                    break;
                 }
         case 1: {
                     current_piece = new Tetramino('T', textures['p']);
+                    break;
                 }
         case 2: {
                     current_piece = new Tetramino('J', textures['b']);
+                    break;
                 }
         case 3: {
                     current_piece = new Tetramino('L', textures['o']);
+                    break;
                 }
         case 4: {
                     current_piece = new Tetramino('Z', textures['g']);
+                    break;
                 }
         case 5: {
                     current_piece = new Tetramino('O', textures['y']);
+                    break;
                 }
         case 6: {
                     current_piece = new Tetramino('I', textures['c']);
+                    break;
                 }
         default: {
                     current_piece = new Tetramino('I', textures['c']);
+                    break;
                  }
     }
 }

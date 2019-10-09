@@ -117,18 +117,20 @@ void Tetramino::initBlockPositions(sf::Texture* texture) {
 
     // Place Tetramino at the top-center of the field:
     vertical_position = 0;
-    horizontal_position = field_width / 2;
+    horizontal_position = field_width / 2 - (init_pos.size() == 9 ? 2 : 3);
 
     switch (init_pos.size()) {
         case 9 : {
                      for (int i = 0; i < 4; i++) {
-                         blocks[i]->setPosition(sf::Vector2f(horizontal_offset + 50 * (block_positions[i] % 3), vertical_offset + 50 * (block_positions[i] / 3)));
+                         blocks[i]->setPosition(sf::Vector2f(horizontal_offset + 50 * (block_positions[i] % 3) + 50 * (horizontal_position), vertical_offset + 50 * (block_positions[i] / 3) + 50 * (vertical_position)));
                      }
+                     break;
                  }
         case 16 : {
                       for (int i = 0; i < 4; i++) {
-                         blocks[i]->setPosition(sf::Vector2f(horizontal_offset + 50 * (block_positions[i] % 4), vertical_offset + 50 * (block_positions[i] / 4)));
+                         blocks[i]->setPosition(sf::Vector2f(horizontal_offset + 50 * (block_positions[i] % 4) + 50 * (horizontal_position), vertical_offset + 50 * (block_positions[i] / 4) + 50 * (vertical_position)));
                       }
+                      break;
                   }
     }
 }
