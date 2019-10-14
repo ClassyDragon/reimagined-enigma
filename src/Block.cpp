@@ -24,3 +24,7 @@ void Block::set_screen_position(sf::Vector2f pos) {
 void Block::set_field_position(sf::Vector2f field_position) {
     this->field_position = field_position;
 }
+
+void Block::move_screen_position(sf::Vector2f offset) {
+    sprite.move(offset);
+}

@@ -17,6 +17,8 @@ class Block {
         void set_screen_position(sf::Vector2f pos);
         // Set Field Position:
         void set_field_position(sf::Vector2f field_position);
+        // Move screen_position:
+        void move_screen_position(sf::Vector2f offset);
     private:
         // Sprite:
         sf::RectangleShape sprite;

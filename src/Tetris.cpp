@@ -47,6 +47,7 @@ void TetrisGame::run() {
 // update all:
 void TetrisGame::update() {
     this->updateEvent();
+    field->update();
 }
 
 // update window event:

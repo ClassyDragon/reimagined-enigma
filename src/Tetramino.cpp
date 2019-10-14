@@ -122,13 +122,13 @@ void Tetramino::initBlockPositions(sf::Texture* texture) {
     switch (init_pos.size()) {
         case 9 : {
                      for (int i = 0; i < 4; i++) {
-                         blocks[i]->setPosition(sf::Vector2f(horizontal_offset + 50 * (block_positions[i] % 3) + 50 * (horizontal_position), vertical_offset + 50 * (block_positions[i] / 3) + 50 * (vertical_position)));
+                         blocks[i]->set_screen_position(sf::Vector2f(horizontal_offset + 50 * (block_positions[i] % 3) + 50 * (horizontal_position), vertical_offset + 50 * (block_positions[i] / 3) + 50 * (vertical_position)));
                      }
                      break;
                  }
         case 16 : {
                       for (int i = 0; i < 4; i++) {
-                         blocks[i]->setPosition(sf::Vector2f(horizontal_offset + 50 * (block_positions[i] % 4) + 50 * (horizontal_position), vertical_offset + 50 * (block_positions[i] / 4) + 50 * (vertical_position)));
+                         blocks[i]->set_screen_position(sf::Vector2f(horizontal_offset + 50 * (block_positions[i] % 4) + 50 * (horizontal_position), vertical_offset + 50 * (block_positions[i] / 4) + 50 * (vertical_position)));
                       }
                       break;
                   }
@@ -196,4 +196,20 @@ void Tetramino::rotate_ccw() {
 // Positional:
 void Tetramino::move(sf::Vector2f offset) {
     
+}
+
+void Tetramino::move_left() {
+    horizontal_position -= 1;
+    for (auto& i : blocks) {
+        i->move_screen_position(sf::Vector2f(-50, 0));
+    }
+    move(sf::Vector2f(-50, 0));
+}
+
+void Tetramino::move_right() {
+    horizontal_position += 1;
+    for (auto& i : blocks) {
+        i->move_screen_position(sf::Vector2f(50, 0));
+    }
+    move(sf::Vector2f(50, 0));
 }
