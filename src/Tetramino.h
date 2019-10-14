@@ -34,6 +34,8 @@ class Tetramino {
         // Positional functions:
         void move(sf::Vector2f offset);
         void setPosition(sf::Vector2f position);
+        void move_left();
+        void move_right();
     protected:
         // Position of individual blocks:
         std::vector<char> init_pos;
