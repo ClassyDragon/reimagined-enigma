@@ -22,7 +22,7 @@ Field::Field(sf::RenderWindow* window) : window(window) {
     textures['w']->loadFromFile("resources/white.png");
 
     // Initialize keys:
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 3; i++)
         key_pressed[i] = 0;
 
     for (int i = 0; i < field_width; i++)
@@ -70,6 +70,12 @@ void Field::update_input() {
     else {
         key_pressed[0] = 0;
         key_pressed[1] = 0;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+        rotate_clockwise();
+    }
+    else {
+        key_pressed[2] = 0;
     }
 }
 
@@ -130,45 +136,64 @@ void Field::set_window(sf::RenderWindow* window) {
 }
 
 // Current Piece Functions:
+bool Field::can_move_left() {
+    if (current_piece->can_move_left())
+        return true;
+    return false;
+}
+
 void Field::move_left() {   
     
-    if (key_pressed[0] == 0) {
-        movement_delay->restart();
-        current_piece->move_left();
-        key_pressed[0] = 1;
-    }
-    if (key_pressed[0] == 1 && movement_delay->getElapsedTime().asMilliseconds() > 380) {
-        current_piece->move_left();
-    }
-    if (key_pressed[0] == 1 && movement_delay->getElapsedTime().asMilliseconds() > 500) {
-        current_piece->move_left();
-        key_pressed[0] == 2;
-        movement_delay->restart();
-    }
-    if (key_pressed[0] == 2 && movement_delay->getElapsedTime().asMilliseconds() > 200) {
-        current_piece->move_left();
-        movement_delay->restart();
+    if (can_move_left()) {
+        if (key_pressed[0] == 0) {
+            movement_delay->restart();
+            current_piece->move_left();
+            key_pressed[0] = 1;
+        }
+        if (key_pressed[0] == 1 && movement_delay->getElapsedTime().asMilliseconds() >= move_time_1) {
+            current_piece->move_left();
+            key_pressed[0] = 2;
+        }
+        if (key_pressed[0] == 2 && movement_delay->getElapsedTime().asMilliseconds() >= move_time_2) {
+            current_piece->move_left();
+            key_pressed[0] = 3;
+            movement_delay->restart();
+        }
+        if (key_pressed[0] == 3 && movement_delay->getElapsedTime().asMilliseconds() >= move_time_3) {
+            current_piece->move_left();
+            movement_delay->restart();
+        }
     }
     
 }
 
+bool Field::can_move_right() {
+    if (current_piece->can_move_right())
+        return true;
+    return false;
+}
+
 void Field::move_right() {
-    if (key_pressed[1] == 0) {
-        movement_delay->restart();
-        current_piece->move_right();
-        key_pressed[1] = 1;
-    }
-    if (key_pressed[1] == 1 && movement_delay->getElapsedTime().asMilliseconds() > 380) {
-        current_piece->move_right();
-    }
-    if (key_pressed[1] == 1 && movement_delay->getElapsedTime().asMilliseconds() > 500) {
-        current_piece->move_right();
-        key_pressed[1] == 2;
-        movement_delay->restart();
-    }
-    if (key_pressed[1] == 2 && movement_delay->getElapsedTime().asMilliseconds() > 200) {
-        current_piece->move_right();
-        movement_delay->restart();
+
+    if (can_move_right()) {
+        if (key_pressed[1] == 0) {
+            movement_delay->restart();
+            current_piece->move_right();
+            key_pressed[1] = 1;
+        }
+        else if (key_pressed[1] == 1 && movement_delay->getElapsedTime().asMilliseconds() >= move_time_1) {
+            current_piece->move_right();
+            key_pressed[1] = 2;
+        }
+        else if (key_pressed[1] == 2 && movement_delay->getElapsedTime().asMilliseconds() >= move_time_2) {
+            current_piece->move_right();
+            key_pressed[1] = 3;
+            movement_delay->restart();
+        }
+        else if (key_pressed[1] == 3 && movement_delay->getElapsedTime().asMilliseconds() >= move_time_3) {
+            current_piece->move_right();
+            movement_delay->restart();
+        }
     }
 }
 
@@ -179,4 +204,25 @@ void Field::hard_drop() {
 }
 
 void Field::soft_drop() {
+}
+
+bool Field::can_rotate_clockwise() {
+    return true;
+}
+
+void Field::rotate_clockwise() {
+    if (can_rotate_clockwise() && key_pressed[2] == 0) {
+        key_pressed[2] = 1;
+        current_piece->rotate_cw();
+    }
+}
+
+bool Field::can_rotate_counter_clockwise() {
+    return true;
+}
+
+void Field::rotate_counter_clockwise() {
+    if (can_rotate_counter_clockwise()) {
+        current_piece->rotate_ccw();
+    }
 }
