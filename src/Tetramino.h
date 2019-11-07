@@ -6,6 +6,8 @@
 #include "Field.h" // field_width and field_height
 #include "Block.h"
 
+class Block;
+
 class Tetramino {
     public:
         // Default Constructor:
@@ -30,11 +32,15 @@ class Tetramino {
         // Rotation functions:
         void rotate_cw(); // Clock-wise
         void rotate_ccw(); // Counter Clock-wise
+        void rotate_blocks_cw();
+        void rotate_blocks_ccw();
 
         // Positional functions:
         void move(sf::Vector2f offset);
         void setPosition(sf::Vector2f position);
+        bool can_move_left();
         void move_left();
+        bool can_move_right();
         void move_right();
     protected:
         // Position of individual blocks:

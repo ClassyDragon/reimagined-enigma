@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include "Field.h"
 
 class Block {
     public:
@@ -17,8 +18,14 @@ class Block {
         void set_screen_position(sf::Vector2f pos);
         // Set Field Position:
         void set_field_position(sf::Vector2f field_position);
+        bool can_move_left();
+        bool can_move_right();
+        void move_left();
+        void move_right();
         // Move screen_position:
         void move_screen_position(sf::Vector2f offset);
+        // Rotation:
+        void update_rotation(int current_rotation, int tetramino_size);
     private:
         // Sprite:
         sf::RectangleShape sprite;
