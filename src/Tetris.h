@@ -19,7 +19,7 @@ class TetrisGame {
         ~TetrisGame();
 
         // MAIN GAME LOOP:
-        void run();
+        void TetrisMain();
 
         // UPDATE FUNCTIONS:
         void update();

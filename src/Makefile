@@ -1,7 +1,7 @@
 
 lib = -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system
 
-Tetris: source.o Tetris.o Tetramino.o Field.o Block.o
+Tetris: source.o Tetris.o Tetramino.o Field.o Block.o precomp.o TextureManager.o
 	g++ *.o -o Tetris $(lib)
 
 source.o: source.cpp
@@ -18,3 +18,12 @@ Block.o: Block.cpp Block.h
 
 Field.o: Field.cpp Field.h
 	g++ Field.cpp -c $(lib)
+
+precomp.o: Dbg_Log/Dbg_Log.*
+	g++ Dbg_Log/*.cpp -c -o precomp.o
+
+TextureManager.o: TextureManager/*
+	g++ TextureManager/TextureManager.cpp -c -o TextureManager.o
+
+clean:
+	rm *.o
