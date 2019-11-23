@@ -128,15 +128,14 @@ void Tetramino::initBlockPositions(sf::Texture* texture) {
                          blocks[i]->set_field_position(sf::Vector2f(block_positions[i] % 3 + horizontal_position, block_positions[i] / 3 + vertical_position));
                          int f = block_positions[i] % 3 + horizontal_position;
                          int g = block_positions[i] / 3 + vertical_position;
-                         std::cout << f << " " << g << std::endl;
+                         //std::cout << f << " " << g << std::endl;
                      }
                      break;
                  }
         case 16 : {
                       for (int i = 0; i < 4; i++) {
                          blocks[i]->set_screen_position(sf::Vector2f(horizontal_offset + 50 * (block_positions[i] % 4) + 50 * (horizontal_position), vertical_offset + 50 * (block_positions[i] / 4) + 50 * (vertical_position)));
-                         blocks[i]->set_field_position(sf::Vector2f(block_positions[i] % 4 + horizontal_position, block_positions[i] / 4 + vertical_position));
-                      }
+                         blocks[i]->set_field_position(sf::Vector2f(block_positions[i] % 4 + horizontal_position, block_positions[i] / 4 + vertical_position)); }
                       break;
                   }
     }
@@ -195,7 +194,7 @@ char Tetramino::get_block(int x, int y) {
 void Tetramino::rotate_cw() {
     current_rotation = (current_rotation + 1) % 4;
     rotate_blocks_cw();
-    std::cout << "Current Rotation: " << current_rotation << std::endl;
+    //std::cout << "Current Rotation: " << current_rotation << std::endl;
 }
 
 void Tetramino::rotate_ccw() {
@@ -203,8 +202,103 @@ void Tetramino::rotate_ccw() {
 }
 
 void Tetramino::rotate_blocks_cw() {
+    int i = 0;
     for (auto& b : blocks) {
-        b->update_rotation(current_rotation, init_pos.size());
+        int x;
+        int y;
+        switch (init_pos.size()) {
+            case 9: {
+                        x = block_positions[i] % 3;
+                        y = block_positions[i] / 3;
+                        switch (current_rotation % 4) {
+                            case 0: {
+                                        int pos = x + (3 * y);
+                                        // x = block_positions[i] % 3
+                                        // y = block_positions[i] / 3
+                                        blocks[i]->set_field_position(sf::Vector2f((pos % 3) + horizontal_position, (pos / 3) + vertical_position));
+                                        blocks[i]->set_screen_position(sf::Vector2f(
+                                                    horizontal_offset + 50 * (pos % 3) + 50 * (horizontal_position),
+                                                    vertical_offset + 50 * (pos / 3) + 50 * (vertical_position))
+                                                );
+                                        break;
+                                    }
+                            case 1: {
+                                        int pos = (3 * x) - y + 2;
+                                        blocks[i]->set_field_position(sf::Vector2f((pos % 3) + horizontal_position, (pos / 3) + vertical_position));
+                                        blocks[i]->set_screen_position(sf::Vector2f(
+                                                    horizontal_offset + 50 * (pos % 3) + 50 * (horizontal_position),
+                                                    vertical_offset + 50 * (pos / 3) + 50 * (vertical_position))
+                                                );
+                                        break;
+                                    }
+                            case 2: {
+                                        int pos = 8 - (3 * y) - x;
+                                        blocks[i]->set_field_position(sf::Vector2f((pos % 3) + horizontal_position, (pos / 3) + vertical_position));
+                                        blocks[i]->set_screen_position(sf::Vector2f(
+                                                    horizontal_offset + 50 * (pos % 3) + 50 * (horizontal_position),
+                                                    vertical_offset + 50 * (pos / 3) + 50 * (vertical_position))
+                                                );
+                                        break;
+                                    }
+                            case 3: {
+                                        int pos = 6 - (3 * x) + y;
+                                        blocks[i]->set_field_position(sf::Vector2f((pos % 3) + horizontal_position, (pos / 3) + vertical_position));
+                                        blocks[i]->set_screen_position(sf::Vector2f(
+                                                    horizontal_offset + 50 * (pos % 3) + 50 * (horizontal_position),
+                                                    vertical_offset + 50 * (pos / 3) + 50 * (vertical_position))
+                                                );
+                                        break;
+                                    }
+                        }
+                        break;
+            }
+            case 16: {
+                        x = block_positions[i] % 4;
+                        y = block_positions[i] / 4;
+                        switch (current_rotation % 4) {
+                            case 0: {
+                                        int pos = x + (4 * y);
+                                        // x = block_positions[i] % 3
+                                        // y = block_positions[i] / 3
+                                        blocks[i]->set_field_position(sf::Vector2f((pos % 4) + horizontal_position, (pos / 4) + vertical_position));
+                                        blocks[i]->set_screen_position(sf::Vector2f(
+                                                    horizontal_offset + 50 * (pos % 4) + 50 * (horizontal_position),
+                                                    vertical_offset + 50 * (pos / 4) + 50 * (vertical_position))
+                                                );
+                                        break;
+                                    }
+                            case 1: {
+                                        int pos = (4 * x) - y + 3;
+                                        blocks[i]->set_field_position(sf::Vector2f((pos % 4) + horizontal_position, (pos / 4) + vertical_position));
+                                        blocks[i]->set_screen_position(sf::Vector2f(
+                                                    horizontal_offset + 50 * (pos % 4) + 50 * (horizontal_position),
+                                                    vertical_offset + 50 * (pos / 4) + 50 * (vertical_position))
+                                                );
+                                        break;
+                                    }
+                            case 2: {
+                                        int pos = 15 - (4 * y) - x;
+                                        blocks[i]->set_field_position(sf::Vector2f((pos % 4) + horizontal_position, (pos / 4) + vertical_position));
+                                        blocks[i]->set_screen_position(sf::Vector2f(
+                                                    horizontal_offset + 50 * (pos % 4) + 50 * (horizontal_position),
+                                                    vertical_offset + 50 * (pos / 4) + 50 * (vertical_position))
+                                                );
+                                        break;
+                                    }
+                            case 3: {
+                                        int pos = 12 - (4 * x) + y;
+                                        blocks[i]->set_field_position(sf::Vector2f((pos % 4) + horizontal_position, (pos / 4) + vertical_position));
+                                        blocks[i]->set_screen_position(sf::Vector2f(
+                                                    horizontal_offset + 50 * (pos % 4) + 50 * (horizontal_position),
+                                                    vertical_offset + 50 * (pos / 4) + 50 * (vertical_position))
+                                                );
+                                        break;
+                                    }
+                        }
+                        break;
+                     }
+        }
+                i++;
     }
 }
 

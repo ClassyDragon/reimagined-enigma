@@ -33,7 +33,7 @@ TetrisGame::~TetrisGame() {
 }
 
 // main game loop:
-void TetrisGame::run() {
+void TetrisGame::TetrisMain() {
 
     // Update and render the window every frame the window
     // is still open:
