@@ -251,7 +251,7 @@ void Field::rotate_clockwise() {
 bool Field::can_rotate_counter_clockwise() {
     bool can_rotate = true;
     for (int i = 0; i < 4; i++) {
-        sf::Vector2f rotated_pos = current_piece->get_field_position(i, -1);
+        sf::Vector2f rotated_pos = current_piece->get_field_position(i, 3);
         if (rotated_pos.x >= field_width || rotated_pos.x < 0 || rotated_pos.y >= field_height) {
             can_rotate = false;
         }
@@ -272,12 +272,14 @@ void Field::lockPiece() {
     // Transfer the attributes
     for (int i = 0; i < 4; i++) {
         sf::Vector2f fpos = current_piece->get_field_position(i, 0);
+//        std::cout << fpos.x << ", " << fpos.y << std::endl;
         Block* b = current_piece->getBlock(i);
         this->blocks[(int)(fpos.x)][(int)(fpos.y)]->setTexture(b->getTexture());
 //        this->blocks[(int)(fpos.x)][(int)(fpos.y)]->set_screen_position(b->get_screen_position());
 //        this->blocks[(int)(fpos.x)][(int)(fpos.y)]->set_field_position(b->get_field_position());
     }
-//    delete current_piece;
-//    generate_piece(rng_bag.back());    
-//    rng_bag.pop_back();
+    delete current_piece;
+    generate_piece(rng_bag.back());    
+    rng_bag.pop_back();
+    timeStill.restart();
 }

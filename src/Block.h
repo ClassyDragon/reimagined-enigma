@@ -31,6 +31,10 @@ class Block {
         void move_screen_position(sf::Vector2f offset);
         // Rotation:
         void update_rotation(int current_rotation, int tetramino_size);
+        // Is block solid:
+        bool isSolid();
+        void setSolid();
+        void setEmpty();
     private:
         // Sprite:
         sf::RectangleShape sprite;
@@ -39,4 +43,6 @@ class Block {
         sf::Vector2f screen_position;
         // Field Position:
         sf::Vector2f field_position;
+        // Represents a solid block:
+        bool solid;
 };

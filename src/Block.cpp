@@ -1,6 +1,7 @@
 #include "Block.h"
 
 Block::Block() {
+    solid = false;
 }
 
 Block::~Block() {
@@ -93,4 +94,16 @@ void Block::update_rotation(int current_rotation, int tetramino_size) {
                      }
                  }
     }
+}
+
+bool Block::isSolid() {
+    return solid;
+}
+
+void Block::setSolid() {
+    solid = true;
+}
+
+void Block::setEmpty() {
+    solid = false;
 }
