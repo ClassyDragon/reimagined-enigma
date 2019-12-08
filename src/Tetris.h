@@ -23,6 +23,7 @@ class TetrisGame {
         // UPDATE FUNCTIONS:
         void update();
         void updateEvent();
+        void updateDrop();
 
         // RENDER FUNCTIONS:
         void render();
@@ -42,4 +43,8 @@ class TetrisGame {
         // Background:
         sf::RectangleShape background;
         sf::Texture bg_texture;
+
+        // Clock
+        sf::Clock drop_delay;
+        int dropDelay_ms;
 };

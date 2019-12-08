@@ -31,6 +31,7 @@ class Field {
         // Updates:
         void update();
         void update_input();
+        void updatePiece();
         // Initialize the piece bag with a seed based on the time:
         void init_rng();
         // Generate a piece based on the current bag:
@@ -49,6 +50,7 @@ class Field {
         void rotate_clockwise();
         bool can_rotate_counter_clockwise();
         void rotate_counter_clockwise();
+        void lockPiece();
     private:
         Block* blocks[field_width][field_height];
         std::map<char, sf::Texture> textures;
@@ -57,4 +59,5 @@ class Field {
         Tetramino* current_piece;
         sf::Clock* movement_delay;
         int key_pressed[4]; // 0: Not pressed, 1: Pressed shortly, 2: Pressed Long
+        sf::Clock timeStill;
 };

@@ -41,6 +41,11 @@ class Tetramino {
         void move_left();
         bool can_move_right();
         void move_right();
+        bool can_move_down();
+        void move_down();
+
+        // Get Block pointer:
+        Block* getBlock(int index);
 
         // Get Field Position of block
         //int get_field_position(int block, int rotation_offset); // using an integer is confusing, instead use a Vector2f

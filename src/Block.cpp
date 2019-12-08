@@ -16,6 +16,10 @@ void Block::setTexture(sf::Texture* texture) {
     sprite.setSize(static_cast<sf::Vector2f>(texture->getSize()));
 }
 
+sf::Texture* Block::getTexture() {
+    return this->texture;
+}
+
 void Block::set_screen_position(sf::Vector2f pos) {
     sprite.setPosition(pos);
 }
@@ -50,6 +54,16 @@ void Block::move_left() {
 
 void Block::move_right() {
     field_position = sf::Vector2f(field_position.x + 1, field_position.y);
+}
+
+bool Block::can_move_down() {
+    if (field_position.y + 1 >= field_height)
+        return false;
+    return true;
+}
+
+void Block::move_down() {
+    field_position = sf::Vector2f(field_position.x, field_position.y + 1);
 }
 
 void Block::move_screen_position(sf::Vector2f offset) {

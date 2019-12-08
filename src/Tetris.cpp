@@ -16,6 +16,9 @@ TetrisGame::TetrisGame(int width, int height, std::string title) {
     this->bg_texture.loadFromFile("resources/backgrounds/background1.png");
     this->background.setSize(static_cast<sf::Vector2f>(this->bg_texture.getSize()));
     this->background.setTexture(&this->bg_texture);
+
+    // Initial Delay
+    this->dropDelay_ms = 200;
 }
 
 // default destructor:
@@ -38,6 +41,7 @@ void TetrisGame::TetrisMain() {
 // update all:
 void TetrisGame::update() {
     this->updateEvent();
+    this->updateDrop();
     field->update();
 }
 
@@ -52,6 +56,13 @@ void TetrisGame::updateEvent() {
             window->close();
         }
 
+    }
+}
+
+void TetrisGame::updateDrop() {
+    if (drop_delay.getElapsedTime().asMilliseconds() >= dropDelay_ms) {
+        field->move_down();
+        drop_delay.restart();
     }
 }
 

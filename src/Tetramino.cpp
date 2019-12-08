@@ -332,9 +332,32 @@ void Tetramino::move_right() {
     for (auto& i : blocks) {
         i->move_screen_position(sf::Vector2f(50, 0));
         i->move_right();
-        sf::Vector2f pos = i->get_field_position();
+        //sf::Vector2f pos = i->get_field_position();
     }
     move(sf::Vector2f(50, 0));
+}
+
+bool Tetramino::can_move_down() {
+    for (auto& b : blocks) {
+        if (!b->can_move_down())
+            return false;
+    }
+    return true;
+}
+
+void Tetramino::move_down() {
+    if (can_move_down()) {
+        vertical_position++;
+        for (auto& b : blocks) {
+            b->move_screen_position(sf::Vector2f(0, 50));
+            b->move_down();
+        }
+    }
+}
+
+// Get Block pointer:
+Block* Tetramino::getBlock(int index) {
+    return blocks[index];
 }
 
 // Get Field Position of block
@@ -358,43 +381,3 @@ sf::Vector2f Tetramino::get_field_position(int block, int rotation_offset) {
     return sf::Vector2f((pos % 3) + horizontal_position, (pos / 3) + vertical_position);
 }
 
-/*
- *
-        switch (current_rotation % 4) {
-            case 0: {
-                        // Return the unrotated character:
-                        return init_pos[x + ( 3 * y )]; 
-                    }
-            case 1: {
-                        return init_pos[( 3 * x ) - y + 2];
-                    }
-            case 2: {
-                        return init_pos[8 - ( 3 * y ) - x];
-                    }
-            case 3: {
-                        return init_pos[6 - ( 3 * x ) + y];
-                    }
-            default: {
-                         return 'E';
-                     }
-        }
-    }
-    else {
-        switch (current_rotation % 4) {
-            case 0: {
-                        return init_pos[0 + ( 4 * y ) + x];
-                    }
-            case 1: {
-                        return init_pos[3 + ( 4 * x ) - y];
-                    }
-            case 2: {
-                        return init_pos[15 - ( 4 * y ) - x];
-                    }
-            case 3: {
-                        return init_pos[12 - ( 4 * x ) + y];
-                    }
-            default: {
-                         return 'E';
-                     }
-        }
-        */
