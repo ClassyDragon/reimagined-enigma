@@ -1,4 +1,3 @@
-
 #include "Block.h"
 
 Block::Block() {
@@ -12,7 +11,7 @@ void Block::render(sf::RenderWindow* window) {
 }
 
 void Block::setTexture(sf::Texture* texture) {
-this->texture = texture;
+    this->texture = texture;
     sprite.setTexture(this->texture);
     sprite.setSize(static_cast<sf::Vector2f>(texture->getSize()));
 }
@@ -23,6 +22,14 @@ void Block::set_screen_position(sf::Vector2f pos) {
 
 void Block::set_field_position(sf::Vector2f field_position) {
     this->field_position = field_position;
+}
+
+sf::Vector2f Block::get_screen_position() {
+    return screen_position;
+}
+
+sf::Vector2f Block::get_field_position() {
+    return field_position;
 }
 
 bool Block::can_move_left() {
