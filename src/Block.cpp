@@ -1,6 +1,7 @@
 #include "Block.h"
 
 Block::Block() {
+    solid = false;
 }
 
 Block::~Block() {
@@ -14,6 +15,10 @@ void Block::setTexture(sf::Texture* texture) {
     this->texture = texture;
     sprite.setTexture(this->texture);
     sprite.setSize(static_cast<sf::Vector2f>(texture->getSize()));
+}
+
+sf::Texture* Block::getTexture() {
+    return this->texture;
 }
 
 void Block::set_screen_position(sf::Vector2f pos) {
@@ -52,6 +57,16 @@ void Block::move_right() {
     field_position = sf::Vector2f(field_position.x + 1, field_position.y);
 }
 
+bool Block::can_move_down() {
+    if (field_position.y + 1 >= field_height)
+        return false;
+    return true;
+}
+
+void Block::move_down() {
+    field_position = sf::Vector2f(field_position.x, field_position.y + 1);
+}
+
 void Block::move_screen_position(sf::Vector2f offset) {
     sprite.move(offset);
 }
@@ -79,4 +94,16 @@ void Block::update_rotation(int current_rotation, int tetramino_size) {
                      }
                  }
     }
+}
+
+bool Block::isSolid() {
+    return solid;
+}
+
+void Block::setSolid() {
+    solid = true;
+}
+
+void Block::setEmpty() {
+    solid = false;
 }

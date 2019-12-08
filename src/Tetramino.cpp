@@ -131,8 +131,7 @@ void Tetramino::initBlockPositions(sf::Texture* texture) {
                                      block_positions[i] % 3 + horizontal_position,
                                      block_positions[i] / 3 + vertical_position
                                      ));
-                         int f = block_positions[i] % 3 + horizontal_position;
-                         int g = block_positions[i] / 3 + vertical_position;
+                         blocks[i]->setSolid();
                      }
                      break;
                  }
@@ -146,6 +145,7 @@ void Tetramino::initBlockPositions(sf::Texture* texture) {
                                      block_positions[i] % 4 + horizontal_position,
                                      block_positions[i] / 4 + vertical_position
                                      ));
+                         blocks[i]->setSolid();
                       }
                       break;
                   }
@@ -332,9 +332,30 @@ void Tetramino::move_right() {
     for (auto& i : blocks) {
         i->move_screen_position(sf::Vector2f(50, 0));
         i->move_right();
-        sf::Vector2f pos = i->get_field_position();
+        //sf::Vector2f pos = i->get_field_position();
     }
     move(sf::Vector2f(50, 0));
+}
+
+bool Tetramino::can_move_down() {
+    for (auto& b : blocks) {
+        if (!b->can_move_down())
+            return false;
+    }
+    return true;
+}
+
+void Tetramino::move_down() {
+    vertical_position++;
+    for (auto& b : blocks) {
+        b->move_screen_position(sf::Vector2f(0, 50));
+        b->move_down();
+    }
+}
+
+// Get Block pointer:
+Block* Tetramino::getBlock(int index) {
+    return blocks[index];
 }
 
 // Get Field Position of block
@@ -342,59 +363,37 @@ sf::Vector2f Tetramino::get_field_position(int block, int rotation_offset) {
     // Value: X Position + (width * Y position) 
     int rotation = (current_rotation + rotation_offset) % 4;
     int fpos = block_positions[block];
-    int x = fpos % 3;
-    int y = fpos / 4;
+    int x; 
+    int y; 
     int pos;
-    switch (rotation) {
-        case 0: pos = (x + (3 * y));
-                break;
-        case 1: pos = ((3 * x) - y + 2);
-                break;
-        case 2: pos = (8 - (3 * y) - x);
-                break;
-        case 3: pos = (6 - (3 * x) + y);
-                break;
-    }
-    return sf::Vector2f((pos % 3) + horizontal_position, (pos / 3) + vertical_position);
-}
-
-/*
- *
-        switch (current_rotation % 4) {
-            case 0: {
-                        // Return the unrotated character:
-                        return init_pos[x + ( 3 * y )]; 
-                    }
-            case 1: {
-                        return init_pos[( 3 * x ) - y + 2];
-                    }
-            case 2: {
-                        return init_pos[8 - ( 3 * y ) - x];
-                    }
-            case 3: {
-                        return init_pos[6 - ( 3 * x ) + y];
-                    }
-            default: {
-                         return 'E';
-                     }
+    if (init_pos.size() == 9) {
+        x = fpos % 3;
+        y = fpos / 3;
+        switch (rotation) {
+            case 0: pos = (x + (3 * y));
+                    break;
+            case 1: pos = ((3 * x) - y + 2);
+                    break;
+            case 2: pos = (8 - (3 * y) - x);
+                    break;
+            case 3: pos = (6 - (3 * x) + y);
+                    break;
         }
+        return sf::Vector2f((pos % 3) + horizontal_position, (pos / 3) + vertical_position);
     }
     else {
-        switch (current_rotation % 4) {
-            case 0: {
-                        return init_pos[0 + ( 4 * y ) + x];
-                    }
-            case 1: {
-                        return init_pos[3 + ( 4 * x ) - y];
-                    }
-            case 2: {
-                        return init_pos[15 - ( 4 * y ) - x];
-                    }
-            case 3: {
-                        return init_pos[12 - ( 4 * x ) + y];
-                    }
-            default: {
-                         return 'E';
-                     }
+        x = fpos % 4;
+        y = fpos / 4;
+        switch (rotation) {
+            case 0: pos = (x + (4 * y));
+                    break;
+            case 1: pos = (3 + (4 * x) - y);
+                    break;
+            case 2: pos = (15 - (4 * y) - x);
+                    break;
+            case 3: pos = (12 - (4 * x) + y);
+                    break;
         }
-        */
+        return sf::Vector2f((pos % 4) + horizontal_position, (pos / 4) + vertical_position);
+    }
+}

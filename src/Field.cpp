@@ -40,7 +40,8 @@ Field::Field(sf::RenderWindow* window) : window(window) {
 
     init_rng();
 
-    generate_piece(rng_bag[0]);    
+    generate_piece(rng_bag.back());    
+    rng_bag.pop_back();
 }
 
 Field::~Field() {
@@ -62,6 +63,7 @@ void Field::render() {
 
 void Field::update() {
     update_input();
+    updatePiece();
 }
 
 void Field::update_input() {
@@ -86,6 +88,12 @@ void Field::update_input() {
     else {
         key_pressed[2] = 0;
         key_pressed[3] = 0;
+    }
+}
+
+void Field::updatePiece() {
+    if (timeStill.getElapsedTime().asMilliseconds() >= 1000) {
+        this->lockPiece();
     }
 }
 
@@ -208,6 +216,10 @@ void Field::move_right() {
 }
 
 void Field::move_down() {
+    if (current_piece->can_move_down()) {
+        current_piece->move_down();
+        timeStill.restart();
+    }
 }
 
 void Field::hard_drop() {
@@ -222,7 +234,7 @@ bool Field::can_rotate_clockwise() {
     bool can_rotate = true;
     for (int i = 0; i < 4; i++) {
         sf::Vector2f rotated_pos = current_piece->get_field_position(i, 1);
-        if (rotated_pos.x >= field_width || rotated_pos.x < 0) {
+        if (rotated_pos.x >= field_width || rotated_pos.x < 0 || rotated_pos.y >= field_height) {
             can_rotate = false;
         }
     }
@@ -237,7 +249,14 @@ void Field::rotate_clockwise() {
 }
 
 bool Field::can_rotate_counter_clockwise() {
-    return true;
+    bool can_rotate = true;
+    for (int i = 0; i < 4; i++) {
+        sf::Vector2f rotated_pos = current_piece->get_field_position(i, 3);
+        if (rotated_pos.x >= field_width || rotated_pos.x < 0 || rotated_pos.y >= field_height) {
+            can_rotate = false;
+        }
+    }
+    return can_rotate;
 }
 
 void Field::rotate_counter_clockwise() {
@@ -245,4 +264,22 @@ void Field::rotate_counter_clockwise() {
         key_pressed[3] = 1;
         current_piece->rotate_ccw();
     }
+}
+
+void Field::lockPiece() {
+    // Iterate through all blocks in current piece
+    // Find the field index that corresponds to that piece's position
+    // Transfer the attributes
+    for (int i = 0; i < 4; i++) {
+        sf::Vector2f fpos = current_piece->get_field_position(i, 0);
+//        std::cout << fpos.x << ", " << fpos.y << std::endl;
+        Block* b = current_piece->getBlock(i);
+        this->blocks[(int)(fpos.x)][(int)(fpos.y)]->setTexture(b->getTexture());
+//        this->blocks[(int)(fpos.x)][(int)(fpos.y)]->set_screen_position(b->get_screen_position());
+//        this->blocks[(int)(fpos.x)][(int)(fpos.y)]->set_field_position(b->get_field_position());
+    }
+    delete current_piece;
+    generate_piece(rng_bag.back());    
+    rng_bag.pop_back();
+    timeStill.restart();
 }
