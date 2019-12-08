@@ -1,4 +1,3 @@
-
 #pragma once
 #include <iostream>
 #include <vector>
@@ -41,6 +40,6 @@ class TetrisGame {
         Field* field;
 
         // Background:
-        sf::RectangleShape* background;
-        sf::Texture* bg_texture;
+        sf::RectangleShape background;
+        sf::Texture bg_texture;
 };

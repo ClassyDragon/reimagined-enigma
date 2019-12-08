@@ -1,36 +1,40 @@
-
 #include "Field.h"
 
+Field::Field() {
+}
+
 Field::Field(sf::RenderWindow* window) : window(window) {
-    textures.insert(std::pair<char, sf::Texture*>('r', new sf::Texture));
-    textures.insert(std::pair<char, sf::Texture*>('p', new sf::Texture));
-    textures.insert(std::pair<char, sf::Texture*>('y', new sf::Texture));
-    textures.insert(std::pair<char, sf::Texture*>('g', new sf::Texture));
-    textures.insert(std::pair<char, sf::Texture*>('o', new sf::Texture));
-    textures.insert(std::pair<char, sf::Texture*>('b', new sf::Texture));
-    textures.insert(std::pair<char, sf::Texture*>('c', new sf::Texture));
-    textures.insert(std::pair<char, sf::Texture*>('w', new sf::Texture));
+    textures.insert(std::pair<char, sf::Texture>('r', sf::Texture()));
+    textures.insert(std::pair<char, sf::Texture>('p', sf::Texture()));
+    textures.insert(std::pair<char, sf::Texture>('y', sf::Texture()));
+    textures.insert(std::pair<char, sf::Texture>('g', sf::Texture()));
+    textures.insert(std::pair<char, sf::Texture>('o', sf::Texture()));
+    textures.insert(std::pair<char, sf::Texture>('b', sf::Texture()));
+    textures.insert(std::pair<char, sf::Texture>('c', sf::Texture()));
+    textures.insert(std::pair<char, sf::Texture>('w', sf::Texture()));
 
     // Load textures:
-    textures['r']->loadFromFile("resources/red.png");
-    textures['p']->loadFromFile("resources/purple.png");
-    textures['y']->loadFromFile("resources/yellow.png");
-    textures['g']->loadFromFile("resources/green.png");
-    textures['o']->loadFromFile("resources/orange.png");
-    textures['b']->loadFromFile("resources/blue.png");
-    textures['c']->loadFromFile("resources/cyan.png");
-    textures['w']->loadFromFile("resources/white.png");
+    textures['r'].loadFromFile("resources/red.png");
+    textures['p'].loadFromFile("resources/purple.png");
+    textures['y'].loadFromFile("resources/yellow.png");
+    textures['g'].loadFromFile("resources/green.png");
+    textures['o'].loadFromFile("resources/orange.png");
+    textures['b'].loadFromFile("resources/blue.png");
+    textures['c'].loadFromFile("resources/cyan.png");
+    textures['w'].loadFromFile("resources/white.png");
 
     // Initialize keys:
     for (int i = 0; i < 3; i++)
         key_pressed[i] = 0;
 
-    for (int i = 0; i < field_width; i++)
+    for (int i = 0; i < field_width; i++) {
         for (int j = 0; j < field_height; j++) {
             blocks[i][j] = new Block();
-            blocks[i][j]->setTexture(textures['w']);
+            blocks[i][j]->setTexture(&textures['w']);
             blocks[i][j]->set_screen_position(sf::Vector2f(50 + (50 * i), 50 + (50 * j)));
         }
+    }
+
 
     movement_delay = new sf::Clock();
 
@@ -40,8 +44,6 @@ Field::Field(sf::RenderWindow* window) : window(window) {
 }
 
 Field::~Field() {
-    for (std::map<char, sf::Texture*>::iterator i = textures.begin(); i != textures.end(); i++ ) 
-        delete i->second;
     for (int i = 0; i < field_width; i++)
         for (int j = 0; j < field_height; j++)
             delete blocks[i][j];
@@ -50,9 +52,11 @@ Field::~Field() {
 }
 
 void Field::render() {
-    for (int i = 0; i < field_width; i++)
-        for (int j = 0; j < field_height; j++)
+    for (int i = 0; i < field_width; i++) {
+        for (int j = 0; j < field_height; j++) {
             blocks[i][j]->render(window);
+        }
+    }
     current_piece->render(window);
 }
 
@@ -72,10 +76,16 @@ void Field::update_input() {
         key_pressed[1] = 0;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-        rotate_clockwise();
+        if (key_pressed[2] == 0) {
+            rotate_clockwise();
+        }
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
+        rotate_counter_clockwise();
     }
     else {
         key_pressed[2] = 0;
+        key_pressed[3] = 0;
     }
 }
 
@@ -97,35 +107,35 @@ void Field::init_rng() {
 void Field::generate_piece(int type) {
     switch (type) {
         case 0: {
-                    current_piece = new Tetramino('S', textures['r']);
+                    current_piece = new Tetramino('S', &textures['r']);
                     break;
                 }
         case 1: {
-                    current_piece = new Tetramino('T', textures['p']);
+                    current_piece = new Tetramino('T', &textures['p']);
                     break;
                 }
         case 2: {
-                    current_piece = new Tetramino('J', textures['b']);
+                    current_piece = new Tetramino('J', &textures['b']);
                     break;
                 }
         case 3: {
-                    current_piece = new Tetramino('L', textures['o']);
+                    current_piece = new Tetramino('L', &textures['o']);
                     break;
                 }
         case 4: {
-                    current_piece = new Tetramino('Z', textures['g']);
+                    current_piece = new Tetramino('Z', &textures['g']);
                     break;
                 }
         case 5: {
-                    current_piece = new Tetramino('O', textures['y']);
+                    current_piece = new Tetramino('O', &textures['y']);
                     break;
                 }
         case 6: {
-                    current_piece = new Tetramino('I', textures['c']);
+                    current_piece = new Tetramino('I', &textures['c']);
                     break;
                 }
         default: {
-                    current_piece = new Tetramino('I', textures['r']);
+                    current_piece = new Tetramino('I', &textures['r']);
                     break;
                  }
     }
@@ -207,7 +217,16 @@ void Field::soft_drop() {
 }
 
 bool Field::can_rotate_clockwise() {
-    return true;
+    // Check that after rotation, all blocks will be within the field and not intersect other blocks.
+    // Get field position of all blocks in piece
+    bool can_rotate = true;
+    for (int i = 0; i < 4; i++) {
+        sf::Vector2f rotated_pos = current_piece->get_field_position(i, 1);
+        if (rotated_pos.x >= field_width || rotated_pos.x < 0) {
+            can_rotate = false;
+        }
+    }
+    return can_rotate;
 }
 
 void Field::rotate_clockwise() {
@@ -222,7 +241,8 @@ bool Field::can_rotate_counter_clockwise() {
 }
 
 void Field::rotate_counter_clockwise() {
-    if (can_rotate_counter_clockwise()) {
+    if (can_rotate_counter_clockwise() && key_pressed[3] == 0) {
+        key_pressed[3] = 1;
         current_piece->rotate_ccw();
     }
 }

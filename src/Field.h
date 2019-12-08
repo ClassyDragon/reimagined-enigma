@@ -51,10 +51,10 @@ class Field {
         void rotate_counter_clockwise();
     private:
         Block* blocks[field_width][field_height];
-        std::map<char, sf::Texture*> textures;
+        std::map<char, sf::Texture> textures;
         sf::RenderWindow* window;
         std::vector<int> rng_bag;
         Tetramino* current_piece;
         sf::Clock* movement_delay;
-        int key_pressed[3]; // 0: Not pressed, 1: Pressed shortly, 2: Pressed Long
+        int key_pressed[4]; // 0: Not pressed, 1: Pressed shortly, 2: Pressed Long
 };
