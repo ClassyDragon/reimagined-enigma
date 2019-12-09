@@ -299,57 +299,57 @@ void Tetramino::move(sf::Vector2f offset) {
     
 }
 
-bool Tetramino::can_move_left() {
+bool Tetramino::canMoveLeft() {
     // Check that each block can be moved:
     bool return_value = true;
     for (auto& b : blocks) {
-        if (!b->can_move_left())
+        if (!b->canMoveLeft())
             return_value = false;
     }
     return return_value;
 }
 
-void Tetramino::move_left() {
+void Tetramino::moveLeft() {
     horizontal_position -= 1;
     for (auto& i : blocks) {
         i->move_screen_position(sf::Vector2f(-50, 0));
-        i->move_left();
+        i->moveLeft();
     }
     move(sf::Vector2f(-50, 0));
 }
 
-bool Tetramino::can_move_right() {
+bool Tetramino::canMoveRight() {
     bool return_value = true;
     for (auto& b : blocks) {
-        if (!b->can_move_right())
+        if (!b->canMoveRight())
             return_value = false;
     }
     return return_value;
 }
 
-void Tetramino::move_right() {
+void Tetramino::moveRight() {
     horizontal_position += 1;
     for (auto& i : blocks) {
         i->move_screen_position(sf::Vector2f(50, 0));
-        i->move_right();
+        i->moveRight();
         //sf::Vector2f pos = i->get_field_position();
     }
     move(sf::Vector2f(50, 0));
 }
 
-bool Tetramino::can_move_down() {
+bool Tetramino::canMoveDown() {
     for (auto& b : blocks) {
-        if (!b->can_move_down())
+        if (!b->canMoveDown())
             return false;
     }
     return true;
 }
 
-void Tetramino::move_down() {
+void Tetramino::moveDown() {
     vertical_position++;
     for (auto& b : blocks) {
         b->move_screen_position(sf::Vector2f(0, 50));
-        b->move_down();
+        b->moveDown();
     }
 }
 

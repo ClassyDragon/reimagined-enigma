@@ -37,12 +37,12 @@ class Tetramino {
         // Positional functions:
         void move(sf::Vector2f offset);
         void setPosition(sf::Vector2f position);
-        bool can_move_left();
-        void move_left();
-        bool can_move_right();
-        void move_right();
-        bool can_move_down();
-        void move_down();
+        bool canMoveLeft();
+        void moveLeft();
+        bool canMoveRight();
+        void moveRight();
+        bool canMoveDown();
+        void moveDown();
 
         // Get Block pointer:
         Block* getBlock(int index);

@@ -63,7 +63,7 @@ void TetrisGame::updateEvent() {
 
 void TetrisGame::updateDrop() {
     if (drop_delay.getElapsedTime().asMilliseconds() >= dropDelay_ms) {
-        field->move_down();
+        field->moveDown();
         drop_delay.restart();
     }
 }
