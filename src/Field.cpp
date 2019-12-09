@@ -303,38 +303,60 @@ void Field::lockPiece() {
     // Iterate through all blocks in current piece
     // Find the field index that corresponds to that piece's position
     // Transfer the attributes
+    std::set<int> linesAffected;
     bool dropDown = true;
     for (int i = 0; i < 4; i++) {
-        sf::Vector2f fpos = current_piece->get_field_position(i, 0);
+        sf::Vector2i fpos = static_cast<sf::Vector2i>(current_piece->get_field_position(i, 0));
         if (fpos.y == field_height - 1) {
             dropDown = false;
             break;
         }
-        else if (this->blocks[(int)(fpos.x)][(int)(fpos.y) + 1]->isSolid()) {
+        else if (this->blocks[fpos.x][fpos.y + 1]->isSolid()) {
             dropDown = false;
             break;
         }
     }
+    if (dropDown) {
+        timeStill.restart();
+        return;
+    }
     for (int i = 0; i < 4; i++) {
-        sf::Vector2f fpos = current_piece->get_field_position(i, 0);
+        sf::Vector2i fpos = static_cast<sf::Vector2i>(current_piece->get_field_position(i, 0));
         Block* b = current_piece->getBlock(i);
-        //if (fpos.y < field_height - 1) {
-        if (dropDown) {
-            //if (!this->blocks[(int)(fpos.x)][(int)(fpos.y) + 1]->isSolid()) {
-                this->blocks[(int)(fpos.x)][(int)(fpos.y) + 1]->setTexture(b->getTexture());
-                this->blocks[(int)(fpos.x)][(int)(fpos.y) + 1]->setSolid();
-            //}
-        }
-        else {
-    //        std::cout << fpos.x << ", " << fpos.y << std::endl;
-            this->blocks[(int)(fpos.x)][(int)(fpos.y)]->setTexture(b->getTexture());
-            this->blocks[(int)(fpos.x)][(int)(fpos.y)]->setSolid();
-    //        this->blocks[(int)(fpos.x)][(int)(fpos.y)]->set_screen_position(b->get_screen_position());
-    //        this->blocks[(int)(fpos.x)][(int)(fpos.y)]->set_field_position(b->get_field_position());
-        }
+        this->blocks[fpos.x][fpos.y]->setTexture(b->getTexture());
+        this->blocks[fpos.x][fpos.y]->setSolid();
+        linesAffected.insert(fpos.y);
     }
     delete current_piece;
+    clearLines(linesAffected);
     generate_piece(rng_bag.back());    
     rng_bag.pop_back();
     timeStill.restart();
+}
+
+void Field::clearLines(std::set<int>& linesAffected) {
+    std::set<int> toClear;
+    for (auto& line : linesAffected) {
+        bool lineCleared = true;
+        for (int i = 0; i < field_width; i++) {
+            if (!blocks[i][line]->isSolid()) {
+                lineCleared = false;
+                break;
+            }
+        }
+        if (lineCleared) {
+            // Remove line from set:
+            toClear.insert(line);
+        }
+    }
+    for (auto& line : toClear) {
+        for (int i = line - 1; i >= 0; i--) {
+            for (int j = 0; j < field_width; j++) {
+                blocks[j][i + 1]->setTexture(blocks[j][i]->getTexture());
+                blocks[j][i + 1]->setSolid(blocks[j][i]->isSolid());
+                blocks[j][i]->setTexture(&textures['w']);
+                blocks[j][i]->setEmpty();
+            }
+        }
+    }
 }

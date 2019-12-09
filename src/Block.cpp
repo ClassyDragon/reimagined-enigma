@@ -104,6 +104,10 @@ void Block::setSolid() {
     solid = true;
 }
 
+void Block::setSolid(bool tf) {
+    solid = tf;
+}
+
 void Block::setEmpty() {
     solid = false;
 }

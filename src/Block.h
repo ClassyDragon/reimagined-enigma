@@ -34,6 +34,7 @@ class Block {
         // Is block solid:
         bool isSolid();
         void setSolid();
+        void setSolid(bool tf);
         void setEmpty();
     private:
         // Sprite:

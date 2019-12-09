@@ -2,6 +2,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <set>
 #include <SFML/Graphics.hpp>
 #include <time.h>
 #include "Block.h"
@@ -51,6 +52,7 @@ class Field {
         bool can_rotate_counter_clockwise();
         void rotate_counter_clockwise();
         void lockPiece();
+        void clearLines(std::set<int>& linesAffected);
     private:
         Block* blocks[field_width][field_height];
         std::map<char, sf::Texture> textures;
