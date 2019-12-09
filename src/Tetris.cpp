@@ -8,6 +8,7 @@ TetrisGame::TetrisGame() {
 TetrisGame::TetrisGame(int width, int height, std::string title) {
     // Initialize Window:
     this->window = new sf::RenderWindow(sf::VideoMode(width, height), title);
+    window->setFramerateLimit(60);
 
     // Initialize field:
     this->field = new Field(this->window);
@@ -19,7 +20,7 @@ TetrisGame::TetrisGame(int width, int height, std::string title) {
     this->background.setTexture(&this->bg_texture);
 
     // Initial Delay
-    this->dropDelay_ms = 200;
+    this->dropDelay_ms = 100;
 }
 
 // default destructor:
@@ -62,7 +63,7 @@ void TetrisGame::updateEvent() {
 
 void TetrisGame::updateDrop() {
     if (drop_delay.getElapsedTime().asMilliseconds() >= dropDelay_ms) {
-        field->move_down();
+        field->moveDown();
         drop_delay.restart();
     }
 }

@@ -2,6 +2,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <set>
 #include <SFML/Graphics.hpp>
 #include <time.h>
 #include "Block.h"
@@ -30,34 +31,35 @@ class Field {
         void render();
         // Updates:
         void update();
-        void update_input();
+        void updateInput();
         void updatePiece();
         // Initialize the piece bag with a seed based on the time:
         void init_rng();
         // Generate a piece based on the current bag:
-        void generate_piece(int type);
+        void generatePiece(int type);
         // Set active window pointer:
-        void set_window(sf::RenderWindow* window);
+        void setWindow(sf::RenderWindow* window);
         // Current Piece functions:
-        bool can_move_left();
-        void move_left();
-        bool can_move_right();
-        void move_right();
-        void move_down();
-        void hard_drop();
-        void soft_drop();
-        bool can_rotate_clockwise();
-        void rotate_clockwise();
-        bool can_rotate_counter_clockwise();
-        void rotate_counter_clockwise();
+        bool canMoveLeft();
+        void moveLeft();
+        bool canMoveRight();
+        void moveRight();
+        void moveDown();
+        void hardDrop();
+        void softDrop();
+        bool canRotateClockwise();
+        void rotateClockwise();
+        bool canRotateCounterClockwise();
+        void rotateCounterClockwise();
         void lockPiece();
+        void clearLines(std::set<int>& linesAffected);
     private:
         Block* blocks[field_width][field_height];
         std::map<char, sf::Texture> textures;
         sf::RenderWindow* window;
-        std::vector<int> rng_bag;
-        Tetramino* current_piece;
-        sf::Clock* movement_delay;
-        int key_pressed[4]; // 0: Not pressed, 1: Pressed shortly, 2: Pressed Long
+        std::vector<int> rngBag;
+        Tetramino* currentPiece;
+        sf::Clock* movementDelay;
+        int keyPressed[4]; // 0: Not pressed, 1: Pressed shortly, 2: Pressed Long
         sf::Clock timeStill;
 };

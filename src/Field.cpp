@@ -25,7 +25,7 @@ Field::Field(sf::RenderWindow* window) : window(window) {
 
     // Initialize keys:
     for (int i = 0; i < 3; i++)
-        key_pressed[i] = 0;
+        keyPressed[i] = 0;
 
     for (int i = 0; i < field_width; i++) {
         for (int j = 0; j < field_height; j++) {
@@ -36,20 +36,20 @@ Field::Field(sf::RenderWindow* window) : window(window) {
     }
 
 
-    movement_delay = new sf::Clock();
+    movementDelay = new sf::Clock();
 
     init_rng();
 
-    generate_piece(rng_bag.back());    
-    rng_bag.pop_back();
+    generatePiece(rngBag.back());    
+    rngBag.pop_back();
 }
 
 Field::~Field() {
     for (int i = 0; i < field_width; i++)
         for (int j = 0; j < field_height; j++)
             delete blocks[i][j];
-    delete current_piece;
-    delete movement_delay;
+    delete currentPiece;
+    delete movementDelay;
 }
 
 void Field::render() {
@@ -58,36 +58,36 @@ void Field::render() {
             blocks[i][j]->render(window);
         }
     }
-    current_piece->render(window);
+    currentPiece->render(window);
 }
 
 void Field::update() {
-    update_input();
+    updateInput();
     updatePiece();
 }
 
-void Field::update_input() {
+void Field::updateInput() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        move_left();
+        moveLeft();
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        move_right();
+        moveRight();
     }
     else {
-        key_pressed[0] = 0;
-        key_pressed[1] = 0;
+        keyPressed[0] = 0;
+        keyPressed[1] = 0;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-        if (key_pressed[2] == 0) {
-            rotate_clockwise();
+        if (keyPressed[2] == 0) {
+            rotateClockwise();
         }
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
-        rotate_counter_clockwise();
+        rotateCounterClockwise();
     }
     else {
-        key_pressed[2] = 0;
-        key_pressed[3] = 0;
+        keyPressed[2] = 0;
+        keyPressed[3] = 0;
     }
 }
 
@@ -95,7 +95,7 @@ void Field::updatePiece() {
     if (timeStill.getElapsedTime().asMilliseconds() >= 1000) {
         this->lockPiece();
     }
-    if (rng_bag.size() == 0) {
+    if (rngBag.size() == 0) {
         init_rng();
     }
 }
@@ -110,56 +110,56 @@ void Field::init_rng() {
     int tempint;
     while (!temp_bag.empty()) {
         tempint = rand() % temp_bag.size();
-        rng_bag.push_back(temp_bag[tempint]);
+        rngBag.push_back(temp_bag[tempint]);
         temp_bag.erase(temp_bag.begin() + tempint);
     }
 }
 
-void Field::generate_piece(int type) {
+void Field::generatePiece(int type) {
     switch (type) {
         case 0: {
-                    current_piece = new Tetramino('S', &textures['r']);
+                    currentPiece = new Tetramino('S', &textures['r']);
                     break;
                 }
         case 1: {
-                    current_piece = new Tetramino('T', &textures['p']);
+                    currentPiece = new Tetramino('T', &textures['p']);
                     break;
                 }
         case 2: {
-                    current_piece = new Tetramino('J', &textures['b']);
+                    currentPiece = new Tetramino('J', &textures['b']);
                     break;
                 }
         case 3: {
-                    current_piece = new Tetramino('L', &textures['o']);
+                    currentPiece = new Tetramino('L', &textures['o']);
                     break;
                 }
         case 4: {
-                    current_piece = new Tetramino('Z', &textures['g']);
+                    currentPiece = new Tetramino('Z', &textures['g']);
                     break;
                 }
         case 5: {
-                    current_piece = new Tetramino('O', &textures['y']);
+                    currentPiece = new Tetramino('O', &textures['y']);
                     break;
                 }
         case 6: {
-                    current_piece = new Tetramino('I', &textures['c']);
+                    currentPiece = new Tetramino('I', &textures['c']);
                     break;
                 }
         default: {
-                    current_piece = new Tetramino('I', &textures['r']);
+                    currentPiece = new Tetramino('I', &textures['r']);
                     break;
                  }
     }
 }
 
-void Field::set_window(sf::RenderWindow* window) {
+void Field::setWindow(sf::RenderWindow* window) {
     this->window = window;
 }
 
 // Current Piece Functions:
-bool Field::can_move_left() {
+bool Field::canMoveLeft() {
     for (int i = 0; i < 4; i++) {
-        sf::Vector2i fpos = static_cast<sf::Vector2i>(current_piece->get_field_position(i, 0));
+        sf::Vector2i fpos = static_cast<sf::Vector2i>(currentPiece->get_field_position(i, 0));
         if (fpos.x == 0) {
             return false;
         }
@@ -170,34 +170,34 @@ bool Field::can_move_left() {
     return true;
 }
 
-void Field::move_left() {   
+void Field::moveLeft() {   
     
-    if (can_move_left()) {
-        if (key_pressed[0] == 0) {
-            movement_delay->restart();
-            current_piece->move_left();
-            key_pressed[0] = 1;
+    if (canMoveLeft()) {
+        if (keyPressed[0] == 0) {
+            movementDelay->restart();
+            currentPiece->moveLeft();
+            keyPressed[0] = 1;
         }
-        if (key_pressed[0] == 1 && movement_delay->getElapsedTime().asMilliseconds() >= move_time_1) {
-            current_piece->move_left();
-            key_pressed[0] = 2;
+        if (keyPressed[0] == 1 && movementDelay->getElapsedTime().asMilliseconds() >= move_time_1) {
+            currentPiece->moveLeft();
+            keyPressed[0] = 2;
         }
-        if (key_pressed[0] == 2 && movement_delay->getElapsedTime().asMilliseconds() >= move_time_2) {
-            current_piece->move_left();
-            key_pressed[0] = 3;
-            movement_delay->restart();
+        if (keyPressed[0] == 2 && movementDelay->getElapsedTime().asMilliseconds() >= move_time_2) {
+            currentPiece->moveLeft();
+            keyPressed[0] = 3;
+            movementDelay->restart();
         }
-        if (key_pressed[0] == 3 && movement_delay->getElapsedTime().asMilliseconds() >= move_time_3) {
-            current_piece->move_left();
-            movement_delay->restart();
+        if (keyPressed[0] == 3 && movementDelay->getElapsedTime().asMilliseconds() >= move_time_3) {
+            currentPiece->moveLeft();
+            movementDelay->restart();
         }
     }
     
 }
 
-bool Field::can_move_right() {
+bool Field::canMoveRight() {
     for (int i = 0; i < 4; i++) {
-        sf::Vector2i fpos = static_cast<sf::Vector2i>(current_piece->get_field_position(i, 0));
+        sf::Vector2i fpos = static_cast<sf::Vector2i>(currentPiece->get_field_position(i, 0));
         if (fpos.x == field_width - 1) {
             return false;
         }
@@ -208,34 +208,34 @@ bool Field::can_move_right() {
     return true;
 }
 
-void Field::move_right() {
+void Field::moveRight() {
 
-    if (can_move_right()) {
-        if (key_pressed[1] == 0) {
-            movement_delay->restart();
-            current_piece->move_right();
-            key_pressed[1] = 1;
+    if (canMoveRight()) {
+        if (keyPressed[1] == 0) {
+            movementDelay->restart();
+            currentPiece->moveRight();
+            keyPressed[1] = 1;
         }
-        else if (key_pressed[1] == 1 && movement_delay->getElapsedTime().asMilliseconds() >= move_time_1) {
-            current_piece->move_right();
-            key_pressed[1] = 2;
+        else if (keyPressed[1] == 1 && movementDelay->getElapsedTime().asMilliseconds() >= move_time_1) {
+            currentPiece->moveRight();
+            keyPressed[1] = 2;
         }
-        else if (key_pressed[1] == 2 && movement_delay->getElapsedTime().asMilliseconds() >= move_time_2) {
-            current_piece->move_right();
-            key_pressed[1] = 3;
-            movement_delay->restart();
+        else if (keyPressed[1] == 2 && movementDelay->getElapsedTime().asMilliseconds() >= move_time_2) {
+            currentPiece->moveRight();
+            keyPressed[1] = 3;
+            movementDelay->restart();
         }
-        else if (key_pressed[1] == 3 && movement_delay->getElapsedTime().asMilliseconds() >= move_time_3) {
-            current_piece->move_right();
-            movement_delay->restart();
+        else if (keyPressed[1] == 3 && movementDelay->getElapsedTime().asMilliseconds() >= move_time_3) {
+            currentPiece->moveRight();
+            movementDelay->restart();
         }
     }
 }
 
-void Field::move_down() {
+void Field::moveDown() {
     bool moveDown = true;
     for (int i = 0; i < 4; i++) {
-        sf::Vector2i fpos = static_cast<sf::Vector2i>(current_piece->get_field_position(i, 0));
+        sf::Vector2i fpos = static_cast<sf::Vector2i>(currentPiece->get_field_position(i, 0));
         if (fpos.y == field_height - 1) {
             moveDown = false;
             break;
@@ -246,22 +246,22 @@ void Field::move_down() {
         }
     }
     if (moveDown) {
-        current_piece->move_down();
+        currentPiece->moveDown();
         timeStill.restart();
     }
 }
 
-void Field::hard_drop() {
+void Field::hardDrop() {
 }
 
-void Field::soft_drop() {
+void Field::softDrop() {
 }
 
-bool Field::can_rotate_clockwise() {
+bool Field::canRotateClockwise() {
     // Check that after rotation, all blocks will be within the field and not intersect other blocks.
     // Get field position of all blocks in piece
     for (int i = 0; i < 4; i++) {
-        sf::Vector2i rotated_pos = static_cast<sf::Vector2i>(current_piece->get_field_position(i, 1));
+        sf::Vector2i rotated_pos = static_cast<sf::Vector2i>(currentPiece->get_field_position(i, 1));
         if (rotated_pos.x >= field_width || rotated_pos.x < 0 || rotated_pos.y >= field_height) {
             return false;
         }
@@ -272,16 +272,16 @@ bool Field::can_rotate_clockwise() {
     return true;
 }
 
-void Field::rotate_clockwise() {
-    if (can_rotate_clockwise() && key_pressed[2] == 0) {
-        key_pressed[2] = 1;
-        current_piece->rotate_cw();
+void Field::rotateClockwise() {
+    if (canRotateClockwise() && keyPressed[2] == 0) {
+        keyPressed[2] = 1;
+        currentPiece->rotate_cw();
     }
 }
 
-bool Field::can_rotate_counter_clockwise() {
+bool Field::canRotateCounterClockwise() {
     for (int i = 0; i < 4; i++) {
-        sf::Vector2i rotated_pos = static_cast<sf::Vector2i>(current_piece->get_field_position(i, 3));
+        sf::Vector2i rotated_pos = static_cast<sf::Vector2i>(currentPiece->get_field_position(i, 3));
         if (rotated_pos.x >= field_width || rotated_pos.x < 0 || rotated_pos.y >= field_height) {
             return false;
         }
@@ -292,10 +292,10 @@ bool Field::can_rotate_counter_clockwise() {
     return true;
 }
 
-void Field::rotate_counter_clockwise() {
-    if (can_rotate_counter_clockwise() && key_pressed[3] == 0) {
-        key_pressed[3] = 1;
-        current_piece->rotate_ccw();
+void Field::rotateCounterClockwise() {
+    if (canRotateCounterClockwise() && keyPressed[3] == 0) {
+        keyPressed[3] = 1;
+        currentPiece->rotate_ccw();
     }
 }
 
@@ -303,38 +303,60 @@ void Field::lockPiece() {
     // Iterate through all blocks in current piece
     // Find the field index that corresponds to that piece's position
     // Transfer the attributes
+    std::set<int> linesAffected;
     bool dropDown = true;
     for (int i = 0; i < 4; i++) {
-        sf::Vector2f fpos = current_piece->get_field_position(i, 0);
+        sf::Vector2i fpos = static_cast<sf::Vector2i>(currentPiece->get_field_position(i, 0));
         if (fpos.y == field_height - 1) {
             dropDown = false;
             break;
         }
-        else if (this->blocks[(int)(fpos.x)][(int)(fpos.y) + 1]->isSolid()) {
+        else if (this->blocks[fpos.x][fpos.y + 1]->isSolid()) {
             dropDown = false;
             break;
         }
     }
+    if (dropDown) {
+        timeStill.restart();
+        return;
+    }
     for (int i = 0; i < 4; i++) {
-        sf::Vector2f fpos = current_piece->get_field_position(i, 0);
-        Block* b = current_piece->getBlock(i);
-        //if (fpos.y < field_height - 1) {
-        if (dropDown) {
-            //if (!this->blocks[(int)(fpos.x)][(int)(fpos.y) + 1]->isSolid()) {
-                this->blocks[(int)(fpos.x)][(int)(fpos.y) + 1]->setTexture(b->getTexture());
-                this->blocks[(int)(fpos.x)][(int)(fpos.y) + 1]->setSolid();
-            //}
+        sf::Vector2i fpos = static_cast<sf::Vector2i>(currentPiece->get_field_position(i, 0));
+        Block* b = currentPiece->getBlock(i);
+        this->blocks[fpos.x][fpos.y]->setTexture(b->getTexture());
+        this->blocks[fpos.x][fpos.y]->setSolid();
+        linesAffected.insert(fpos.y);
+    }
+    delete currentPiece;
+    clearLines(linesAffected);
+    generatePiece(rngBag.back());    
+    rngBag.pop_back();
+    timeStill.restart();
+}
+
+void Field::clearLines(std::set<int>& linesAffected) {
+    std::set<int> toClear;
+    for (auto& line : linesAffected) {
+        bool lineCleared = true;
+        for (int i = 0; i < field_width; i++) {
+            if (!blocks[i][line]->isSolid()) {
+                lineCleared = false;
+                break;
+            }
         }
-        else {
-    //        std::cout << fpos.x << ", " << fpos.y << std::endl;
-            this->blocks[(int)(fpos.x)][(int)(fpos.y)]->setTexture(b->getTexture());
-            this->blocks[(int)(fpos.x)][(int)(fpos.y)]->setSolid();
-    //        this->blocks[(int)(fpos.x)][(int)(fpos.y)]->set_screen_position(b->get_screen_position());
-    //        this->blocks[(int)(fpos.x)][(int)(fpos.y)]->set_field_position(b->get_field_position());
+        if (lineCleared) {
+            // Remove line from set:
+            toClear.insert(line);
         }
     }
-    delete current_piece;
-    generate_piece(rng_bag.back());    
-    rng_bag.pop_back();
-    timeStill.restart();
+    for (auto& line : toClear) {
+        for (int i = line - 1; i >= 0; i--) {
+            for (int j = 0; j < field_width; j++) {
+                blocks[j][i + 1]->setTexture(blocks[j][i]->getTexture());
+                blocks[j][i + 1]->setSolid(blocks[j][i]->isSolid());
+                blocks[j][i]->setTexture(&textures['w']);
+                blocks[j][i]->setEmpty();
+            }
+        }
+    }
 }

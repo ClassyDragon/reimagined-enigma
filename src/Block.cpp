@@ -37,33 +37,33 @@ sf::Vector2f Block::get_field_position() {
     return field_position;
 }
 
-bool Block::can_move_left() {
+bool Block::canMoveLeft() {
     if (field_position.x - 1 < 0)
         return false;
     return true;
 }
 
-bool Block::can_move_right() {
+bool Block::canMoveRight() {
     if (field_position.x + 1 >= field_width)
         return false;
     return true;
 }
 
-void Block::move_left() {
+void Block::moveLeft() {
     field_position = sf::Vector2f(field_position.x - 1, field_position.y);
 }
 
-void Block::move_right() {
+void Block::moveRight() {
     field_position = sf::Vector2f(field_position.x + 1, field_position.y);
 }
 
-bool Block::can_move_down() {
+bool Block::canMoveDown() {
     if (field_position.y + 1 >= field_height)
         return false;
     return true;
 }
 
-void Block::move_down() {
+void Block::moveDown() {
     field_position = sf::Vector2f(field_position.x, field_position.y + 1);
 }
 
@@ -102,6 +102,10 @@ bool Block::isSolid() {
 
 void Block::setSolid() {
     solid = true;
+}
+
+void Block::setSolid(bool tf) {
+    solid = tf;
 }
 
 void Block::setEmpty() {

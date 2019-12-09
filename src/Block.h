@@ -21,12 +21,12 @@ class Block {
         // Set Field Position:
         void set_field_position(sf::Vector2f field_position);
         sf::Vector2f get_field_position();
-        bool can_move_left();
-        bool can_move_right();
-        void move_left();
-        void move_right();
-        bool can_move_down();
-        void move_down();
+        bool canMoveLeft();
+        bool canMoveRight();
+        void moveLeft();
+        void moveRight();
+        bool canMoveDown();
+        void moveDown();
         // Move screen_position:
         void move_screen_position(sf::Vector2f offset);
         // Rotation:
@@ -34,6 +34,7 @@ class Block {
         // Is block solid:
         bool isSolid();
         void setSolid();
+        void setSolid(bool tf);
         void setEmpty();
     private:
         // Sprite:
