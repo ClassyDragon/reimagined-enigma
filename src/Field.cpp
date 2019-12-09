@@ -95,6 +95,9 @@ void Field::updatePiece() {
     if (timeStill.getElapsedTime().asMilliseconds() >= 1000) {
         this->lockPiece();
     }
+    if (rng_bag.size() == 0) {
+        init_rng();
+    }
 }
 
 void Field::init_rng() {
@@ -155,9 +158,16 @@ void Field::set_window(sf::RenderWindow* window) {
 
 // Current Piece Functions:
 bool Field::can_move_left() {
-    if (current_piece->can_move_left())
-        return true;
-    return false;
+    for (int i = 0; i < 4; i++) {
+        sf::Vector2i fpos = static_cast<sf::Vector2i>(current_piece->get_field_position(i, 0));
+        if (fpos.x == 0) {
+            return false;
+        }
+        else if (this->blocks[fpos.x - 1][fpos.y]->isSolid()) {
+            return false;
+        }
+    }
+    return true;
 }
 
 void Field::move_left() {   
@@ -186,9 +196,16 @@ void Field::move_left() {
 }
 
 bool Field::can_move_right() {
-    if (current_piece->can_move_right())
-        return true;
-    return false;
+    for (int i = 0; i < 4; i++) {
+        sf::Vector2i fpos = static_cast<sf::Vector2i>(current_piece->get_field_position(i, 0));
+        if (fpos.x == field_width - 1) {
+            return false;
+        }
+        else if (this->blocks[fpos.x + 1][fpos.y]->isSolid()) {
+            return false;
+        }
+    }
+    return true;
 }
 
 void Field::move_right() {
@@ -216,7 +233,19 @@ void Field::move_right() {
 }
 
 void Field::move_down() {
-    if (current_piece->can_move_down()) {
+    bool moveDown = true;
+    for (int i = 0; i < 4; i++) {
+        sf::Vector2i fpos = static_cast<sf::Vector2i>(current_piece->get_field_position(i, 0));
+        if (fpos.y == field_height - 1) {
+            moveDown = false;
+            break;
+        }
+        else if (this->blocks[fpos.x][fpos.y + 1]->isSolid()) {
+            moveDown = false;
+            break;
+        }
+    }
+    if (moveDown) {
         current_piece->move_down();
         timeStill.restart();
     }
@@ -231,14 +260,16 @@ void Field::soft_drop() {
 bool Field::can_rotate_clockwise() {
     // Check that after rotation, all blocks will be within the field and not intersect other blocks.
     // Get field position of all blocks in piece
-    bool can_rotate = true;
     for (int i = 0; i < 4; i++) {
-        sf::Vector2f rotated_pos = current_piece->get_field_position(i, 1);
+        sf::Vector2i rotated_pos = static_cast<sf::Vector2i>(current_piece->get_field_position(i, 1));
         if (rotated_pos.x >= field_width || rotated_pos.x < 0 || rotated_pos.y >= field_height) {
-            can_rotate = false;
+            return false;
+        }
+        else if (blocks[rotated_pos.x][rotated_pos.y]->isSolid()){
+            return false;
         }
     }
-    return can_rotate;
+    return true;
 }
 
 void Field::rotate_clockwise() {
@@ -249,14 +280,16 @@ void Field::rotate_clockwise() {
 }
 
 bool Field::can_rotate_counter_clockwise() {
-    bool can_rotate = true;
     for (int i = 0; i < 4; i++) {
-        sf::Vector2f rotated_pos = current_piece->get_field_position(i, 3);
+        sf::Vector2i rotated_pos = static_cast<sf::Vector2i>(current_piece->get_field_position(i, 3));
         if (rotated_pos.x >= field_width || rotated_pos.x < 0 || rotated_pos.y >= field_height) {
-            can_rotate = false;
+            return false;
+        }
+        else if (blocks[rotated_pos.x][rotated_pos.y]->isSolid()){
+            return false;
         }
     }
-    return can_rotate;
+    return true;
 }
 
 void Field::rotate_counter_clockwise() {
@@ -270,13 +303,35 @@ void Field::lockPiece() {
     // Iterate through all blocks in current piece
     // Find the field index that corresponds to that piece's position
     // Transfer the attributes
+    bool dropDown = true;
     for (int i = 0; i < 4; i++) {
         sf::Vector2f fpos = current_piece->get_field_position(i, 0);
-//        std::cout << fpos.x << ", " << fpos.y << std::endl;
+        if (fpos.y == field_height - 1) {
+            dropDown = false;
+            break;
+        }
+        else if (this->blocks[(int)(fpos.x)][(int)(fpos.y) + 1]->isSolid()) {
+            dropDown = false;
+            break;
+        }
+    }
+    for (int i = 0; i < 4; i++) {
+        sf::Vector2f fpos = current_piece->get_field_position(i, 0);
         Block* b = current_piece->getBlock(i);
-        this->blocks[(int)(fpos.x)][(int)(fpos.y)]->setTexture(b->getTexture());
-//        this->blocks[(int)(fpos.x)][(int)(fpos.y)]->set_screen_position(b->get_screen_position());
-//        this->blocks[(int)(fpos.x)][(int)(fpos.y)]->set_field_position(b->get_field_position());
+        //if (fpos.y < field_height - 1) {
+        if (dropDown) {
+            //if (!this->blocks[(int)(fpos.x)][(int)(fpos.y) + 1]->isSolid()) {
+                this->blocks[(int)(fpos.x)][(int)(fpos.y) + 1]->setTexture(b->getTexture());
+                this->blocks[(int)(fpos.x)][(int)(fpos.y) + 1]->setSolid();
+            //}
+        }
+        else {
+    //        std::cout << fpos.x << ", " << fpos.y << std::endl;
+            this->blocks[(int)(fpos.x)][(int)(fpos.y)]->setTexture(b->getTexture());
+            this->blocks[(int)(fpos.x)][(int)(fpos.y)]->setSolid();
+    //        this->blocks[(int)(fpos.x)][(int)(fpos.y)]->set_screen_position(b->get_screen_position());
+    //        this->blocks[(int)(fpos.x)][(int)(fpos.y)]->set_field_position(b->get_field_position());
+        }
     }
     delete current_piece;
     generate_piece(rng_bag.back());    
