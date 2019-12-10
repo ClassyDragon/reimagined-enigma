@@ -11,11 +11,11 @@ Simple open-source Tetris Game made using C++ and the SFML Library.
 7. Hard Drop
 8. Super Rotation System (SRS)
 9. Ghost Piece
+10. Soft Drop
 
 ## TO-DO:
 1. Score-keeping, speed changes, lose condition, etc.
-2. Soft Dropping.
-3. Hold Piece
+2. Hold Piece
 
 ## BUGS:
 1. In some situations, rotating while moving can cause blocks to rotate where they should be able to.

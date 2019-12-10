@@ -107,6 +107,16 @@ void Field::updateInput() {
         keyPressed[2] = 0;
         keyPressed[3] = 0;
     }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        if (keyPressed[5] == 0) {
+            softDropClock.restart();
+            keyPressed[5] = 1;
+        }
+        softDrop();
+    }
+    else {
+        keyPressed[5] = 0;
+    }
 }
 
 void Field::updatePiece() {
@@ -132,9 +142,9 @@ void Field::updateGhostPiece() {
     int down = toFloor;
     for (int i = 0; i < 4; i++) {
         int yPos = currentPiece->get_default_position(i, 0).y;
-        int xPos = currentPiece->get_field_position(i, 0).x;
+        sf::Vector2i fp  = currentPiece->get_field_position(i, 0);
         for (int j = 0; j < field_height; j++) {
-            if (blocks[xPos][j]->isSolid()) {
+            if (blocks[fp.x][j]->isSolid()) {
                 temp = true;
                 if (j - yPos < down) {
                     down = j - yPos;
@@ -358,6 +368,10 @@ void Field::hardDrop() {
 }
 
 void Field::softDrop() {
+    if (softDropClock.getElapsedTime().asMilliseconds() > 40) {
+        softDropClock.restart();
+        moveDown();
+    }
 }
 
 int Field::canRotate(int r) {

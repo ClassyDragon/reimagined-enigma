@@ -68,8 +68,9 @@ class Field {
         Tetramino* currentPiece;
         std::vector<Block> ghostPiece;
         sf::Clock* movementDelay;
-        int keyPressed[5]; // 0: Not pressed, 1: Pressed shortly, 2: Pressed Long
+        int keyPressed[6]; // 0: Not pressed, 1: Pressed shortly, 2: Pressed Long
         sf::Clock timeStill;
+        sf::Clock softDropClock;
         bool GameOver;
         int* Score;
         int* LinesCleared;
