@@ -30,9 +30,8 @@ class Tetramino {
         char get_block(int x, int y);
 
         // Rotation functions:
-        void rotate_cw(); // Clock-wise
-        void rotate_ccw(); // Counter Clock-wise
-        void rotate_blocks();
+        void rotate(int r, int offset); // Clock-wise
+        void rotate_blocks(int offset);
 
         // Positional functions:
         void move(sf::Vector2f offset);
@@ -49,7 +48,7 @@ class Tetramino {
 
         // Get Field Position of block
         //int get_field_position(int block, int rotation_offset); // using an integer is confusing, instead use a Vector2f
-        sf::Vector2f get_field_position(int block, int rotation_offset);
+        sf::Vector2i get_field_position(int block, int rotation_offset);
     protected:
         // Position of individual blocks:
         std::vector<char> init_pos;

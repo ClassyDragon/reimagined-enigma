@@ -17,6 +17,9 @@ class TetrisGame {
         // Default destructor:
         ~TetrisGame();
 
+        // Init Functions
+        void InitText();
+
         // MAIN GAME LOOP:
         void TetrisMain();
 
@@ -47,4 +50,10 @@ class TetrisGame {
         // Clock
         sf::Clock drop_delay;
         int dropDelay_ms;
+
+        // Score-Related
+        int Score;
+        int LinesCleared;
+        std::map<std::string, sf::Text> text;
+        sf::Font font;
 };
