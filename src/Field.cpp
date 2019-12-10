@@ -421,56 +421,6 @@ int Field::canRotate(int r) {
         }
     }
     if (valid) return 7;
-    valid = true;
-
-    /*
-    for (int i = 0; i < 4; i++) {
-        sf::Vector2i rotated_pos = currentPiece->get_field_position(i, 1);
-        if (rotated_pos.y >= field_height) {
-            canRotate[0] = -1;
-        }
-        if (rotated_pos.x >= field_width || rotated_pos.x < 0) {
-            canRotate[0] = -1;
-            canRotate[2] = -1;
-            canRotate[1] = -1;
-            if (rotated_pos.x - 1 < 0 || rotated_pos.x - 1 >= field_width) {
-                canRotate[3] = -1;
-            }
-        }
-        else if (rotated_pos.y + 1 >= field_height) {
-            canRotate[1] = -1;
-        }
-        else if (rotated_pos.x + 1 >= field_width || rotated_pos.x + 1 < 0) {
-            canRotate[4] = -1;
-        }
-        else if (rotated_pos.x - 1 < 0 || rotated_pos.x - 1 >= field_width) {
-            canRotate[3] = -1;
-        }
-        else {
-            if (blocks[rotated_pos.x][rotated_pos.y]->isSolid()){
-                canRotate[0] = -1;
-            }
-            if (blocks[rotated_pos.x][rotated_pos.y - 1]->isSolid()) {
-                canRotate[2] = -1;
-            }
-            if (blocks[rotated_pos.x][rotated_pos.y + 1]->isSolid()) {
-                canRotate[1] = -1;
-            }
-            if (blocks[rotated_pos.x - 1][rotated_pos.y]->isSolid()) {
-                canRotate[3] = -1;
-            }
-            if (blocks[rotated_pos.x + 1][rotated_pos.y]->isSolid()) {
-                canRotate[4] = -1;
-            }
-        }
-    }
-    for (int i = 0; i < 5; i++) {
-        if (canRotate[i] != -1) {
-            std::cout << i + 1 << std::endl;
-            return i + 1;
-        }
-    }
-    */
     return -1;
 }
 
