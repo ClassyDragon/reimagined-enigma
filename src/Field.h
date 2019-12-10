@@ -47,12 +47,17 @@ class Field {
         void moveDown();
         void hardDrop();
         void softDrop();
-        bool canRotateClockwise();
-        void rotateClockwise();
-        bool canRotateCounterClockwise();
-        void rotateCounterClockwise();
+        int canRotate(int r);
+        void rotate(int r);
         void lockPiece();
         void clearLines(std::set<int>& linesAffected);
+        // Game Over Check
+        bool isGameOver();
+
+        // Set Score and Line Cleared Ref:
+        void setScoreRef(int* Score);
+        void setLinesClearedRef(int* LinesCleared);
+        void setTextRef(sf::Text* fScore, sf::Text* fLinesCleared);
     private:
         Block* blocks[field_width][field_height];
         std::map<char, sf::Texture> textures;
@@ -60,6 +65,11 @@ class Field {
         std::vector<int> rngBag;
         Tetramino* currentPiece;
         sf::Clock* movementDelay;
-        int keyPressed[4]; // 0: Not pressed, 1: Pressed shortly, 2: Pressed Long
+        int keyPressed[5]; // 0: Not pressed, 1: Pressed shortly, 2: Pressed Long
         sf::Clock timeStill;
+        bool GameOver;
+        int* Score;
+        int* LinesCleared;
+        sf::Text* fLinesCleared;
+        sf::Text* fScore;
 };

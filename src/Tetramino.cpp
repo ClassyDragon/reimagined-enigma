@@ -182,22 +182,42 @@ char Tetramino::get_block(int x, int y) {
 }
 
 // Rotations:
-void Tetramino::rotate_cw() {
-    current_rotation = (current_rotation + 1) % 4;
-    rotate_blocks();
+void Tetramino::rotate(int r, int offset) {
+    current_rotation = (current_rotation + r) % 4;
+    rotate_blocks(offset);
     //std::cout << "Current Rotation: " << current_rotation << std::endl;
 }
 
-void Tetramino::rotate_ccw() {
-    current_rotation = (current_rotation + 3) % 4;
-    rotate_blocks();
-}
-
-void Tetramino::rotate_blocks() {
+void Tetramino::rotate_blocks(int offset) {
     int i = 0;
+    switch (offset) {
+        case 1: break; // in place
+        case 2: vertical_position++; // up
+                break;
+        case 3: vertical_position--; // down
+                break;
+        case 4: horizontal_position--; // left
+                break;
+        case 5: horizontal_position++; // right
+                break;
+        case 6: horizontal_position--; // up left
+                vertical_position--;
+                break;
+        case 7: horizontal_position++; // up right
+                vertical_position--;
+                break;
+        case 8: horizontal_position--; // down left
+                vertical_position++;
+                break;
+        case 9: horizontal_position++; // down right
+                vertical_position++;
+                break;
+    }
     for (auto& b : blocks) {
         int x;
         int y;
+        int offsetX;
+        int offsetY;
         switch (init_pos.size()) {
             case 9: {
                         x = block_positions[i] % 3;
@@ -205,8 +225,6 @@ void Tetramino::rotate_blocks() {
                         switch (current_rotation % 4) {
                             case 0: {
                                         int pos = x + (3 * y);
-                                        // x = block_positions[i] % 3
-                                        // y = block_positions[i] / 3
                                         blocks[i]->set_field_position(sf::Vector2f((pos % 3) + horizontal_position, (pos / 3) + vertical_position));
                                         blocks[i]->set_screen_position(sf::Vector2f(
                                                     horizontal_offset + 50 * (pos % 3) + 50 * (horizontal_position),
@@ -250,8 +268,6 @@ void Tetramino::rotate_blocks() {
                         switch (current_rotation % 4) {
                             case 0: {
                                         int pos = x + (4 * y);
-                                        // x = block_positions[i] % 3
-                                        // y = block_positions[i] / 3
                                         blocks[i]->set_field_position(sf::Vector2f((pos % 4) + horizontal_position, (pos / 4) + vertical_position));
                                         blocks[i]->set_screen_position(sf::Vector2f(
                                                     horizontal_offset + 50 * (pos % 4) + 50 * (horizontal_position),
@@ -359,7 +375,7 @@ Block* Tetramino::getBlock(int index) {
 }
 
 // Get Field Position of block
-sf::Vector2f Tetramino::get_field_position(int block, int rotation_offset) {
+sf::Vector2i Tetramino::get_field_position(int block, int rotation_offset) {
     // Value: X Position + (width * Y position) 
     int rotation = (current_rotation + rotation_offset) % 4;
     int fpos = block_positions[block];
@@ -379,7 +395,7 @@ sf::Vector2f Tetramino::get_field_position(int block, int rotation_offset) {
             case 3: pos = (6 - (3 * x) + y);
                     break;
         }
-        return sf::Vector2f((pos % 3) + horizontal_position, (pos / 3) + vertical_position);
+        return sf::Vector2i((pos % 3) + horizontal_position, (pos / 3) + vertical_position);
     }
     else {
         x = fpos % 4;
@@ -394,6 +410,6 @@ sf::Vector2f Tetramino::get_field_position(int block, int rotation_offset) {
             case 3: pos = (12 - (4 * x) + y);
                     break;
         }
-        return sf::Vector2f((pos % 4) + horizontal_position, (pos / 4) + vertical_position);
+        return sf::Vector2i((pos % 4) + horizontal_position, (pos / 4) + vertical_position);
     }
 }
