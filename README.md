@@ -16,5 +16,12 @@ Simple open-source Tetris Game made using C++ and the SFML Library.
 4. Ghost Piece
 5. Hold Piece
 
+## BUGS:
+1. In some situations, rotating while moving can cause blocks to rotate where they should be able to.
+
+## Needs Improved:
+1. Representation of solid tiles in field.
+2. Moving blocks down when a line is cleared
+
 **This project is very incomplete. There are a lot of things I plan to change to make reading and modifying the code easier.
 Updates will be infrequent for this project.**
