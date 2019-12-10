@@ -118,10 +118,9 @@ void Field::updatePiece() {
     }
 }
 
-// dab
 void Field::updateGhostPiece() {
     // Field height = 18 (0 - 17)
-    int toFloor = 17;
+    int toFloor = field_height - 1;
     for (int i = 0; i < 4; i++) {
         int yPos = currentPiece->get_default_position(i, 0).y;
         int xPos = currentPiece->get_field_position(i, 0).x;
@@ -134,7 +133,7 @@ void Field::updateGhostPiece() {
     for (int i = 0; i < 4; i++) {
         int yPos = currentPiece->get_default_position(i, 0).y;
         int xPos = currentPiece->get_field_position(i, 0).x;
-        for (int j = 0; j < 18; j++) {
+        for (int j = 0; j < field_height; j++) {
             if (blocks[xPos][j]->isSolid()) {
                 temp = true;
                 if (j - yPos < down) {
@@ -160,47 +159,6 @@ void Field::updateGhostPiece() {
                     )
                 );
     }
-    /*
-    int vertical = 17;
-    int most = 17;
-    // For each column, find the furthest down each block in that column can move.
-    for (int i = 0; i < 4; i++) {
-        int temp = currentPiece->get_default_position(i, 0).y;
-        if (vertical - temp < most) {
-            most = vertical - temp;
-        }
-    }
-    std::cout << "Most: " << most << std::endl;
-    int most2 = most;
-    for (int i = 0; i < 4; i++) {
-        sf::Vector2i defaultPos = currentPiece->get_default_position(i, 0);
-        sf::Vector2i fieldPos = currentPiece->get_field_position(i, 0);
-        int j = 0;
-        std::cout << i << " " << j << std::endl;
-        while (j < most + 2) {
-           // !blocks[fieldPos.x][j + 1]->isSolid()) {
-            if (blocks[fieldPos.x][j]->isSolid()) {
-                //j = j - defaultPos.y;
-                if (j - (defaultPos.y + 1) < most2) most2 = j - (defaultPos.y + 1);
-            }
-            j++;
-        }
-    }
-    for (int i = 0; i < 4; i++) {
-        sf::Vector2i pos = currentPiece->get_field_position(i, 0);
-        sf::Vector2i pos2 = currentPiece->get_default_position(i, 0);
-        ghostPiece[i].set_field_position(sf::Vector2f(
-                    pos.x,
-                    pos2.y + most2
-                    )
-                );
-        ghostPiece[i].set_screen_position(sf::Vector2f(
-                    horizontal_offset + 50 * pos.x,
-                    vertical_offset + 50 * (pos2.y + most2)
-                    )
-                );
-    }
-    */
 }
 
 void Field::init_rng() {

@@ -8,13 +8,14 @@ Simple open-source Tetris Game made using C++ and the SFML Library.
 4. Vertical movement
 5. Bounds checking when rotating piece against blocks in field
 6. Line-clearing
+7. Hard Drop
+8. Super Rotation System (SRS)
+9. Ghost Piece
 
 ## TO-DO:
 1. Score-keeping, speed changes, lose condition, etc.
-2. Soft and Hard Dropping.
-3. Super Rotation System (SRS)
-4. Ghost Piece
-5. Hold Piece
+2. Soft Dropping.
+3. Hold Piece
 
 ## BUGS:
 1. In some situations, rotating while moving can cause blocks to rotate where they should be able to.
