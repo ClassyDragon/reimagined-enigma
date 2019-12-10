@@ -33,8 +33,10 @@ class Field {
         void update();
         void updateInput();
         void updatePiece();
+        void updateGhostPiece();
         // Initialize the piece bag with a seed based on the time:
         void init_rng();
+        void initGhostPiece();
         // Generate a piece based on the current bag:
         void generatePiece(int type);
         // Set active window pointer:
@@ -64,6 +66,7 @@ class Field {
         sf::RenderWindow* window;
         std::vector<int> rngBag;
         Tetramino* currentPiece;
+        std::vector<Block> ghostPiece;
         sf::Clock* movementDelay;
         int keyPressed[5]; // 0: Not pressed, 1: Pressed shortly, 2: Pressed Long
         sf::Clock timeStill;

@@ -28,7 +28,7 @@ TetrisGame::TetrisGame(int width, int height, std::string title) {
     this->background.setTexture(&this->bg_texture);
 
     // Initial Delay
-    this->dropDelay_ms = 300;
+    this->dropDelay_ms = 350;
     
 }
 

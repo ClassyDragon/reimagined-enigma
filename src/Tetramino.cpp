@@ -413,3 +413,41 @@ sf::Vector2i Tetramino::get_field_position(int block, int rotation_offset) {
         return sf::Vector2i((pos % 4) + horizontal_position, (pos / 4) + vertical_position);
     }
 }
+
+sf::Vector2i Tetramino::get_default_position(int block, int rotation_offset) {
+    int rotation = (current_rotation + rotation_offset) % 4;
+    int fpos = block_positions[block];
+    int x; 
+    int y; 
+    int pos;
+    if (init_pos.size() == 9) {
+        x = fpos % 3;
+        y = fpos / 3;
+        switch (rotation) {
+            case 0: pos = (x + (3 * y));
+                    break;
+            case 1: pos = ((3 * x) - y + 2);
+                    break;
+            case 2: pos = (8 - (3 * y) - x);
+                    break;
+            case 3: pos = (6 - (3 * x) + y);
+                    break;
+        }
+        return sf::Vector2i((pos % 3), (pos / 3));
+    }
+    else {
+        x = fpos % 4;
+        y = fpos / 4;
+        switch (rotation) {
+            case 0: pos = (x + (4 * y));
+                    break;
+            case 1: pos = (3 + (4 * x) - y);
+                    break;
+            case 2: pos = (15 - (4 * y) - x);
+                    break;
+            case 3: pos = (12 - (4 * x) + y);
+                    break;
+        }
+        return sf::Vector2i((pos % 4), (pos / 4));
+    }
+}
