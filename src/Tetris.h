@@ -20,7 +20,7 @@ class TetrisGame {
         ~TetrisGame();
 
         // Init Functions
-        void InitText();
+        void initText();
 
         // MAIN GAME LOOP:
         void TetrisMain();

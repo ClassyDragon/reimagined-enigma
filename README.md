@@ -16,6 +16,7 @@ Simple open-source Tetris Game made using C++ and the SFML Library.
 ## TO-DO:
 1. Score-keeping, speed changes, lose condition, etc.
 2. Hold Piece
+3. Next Piece Queue
 
 ## BUGS:
 1. In some situations, rotating while moving can cause blocks to rotate where they should be able to.

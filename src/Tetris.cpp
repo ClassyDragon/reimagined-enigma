@@ -14,13 +14,13 @@ TetrisGame::TetrisGame(int width, int height, std::string title) {
     // Initialize Score
     Score = 0;
     LinesCleared = 0;
-    InitText();
+    initText();
 
     // Initialize field:
     this->field = new Field(this->window);
     field->setScoreRef(&Score);
     field->setLinesClearedRef(&LinesCleared);
-    field->setTextRef(&text["Score"], &text["Lines Cleared"]);
+    field->setTextRef(&text["vScore"], &text["vLines"]);
 
     // Initialize Background:
 //    this->bg_texture.loadFromFile("resources/backgrounds/background1.png");
@@ -35,7 +35,8 @@ TetrisGame::TetrisGame(int width, int height, std::string title) {
     std::map<std::string, Sprite::Animation> animations;
     animations.insert(std::pair<std::string, Sprite::Animation>("Idle", a1)); 
     kirby = Sprite::anim_sprite("resources/kirby.png", 200, 200, animations);
-    
+    kirby.setPosition(sf::Vector2f(650, 600));
+    kirby.set_speed_ms(200);    
 }
 
 // default destructor:
@@ -44,17 +45,23 @@ TetrisGame::~TetrisGame() {
 }
 
 // Init Functions:
-void TetrisGame::InitText() {
+void TetrisGame::initText() {
     if (!this->font.loadFromFile("resources/Fonts/font.ttf")) {
         window->close();
         std::cout << "Failed to load font.ttf." << std::endl;
     }
-    this->text.insert(std::pair<std::string, sf::Text>("Score", sf::Text("0", this->font)));
-    this->text.insert(std::pair<std::string, sf::Text>("Lines Cleared", sf::Text("0", this->font)));
+    this->text.insert(std::pair<std::string, sf::Text>("vScore", sf::Text("0", this->font)));
+    this->text.insert(std::pair<std::string, sf::Text>("vLines", sf::Text("0", this->font)));
+    this->text.insert(std::pair<std::string, sf::Text>("Lines Cleared", sf::Text("Lines Cleared:", this->font)));
+    this->text.insert(std::pair<std::string, sf::Text>("Score", sf::Text("Score:", this->font)));
+    text["vScore"].setFillColor(sf::Color::White);
+    text["vScore"].setPosition(sf::Vector2f(900, 246));
+    text["vLines"].setFillColor(sf::Color::White);
+    text["vLines"].setPosition(sf::Vector2f(900, 475));
     text["Score"].setFillColor(sf::Color::White);
-    text["Score"].setPosition(sf::Vector2f(800, 246));
+    text["Score"].setPosition(sf::Vector2f(770, 246));
     text["Lines Cleared"].setFillColor(sf::Color::White);
-    text["Lines Cleared"].setPosition(sf::Vector2f(800, 475));
+    text["Lines Cleared"].setPosition(sf::Vector2f(650, 475));
 }
 
 // main game loop:
