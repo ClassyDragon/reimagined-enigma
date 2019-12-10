@@ -6,6 +6,7 @@ TetrisGame::TetrisGame() {
 
 // constructor with window size:
 TetrisGame::TetrisGame(int width, int height, std::string title) {
+    TextureManager::load("resources/kirby.png");
     // Initialize Window:
     this->window = new sf::RenderWindow(sf::VideoMode(width, height), title);
     window->setFramerateLimit(60);
@@ -29,6 +30,11 @@ TetrisGame::TetrisGame(int width, int height, std::string title) {
 
     // Initial Delay
     this->dropDelay_ms = 350;
+
+    Sprite::Animation a1(0, 2, false);
+    std::map<std::string, Sprite::Animation> animations;
+    animations.insert(std::pair<std::string, Sprite::Animation>("Idle", a1)); 
+    kirby = Sprite::anim_sprite("resources/kirby.png", 200, 200, animations);
     
 }
 
@@ -67,6 +73,7 @@ void TetrisGame::TetrisMain() {
 void TetrisGame::update() {
     this->updateEvent();
     this->updateDrop();
+    kirby.update();
     field->update();
 }
 
@@ -103,6 +110,7 @@ void TetrisGame::render() {
     for (auto i : this->text) {
         window->draw(i.second);
     }
+    kirby.drawto(window);
 
     // Display the buffer:
     this->window->display();

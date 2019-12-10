@@ -5,6 +5,8 @@
 #include "Tetramino.h"
 #include "Field.h"
 #include "Block.h"
+#include "Sprite/Sprite.h"
+#include "TextureManager/TextureManager.h"
 
 class TetrisGame {
     public:
@@ -56,4 +58,7 @@ class TetrisGame {
         int LinesCleared;
         std::map<std::string, sf::Text> text;
         sf::Font font;
+
+        // Kirby
+        Sprite::anim_sprite kirby;
 };
