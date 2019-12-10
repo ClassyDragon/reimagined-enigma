@@ -212,6 +212,12 @@ void Tetramino::rotate_blocks(int offset) {
         case 9: horizontal_position++; // down right
                 vertical_position++;
                 break;
+        case 10: horizontal_position -= 1;
+                 vertical_position += 2;
+                 break;
+        case 11: horizontal_position += 1;
+                 vertical_position += 2;
+                 break;
     }
     for (auto& b : blocks) {
         int x;

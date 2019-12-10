@@ -24,7 +24,8 @@ TetrisGame::TetrisGame(int width, int height, std::string title) {
 
     // Initialize Background:
 //    this->bg_texture.loadFromFile("resources/backgrounds/background1.png");
-    this->bg_texture.loadFromFile("resources/backgrounds/black_background.png");
+//    this->bg_texture.loadFromFile("resources/backgrounds/black_background.png");
+    this->bg_texture.loadFromFile("resources/backgrounds/mario_background.png");
     this->background.setSize(static_cast<sf::Vector2f>(this->bg_texture.getSize()));
     this->background.setTexture(&this->bg_texture);
 

@@ -417,19 +417,6 @@ int Field::canRotate(int r) {
     }
     if (valid) return 2;
     valid = true;
-    // Case 3: Up
-    for (int i = 0; i < 4; i++) {
-        if (rotated_pos[i].y - 1 >= field_height || rotated_pos[i].x >= field_width || rotated_pos[i].x < 0) {
-            valid = false;
-            break;
-        }
-        else if (blocks[rotated_pos[i].x][rotated_pos[i].y - 1]->isSolid()) {
-            valid = false;
-            break;
-        }
-    }
-    if (valid) return 3;
-    valid = true;
     // Case 4: Left
     for (int i = 0; i < 4; i++) {
         if (rotated_pos[i].y >= field_height || rotated_pos[i].x - 1 >= field_width || rotated_pos[i].x - 1 < 0) {
@@ -482,6 +469,45 @@ int Field::canRotate(int r) {
     }
     if (valid) return 9;
     valid = true;
+    // Case 10: Down 2 left
+    for (int i = 0; i < 4; i++) {
+        if (rotated_pos[i].y + 2 >= field_height || rotated_pos[i].x - 1 >= field_width || rotated_pos[i].x - 1 < 0) {
+            valid = false;
+            break;
+        }
+        else if (blocks[rotated_pos[i].x - 1][rotated_pos[i].y + 2]->isSolid()) {
+            valid = false;
+            break;
+        }
+    }
+    if (valid) return 10;
+    valid = true;
+    // Case 11: Down 2 Right
+    for (int i = 0; i < 4; i++) {
+        if (rotated_pos[i].y + 2 >= field_height || rotated_pos[i].x + 1 >= field_width || rotated_pos[i].x + 1 < 0) {
+            valid = false;
+            break;
+        }
+        else if (blocks[rotated_pos[i].x + 1][rotated_pos[i].y + 2]->isSolid()) {
+            valid = false;
+            break;
+        }
+    }
+    if (valid) return 11;
+    valid = true;
+    // Case 3: Up
+    for (int i = 0; i < 4; i++) {
+        if (rotated_pos[i].y - 1 >= field_height || rotated_pos[i].x >= field_width || rotated_pos[i].x < 0) {
+            valid = false;
+            break;
+        }
+        else if (blocks[rotated_pos[i].x][rotated_pos[i].y - 1]->isSolid()) {
+            valid = false;
+            break;
+        }
+    }
+    if (valid) return 3;
+    valid = true;
     // Case 6: Up Left
     for (int i = 0; i < 4; i++) {
         if (rotated_pos[i].y - 1 >= field_height || rotated_pos[i].x - 1 >= field_width || rotated_pos[i].x - 1 < 0) {
@@ -507,6 +533,7 @@ int Field::canRotate(int r) {
         }
     }
     if (valid) return 7;
+    valid = true;
     return -1;
 }
 
