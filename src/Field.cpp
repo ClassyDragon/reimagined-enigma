@@ -217,8 +217,27 @@ void Field::updateRNG() {
 }
 
 void Field::updateQueue() {
-    /*
-        switch (rngBag[rngBag.size() - i - 1]) {
+    int nextPiecesInQueue[3];
+    int bagSize = rngBag.size();
+    if (bagSize > 2) {
+        for (int i = 0; i < 3; i++) {
+            nextPiecesInQueue[i] = rngBag[rngBag.size() - 1 - i];
+        }
+    }
+    else if (bagSize == 2) {
+        nextPiecesInQueue[0] = rngBag[1];
+        nextPiecesInQueue[1] = rngBag[0];
+        nextPiecesInQueue[2] = nextBag.back();
+    }
+    else if (bagSize == 1) {
+        nextPiecesInQueue[0] = rngBag[0];
+        nextPiecesInQueue[1] = nextBag.back();
+        nextPiecesInQueue[2] = nextBag[nextBag.size() - 1 - 1];
+    }
+
+    for (int i = 0; i < 3; i++) {
+        int x;
+        switch (nextPiecesInQueue[i]) {
             case 0: x = 500;
                     break;
             case 1: x = 400;
@@ -234,137 +253,7 @@ void Field::updateQueue() {
             case 6: x = 0;
                     break;
         }
-        */
-    if (rngBag.size() < 3) {
-        int x;
-        if (rngBag.size() == 2) {
-            switch (rngBag[1]) {
-                case 0: x = 500;
-                        break;
-                case 1: x = 400;
-                        break;
-                case 2: x = 300;
-                        break;
-                case 3: x = 200;
-                        break;
-                case 4: x = 600;
-                        break;
-                case 5: x = 100;
-                        break;
-                case 6: x = 0;
-                        break;
-            }
-            nextQueue[0].setTextureRect(sf::IntRect(x, 0, 100, 100));
-            switch (rngBag[0]) {
-                case 0: x = 500;
-                        break;
-                case 1: x = 400;
-                        break;
-                case 2: x = 300;
-                        break;
-                case 3: x = 200;
-                        break;
-                case 4: x = 600;
-                        break;
-                case 5: x = 100;
-                        break;
-                case 6: x = 0;
-                        break;
-            }
-            nextQueue[1].setTextureRect(sf::IntRect(x, 0, 100, 100));
-            switch (nextBag.back()) {
-                case 0: x = 500;
-                        break;
-                case 1: x = 400;
-                        break;
-                case 2: x = 300;
-                        break;
-                case 3: x = 200;
-                        break;
-                case 4: x = 600;
-                        break;
-                case 5: x = 100;
-                        break;
-                case 6: x = 0;
-                        break;
-            }
-            nextQueue[2].setTextureRect(sf::IntRect(x, 0, 100, 100));
-        }
-        else if (rngBag.size() == 1) {
-            switch (rngBag[0]) {
-                case 0: x = 500;
-                        break;
-                case 1: x = 400;
-                        break;
-                case 2: x = 300;
-                        break;
-                case 3: x = 200;
-                        break;
-                case 4: x = 600;
-                        break;
-                case 5: x = 100;
-                        break;
-                case 6: x = 0;
-                        break;
-            }
-            nextQueue[0].setTextureRect(sf::IntRect(x, 0, 100, 100));
-            switch (nextBag.back()) {
-                case 0: x = 500;
-                        break;
-                case 1: x = 400;
-                        break;
-                case 2: x = 300;
-                        break;
-                case 3: x = 200;
-                        break;
-                case 4: x = 600;
-                        break;
-                case 5: x = 100;
-                        break;
-                case 6: x = 0;
-                        break;
-            }
-            nextQueue[1].setTextureRect(sf::IntRect(x, 0, 100, 100));
-            switch (nextBag[nextBag.size() - 2]) {
-                case 0: x = 500;
-                        break;
-                case 1: x = 400;
-                        break;
-                case 2: x = 300;
-                        break;
-                case 3: x = 200;
-                        break;
-                case 4: x = 600;
-                        break;
-                case 5: x = 100;
-                        break;
-                case 6: x = 0;
-                        break;
-            }
-            nextQueue[2].setTextureRect(sf::IntRect(x, 0, 100, 100));
-        }
-    }
-    else {
-        for (int i = 0; i < 3; i++) {
-            int x;
-            switch (rngBag[rngBag.size() - i - 1]) {
-                case 0: x = 500;
-                        break;
-                case 1: x = 400;
-                        break;
-                case 2: x = 300;
-                        break;
-                case 3: x = 200;
-                        break;
-                case 4: x = 600;
-                        break;
-                case 5: x = 100;
-                        break;
-                case 6: x = 0;
-                        break;
-            }
-            nextQueue[i].setTextureRect(sf::IntRect(x, 0, 100, 100));
-        }
+        nextQueue[i].setTextureRect(sf::IntRect(x, 0, 100, 100));
     }
 }
 
