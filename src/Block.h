@@ -1,9 +1,15 @@
-
 #pragma once
 #include <iostream>
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "Field.h"
+
+const int field_width_v = 10;
+const int field_height_v = 18;
+//const int vertical_offset = 50;
+//const int horizontal_offset = 50;
+//const int move_time_1 = 380;
+//const int move_time_2 = 450;
+//const int move_time_3 = 60;
 
 class Block {
     public:
@@ -20,7 +26,7 @@ class Block {
         sf::Vector2f get_screen_position();
         // Set Field Position:
         void set_field_position(sf::Vector2f field_position);
-        sf::Vector2f get_field_position();
+        sf::Vector2f getFieldPosition();
         bool canMoveLeft();
         bool canMoveRight();
         void moveLeft();

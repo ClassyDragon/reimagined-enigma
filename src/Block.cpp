@@ -33,7 +33,7 @@ sf::Vector2f Block::get_screen_position() {
     return screen_position;
 }
 
-sf::Vector2f Block::get_field_position() {
+sf::Vector2f Block::getFieldPosition() {
     return field_position;
 }
 
@@ -44,7 +44,7 @@ bool Block::canMoveLeft() {
 }
 
 bool Block::canMoveRight() {
-    if (field_position.x + 1 >= field_width)
+    if (field_position.x + 1 >= field_width_v)
         return false;
     return true;
 }
@@ -58,7 +58,7 @@ void Block::moveRight() {
 }
 
 bool Block::canMoveDown() {
-    if (field_position.y + 1 >= field_height)
+    if (field_position.y + 1 >= field_height_v)
         return false;
     return true;
 }

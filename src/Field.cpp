@@ -25,46 +25,71 @@ Field::Field(sf::RenderWindow* window) : window(window) {
     textures['w'].loadFromFile("resources/white.png");
     textures['a'].loadFromFile("resources/clear.png");
 
+    TextureManager::load("resources/nextPieces.png");
+
     // Initialize keys:
     for (int i = 0; i < 3; i++)
         keyPressed[i] = 0;
 
     for (int i = 0; i < field_width; i++) {
         for (int j = 0; j < field_height; j++) {
-            blocks[i][j] = new Block();
-            blocks[i][j]->setTexture(&textures['w']);
-            blocks[i][j]->set_screen_position(sf::Vector2f(50 + (50 * i), 50 + (50 * j)));
+            blocks[i][j] = Block();
+            blocks[i][j].setTexture(&textures['w']);
+            blocks[i][j].set_screen_position(sf::Vector2f(50 + (50 * i), 50 + (50 * j)));
         }
     }
 
-
-    movementDelay = new sf::Clock();
-
-    init_rng();
+    initRNG();
 
     generatePiece(rngBag.back());    
     rngBag.pop_back();
     initGhostPiece();
 
     GameOver = false;
+
+    nextQueue.resize(3);    
+    for (int i = 0; i < 3; i++) {
+        nextQueue[i].setSize(sf::Vector2f(100, 100));
+        nextQueue[i].setTexture(TextureManager::get_texture("resources/nextPieces.png"));
+        int x;
+        switch (rngBag[rngBag.size() - i - 1]) {
+            case 0: x = 500;
+                    break;
+            case 1: x = 400;
+                    break;
+            case 2: x = 300;
+                    break;
+            case 3: x = 200;
+                    break;
+            case 4: x = 600;
+                    break;
+            case 5: x = 100;
+                    break;
+            case 6: x = 0;
+                    break;
+        }
+        nextQueue[i].setTextureRect(sf::IntRect(x, 0, 100, 100));
+        nextQueue[i].setPosition(sf::Vector2f(570, 100));
+    }
+    nextQueue[1].move(0, 150);
+    nextQueue[2].move(0, 300);
 }
 
 Field::~Field() {
-    for (int i = 0; i < field_width; i++)
-        for (int j = 0; j < field_height; j++)
-            delete blocks[i][j];
     delete currentPiece;
-    delete movementDelay;
 }
 
 void Field::render() {
     for (int i = 0; i < field_width; i++) {
         for (int j = 0; j < field_height; j++) {
-            blocks[i][j]->render(window);
+            blocks[i][j].render(window);
         }
     }
     for (int i = 0; i < 4; i++) {
         ghostPiece[i].render(window);
+    }
+    for (int i = 0; i < 3; i++) {
+        window->draw(nextQueue[i]);
     }
     currentPiece->render(window);
 }
@@ -124,7 +149,8 @@ void Field::updatePiece() {
         this->lockPiece();
     }
     if (rngBag.size() == 0) {
-        init_rng();
+        updateRNG();
+        updateQueue();
     }
 }
 
@@ -132,8 +158,8 @@ void Field::updateGhostPiece() {
     // Field height = 18 (0 - 17)
     int toFloor = field_height - 1;
     for (int i = 0; i < 4; i++) {
-        int yPos = currentPiece->get_default_position(i, 0).y;
-        int xPos = currentPiece->get_field_position(i, 0).x;
+        int yPos = currentPiece->getDefaultPosition(i, 0).y;
+        int xPos = currentPiece->getFieldPosition(i, 0).x;
         if (field_height - 1 - yPos < toFloor) {
             toFloor = field_height - 1 - yPos;
         }
@@ -141,10 +167,10 @@ void Field::updateGhostPiece() {
     bool temp = false;
     int down = toFloor;
     for (int i = 0; i < 4; i++) {
-        int yPos = currentPiece->get_default_position(i, 0).y;
-        sf::Vector2i fp  = currentPiece->get_field_position(i, 0);
+        int yPos = currentPiece->getDefaultPosition(i, 0).y;
+        sf::Vector2i fp  = currentPiece->getFieldPosition(i, 0);
         for (int j = 0; j < field_height; j++) {
-            if (blocks[fp.x][j]->isSolid()) {
+            if (blocks[fp.x][j].isSolid()) {
                 temp = true;
                 if (j - yPos < down) {
                     down = j - yPos;
@@ -156,8 +182,8 @@ void Field::updateGhostPiece() {
         down--;
     }
     for (int i = 0; i < 4; i++) {
-        sf::Vector2i pos = currentPiece->get_field_position(i, 0);
-        sf::Vector2i pos2 = currentPiece->get_default_position(i, 0);
+        sf::Vector2i pos = currentPiece->getFieldPosition(i, 0);
+        sf::Vector2i pos2 = currentPiece->getDefaultPosition(i, 0);
         ghostPiece[i].set_field_position(sf::Vector2f(
                     pos.x,
                     pos2.y + down
@@ -171,7 +197,178 @@ void Field::updateGhostPiece() {
     }
 }
 
-void Field::init_rng() {
+void Field::updateRNG() {
+    if (rngBag.size() == 0) {
+        rngBag = nextBag;
+        nextBag.clear();
+        srand(time(NULL));
+        std::vector<int> temp_bag;
+        for (int i = 0; i < 7; i++) {
+            temp_bag.push_back(i);
+        }
+
+        int tempint;
+        while (!temp_bag.empty()) {
+            tempint = rand() % temp_bag.size();
+            nextBag.push_back(temp_bag[tempint]);
+            temp_bag.erase(temp_bag.begin() + tempint);
+        }
+    }
+}
+
+void Field::updateQueue() {
+    /*
+        switch (rngBag[rngBag.size() - i - 1]) {
+            case 0: x = 500;
+                    break;
+            case 1: x = 400;
+                    break;
+            case 2: x = 300;
+                    break;
+            case 3: x = 200;
+                    break;
+            case 4: x = 600;
+                    break;
+            case 5: x = 100;
+                    break;
+            case 6: x = 0;
+                    break;
+        }
+        */
+    if (rngBag.size() < 3) {
+        int x;
+        if (rngBag.size() == 2) {
+            switch (rngBag[1]) {
+                case 0: x = 500;
+                        break;
+                case 1: x = 400;
+                        break;
+                case 2: x = 300;
+                        break;
+                case 3: x = 200;
+                        break;
+                case 4: x = 600;
+                        break;
+                case 5: x = 100;
+                        break;
+                case 6: x = 0;
+                        break;
+            }
+            nextQueue[0].setTextureRect(sf::IntRect(x, 0, 100, 100));
+            switch (rngBag[0]) {
+                case 0: x = 500;
+                        break;
+                case 1: x = 400;
+                        break;
+                case 2: x = 300;
+                        break;
+                case 3: x = 200;
+                        break;
+                case 4: x = 600;
+                        break;
+                case 5: x = 100;
+                        break;
+                case 6: x = 0;
+                        break;
+            }
+            nextQueue[1].setTextureRect(sf::IntRect(x, 0, 100, 100));
+            switch (nextBag.back()) {
+                case 0: x = 500;
+                        break;
+                case 1: x = 400;
+                        break;
+                case 2: x = 300;
+                        break;
+                case 3: x = 200;
+                        break;
+                case 4: x = 600;
+                        break;
+                case 5: x = 100;
+                        break;
+                case 6: x = 0;
+                        break;
+            }
+            nextQueue[2].setTextureRect(sf::IntRect(x, 0, 100, 100));
+        }
+        else if (rngBag.size() == 1) {
+            switch (rngBag[0]) {
+                case 0: x = 500;
+                        break;
+                case 1: x = 400;
+                        break;
+                case 2: x = 300;
+                        break;
+                case 3: x = 200;
+                        break;
+                case 4: x = 600;
+                        break;
+                case 5: x = 100;
+                        break;
+                case 6: x = 0;
+                        break;
+            }
+            nextQueue[0].setTextureRect(sf::IntRect(x, 0, 100, 100));
+            switch (nextBag.back()) {
+                case 0: x = 500;
+                        break;
+                case 1: x = 400;
+                        break;
+                case 2: x = 300;
+                        break;
+                case 3: x = 200;
+                        break;
+                case 4: x = 600;
+                        break;
+                case 5: x = 100;
+                        break;
+                case 6: x = 0;
+                        break;
+            }
+            nextQueue[1].setTextureRect(sf::IntRect(x, 0, 100, 100));
+            switch (nextBag[nextBag.size() - 2]) {
+                case 0: x = 500;
+                        break;
+                case 1: x = 400;
+                        break;
+                case 2: x = 300;
+                        break;
+                case 3: x = 200;
+                        break;
+                case 4: x = 600;
+                        break;
+                case 5: x = 100;
+                        break;
+                case 6: x = 0;
+                        break;
+            }
+            nextQueue[2].setTextureRect(sf::IntRect(x, 0, 100, 100));
+        }
+    }
+    else {
+        for (int i = 0; i < 3; i++) {
+            int x;
+            switch (rngBag[rngBag.size() - i - 1]) {
+                case 0: x = 500;
+                        break;
+                case 1: x = 400;
+                        break;
+                case 2: x = 300;
+                        break;
+                case 3: x = 200;
+                        break;
+                case 4: x = 600;
+                        break;
+                case 5: x = 100;
+                        break;
+                case 6: x = 0;
+                        break;
+            }
+            nextQueue[i].setTextureRect(sf::IntRect(x, 0, 100, 100));
+        }
+    }
+}
+
+void Field::initRNG() {
     srand(time(NULL));
     std::vector<int> temp_bag;
     for (int i = 0; i < 7; i++) {
@@ -184,12 +381,20 @@ void Field::init_rng() {
         rngBag.push_back(temp_bag[tempint]);
         temp_bag.erase(temp_bag.begin() + tempint);
     }
+    for (int i = 0; i < 7; i++) {
+        temp_bag.push_back(i);
+    }
+    while (!temp_bag.empty()) {
+        tempint = rand() % temp_bag.size();
+        nextBag.push_back(temp_bag[tempint]);
+        temp_bag.erase(temp_bag.begin() + tempint);
+    }
 }
 
 void Field::initGhostPiece() {
     ghostPiece.resize(4);
     for (int i = 0; i < 4; i++) {
-        sf::Vector2i pos = currentPiece->get_field_position(i, 0);
+        sf::Vector2i pos = currentPiece->getFieldPosition(i, 0);
         ghostPiece[i].setTexture(&textures['a']);
         ghostPiece[i].set_field_position(sf::Vector2f(
                     pos.x, 
@@ -249,11 +454,11 @@ void Field::setWindow(sf::RenderWindow* window) {
 // Current Piece Functions:
 bool Field::canMoveLeft() {
     for (int i = 0; i < 4; i++) {
-        sf::Vector2i fpos = currentPiece->get_field_position(i, 0);
+        sf::Vector2i fpos = currentPiece->getFieldPosition(i, 0);
         if (fpos.x == 0) {
             return false;
         }
-        else if (this->blocks[fpos.x - 1][fpos.y]->isSolid()) {
+        else if (this->blocks[fpos.x - 1][fpos.y].isSolid()) {
             return false;
         }
     }
@@ -264,22 +469,22 @@ void Field::moveLeft() {
     
     if (canMoveLeft()) {
         if (keyPressed[0] == 0) {
-            movementDelay->restart();
+            movementDelay.restart();
             currentPiece->moveLeft();
             keyPressed[0] = 1;
         }
-        if (keyPressed[0] == 1 && movementDelay->getElapsedTime().asMilliseconds() >= move_time_1) {
+        if (keyPressed[0] == 1 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_1) {
             currentPiece->moveLeft();
             keyPressed[0] = 2;
         }
-        if (keyPressed[0] == 2 && movementDelay->getElapsedTime().asMilliseconds() >= move_time_2) {
+        if (keyPressed[0] == 2 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_2) {
             currentPiece->moveLeft();
             keyPressed[0] = 3;
-            movementDelay->restart();
+            movementDelay.restart();
         }
-        if (keyPressed[0] == 3 && movementDelay->getElapsedTime().asMilliseconds() >= move_time_3) {
+        if (keyPressed[0] == 3 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_3) {
             currentPiece->moveLeft();
-            movementDelay->restart();
+            movementDelay.restart();
         }
     }
     
@@ -287,11 +492,11 @@ void Field::moveLeft() {
 
 bool Field::canMoveRight() {
     for (int i = 0; i < 4; i++) {
-        sf::Vector2i fpos = currentPiece->get_field_position(i, 0);
+        sf::Vector2i fpos = currentPiece->getFieldPosition(i, 0);
         if (fpos.x == field_width - 1) {
             return false;
         }
-        else if (this->blocks[fpos.x + 1][fpos.y]->isSolid()) {
+        else if (this->blocks[fpos.x + 1][fpos.y].isSolid()) {
             return false;
         }
     }
@@ -302,22 +507,22 @@ void Field::moveRight() {
 
     if (canMoveRight()) {
         if (keyPressed[1] == 0) {
-            movementDelay->restart();
+            movementDelay.restart();
             currentPiece->moveRight();
             keyPressed[1] = 1;
         }
-        else if (keyPressed[1] == 1 && movementDelay->getElapsedTime().asMilliseconds() >= move_time_1) {
+        else if (keyPressed[1] == 1 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_1) {
             currentPiece->moveRight();
             keyPressed[1] = 2;
         }
-        else if (keyPressed[1] == 2 && movementDelay->getElapsedTime().asMilliseconds() >= move_time_2) {
+        else if (keyPressed[1] == 2 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_2) {
             currentPiece->moveRight();
             keyPressed[1] = 3;
-            movementDelay->restart();
+            movementDelay.restart();
         }
-        else if (keyPressed[1] == 3 && movementDelay->getElapsedTime().asMilliseconds() >= move_time_3) {
+        else if (keyPressed[1] == 3 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_3) {
             currentPiece->moveRight();
-            movementDelay->restart();
+            movementDelay.restart();
         }
     }
 }
@@ -325,12 +530,12 @@ void Field::moveRight() {
 void Field::moveDown() {
     bool moveDown = true;
     for (int i = 0; i < 4; i++) {
-        sf::Vector2i fpos = currentPiece->get_field_position(i, 0);
+        sf::Vector2i fpos = currentPiece->getFieldPosition(i, 0);
         if (fpos.y == field_height - 1) {
             moveDown = false;
             break;
         }
-        else if (this->blocks[fpos.x][fpos.y + 1]->isSolid()) {
+        else if (this->blocks[fpos.x][fpos.y + 1].isSolid()) {
             moveDown = false;
             break;
         }
@@ -346,11 +551,11 @@ void Field::hardDrop() {
         keyPressed[4] = 1;
         std::set<int> indexes;
         for (int i = 0; i < 4; i++) {
-            sf::Vector2i position = currentPiece->get_field_position(i, 0);
+            sf::Vector2i position = currentPiece->getFieldPosition(i, 0);
             int x = position.x;
             int y = position.y;
             while (y < field_height - 1) {
-                if (!blocks[x][y + 1]->isSolid()) {
+                if (!blocks[x][y + 1].isSolid()) {
                     y++;
                 }
                 else {
@@ -368,7 +573,7 @@ void Field::hardDrop() {
 }
 
 void Field::softDrop() {
-    if (softDropClock.getElapsedTime().asMilliseconds() > 40) {
+    if (softDropClock.getElapsedTime().asMilliseconds() > 20) {
         softDropClock.restart();
         moveDown();
     }
@@ -384,10 +589,10 @@ int Field::canRotate(int r) {
     // Check that after rotation, all blocks will be within the field and not intersect other blocks.
     // Get field position of all blocks in piece
     std::vector<sf::Vector2i> rotated_pos(4);
-    rotated_pos[0] = (currentPiece->get_field_position(0, r));
-    rotated_pos[1] = (currentPiece->get_field_position(1, r));
-    rotated_pos[2] = (currentPiece->get_field_position(2, r));
-    rotated_pos[3] = (currentPiece->get_field_position(3, r));
+    rotated_pos[0] = (currentPiece->getFieldPosition(0, r));
+    rotated_pos[1] = (currentPiece->getFieldPosition(1, r));
+    rotated_pos[2] = (currentPiece->getFieldPosition(2, r));
+    rotated_pos[3] = (currentPiece->getFieldPosition(3, r));
     bool valid = true;
     // Case 1: In place
     for (int i = 0; i < 4; i++) {
@@ -395,7 +600,7 @@ int Field::canRotate(int r) {
             valid = false;
             break;
         }
-        else if (blocks[rotated_pos[i].x][rotated_pos[i].y]->isSolid()) {
+        else if (blocks[rotated_pos[i].x][rotated_pos[i].y].isSolid()) {
             valid = false;
             break;
         }
@@ -410,7 +615,7 @@ int Field::canRotate(int r) {
             valid = false;
             break;
         }
-        else if (blocks[rotated_pos[i].x][rotated_pos[i].y + 1]->isSolid()) {
+        else if (blocks[rotated_pos[i].x][rotated_pos[i].y + 1].isSolid()) {
             valid = false;
             break;
         }
@@ -423,7 +628,7 @@ int Field::canRotate(int r) {
             valid = false;
             break;
         }
-        else if (blocks[rotated_pos[i].x - 1][rotated_pos[i].y]->isSolid()) {
+        else if (blocks[rotated_pos[i].x - 1][rotated_pos[i].y].isSolid()) {
             valid = false;
             break;
         }
@@ -436,7 +641,7 @@ int Field::canRotate(int r) {
             valid = false;
             break;
         }
-        else if (blocks[rotated_pos[i].x + 1][rotated_pos[i].y]->isSolid()) {
+        else if (blocks[rotated_pos[i].x + 1][rotated_pos[i].y].isSolid()) {
             valid = false;
             break;
         }
@@ -449,7 +654,7 @@ int Field::canRotate(int r) {
             valid = false;
             break;
         }
-        else if (blocks[rotated_pos[i].x - 1][rotated_pos[i].y + 1]->isSolid()) {
+        else if (blocks[rotated_pos[i].x - 1][rotated_pos[i].y + 1].isSolid()) {
             valid = false;
             break;
         }
@@ -462,7 +667,7 @@ int Field::canRotate(int r) {
             valid = false;
             break;
         }
-        else if (blocks[rotated_pos[i].x + 1][rotated_pos[i].y + 1]->isSolid()) {
+        else if (blocks[rotated_pos[i].x + 1][rotated_pos[i].y + 1].isSolid()) {
             valid = false;
             break;
         }
@@ -475,7 +680,7 @@ int Field::canRotate(int r) {
             valid = false;
             break;
         }
-        else if (blocks[rotated_pos[i].x - 1][rotated_pos[i].y + 2]->isSolid()) {
+        else if (blocks[rotated_pos[i].x - 1][rotated_pos[i].y + 2].isSolid()) {
             valid = false;
             break;
         }
@@ -488,7 +693,7 @@ int Field::canRotate(int r) {
             valid = false;
             break;
         }
-        else if (blocks[rotated_pos[i].x + 1][rotated_pos[i].y + 2]->isSolid()) {
+        else if (blocks[rotated_pos[i].x + 1][rotated_pos[i].y + 2].isSolid()) {
             valid = false;
             break;
         }
@@ -501,7 +706,7 @@ int Field::canRotate(int r) {
             valid = false;
             break;
         }
-        else if (blocks[rotated_pos[i].x][rotated_pos[i].y - 1]->isSolid()) {
+        else if (blocks[rotated_pos[i].x][rotated_pos[i].y - 1].isSolid()) {
             valid = false;
             break;
         }
@@ -514,7 +719,7 @@ int Field::canRotate(int r) {
             valid = false;
             break;
         }
-        else if (blocks[rotated_pos[i].x - 1][rotated_pos[i].y - 1]->isSolid()) {
+        else if (blocks[rotated_pos[i].x - 1][rotated_pos[i].y - 1].isSolid()) {
             valid = false;
             break;
         }
@@ -527,7 +732,7 @@ int Field::canRotate(int r) {
             valid = false;
             break;
         }
-        else if (blocks[rotated_pos[i].x + 1][rotated_pos[i].y - 1]->isSolid()) {
+        else if (blocks[rotated_pos[i].x + 1][rotated_pos[i].y - 1].isSolid()) {
             valid = false;
             break;
         }
@@ -553,12 +758,12 @@ void Field::lockPiece() {
     std::set<int> linesAffected;
     bool dropDown = true;
     for (int i = 0; i < 4; i++) {
-        sf::Vector2i fpos = currentPiece->get_field_position(i, 0);
+        sf::Vector2i fpos = currentPiece->getFieldPosition(i, 0);
         if (fpos.y == field_height - 1) {
             dropDown = false;
             break;
         }
-        else if (this->blocks[fpos.x][fpos.y + 1]->isSolid()) {
+        else if (this->blocks[fpos.x][fpos.y + 1].isSolid()) {
             dropDown = false;
             break;
         }
@@ -568,10 +773,10 @@ void Field::lockPiece() {
         return;
     }
     for (int i = 0; i < 4; i++) {
-        sf::Vector2i fpos = currentPiece->get_field_position(i, 0);
+        sf::Vector2i fpos = currentPiece->getFieldPosition(i, 0);
         Block* b = currentPiece->getBlock(i);
-        this->blocks[fpos.x][fpos.y]->setTexture(b->getTexture());
-        this->blocks[fpos.x][fpos.y]->setSolid();
+        this->blocks[fpos.x][fpos.y].setTexture(b->getTexture());
+        this->blocks[fpos.x][fpos.y].setSolid();
         linesAffected.insert(fpos.y);
     }
     delete currentPiece;
@@ -584,6 +789,7 @@ void Field::lockPiece() {
         rngBag.pop_back();
         timeStill.restart();
         updateGhostPiece();
+        updateQueue();
     }
 }
 
@@ -592,7 +798,7 @@ void Field::clearLines(std::set<int>& linesAffected) {
     for (auto& line : linesAffected) {
         bool lineCleared = true;
         for (int i = 0; i < field_width; i++) {
-            if (!blocks[i][line]->isSolid()) {
+            if (!blocks[i][line].isSolid()) {
                 lineCleared = false;
                 break;
             }
@@ -605,10 +811,10 @@ void Field::clearLines(std::set<int>& linesAffected) {
     for (auto& line : toClear) {
         for (int i = line - 1; i >= 0; i--) {
             for (int j = 0; j < field_width; j++) {
-                blocks[j][i + 1]->setTexture(blocks[j][i]->getTexture());
-                blocks[j][i + 1]->setSolid(blocks[j][i]->isSolid());
-                blocks[j][i]->setTexture(&textures['w']);
-                blocks[j][i]->setEmpty();
+                blocks[j][i + 1].setTexture(blocks[j][i].getTexture());
+                blocks[j][i + 1].setSolid(blocks[j][i].isSolid());
+                blocks[j][i].setTexture(&textures['w']);
+                blocks[j][i].setEmpty();
             }
         }
     }

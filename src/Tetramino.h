@@ -47,9 +47,9 @@ class Tetramino {
         Block* getBlock(int index);
 
         // Get Field Position of block
-        //int get_field_position(int block, int rotation_offset); // using an integer is confusing, instead use a Vector2f
-        sf::Vector2i get_field_position(int block, int rotation_offset);
-        sf::Vector2i get_default_position(int block, int rotation_offset);
+        //int getFieldPosition(int block, int rotation_offset); // using an integer is confusing, instead use a Vector2f
+        sf::Vector2i getFieldPosition(int block, int rotation_offset);
+        sf::Vector2i getDefaultPosition(int block, int rotation_offset);
     protected:
         // Position of individual blocks:
         std::vector<char> init_pos;

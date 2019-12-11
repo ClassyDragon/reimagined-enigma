@@ -354,7 +354,7 @@ void Tetramino::moveRight() {
     for (auto& i : blocks) {
         i->move_screen_position(sf::Vector2f(50, 0));
         i->moveRight();
-        //sf::Vector2f pos = i->get_field_position();
+        //sf::Vector2f pos = i->getFieldPosition();
     }
     move(sf::Vector2f(50, 0));
 }
@@ -381,7 +381,7 @@ Block* Tetramino::getBlock(int index) {
 }
 
 // Get Field Position of block
-sf::Vector2i Tetramino::get_field_position(int block, int rotation_offset) {
+sf::Vector2i Tetramino::getFieldPosition(int block, int rotation_offset) {
     // Value: X Position + (width * Y position) 
     int rotation = (current_rotation + rotation_offset) % 4;
     int fpos = block_positions[block];
@@ -420,7 +420,7 @@ sf::Vector2i Tetramino::get_field_position(int block, int rotation_offset) {
     }
 }
 
-sf::Vector2i Tetramino::get_default_position(int block, int rotation_offset) {
+sf::Vector2i Tetramino::getDefaultPosition(int block, int rotation_offset) {
     int rotation = (current_rotation + rotation_offset) % 4;
     int fpos = block_positions[block];
     int x; 

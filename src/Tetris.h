@@ -37,13 +37,13 @@ class TetrisGame {
         // Pointer to application window:
         // This pointer will be passed to different objects as a target
         // for rendering.
-        sf::RenderWindow* window;
+        sf::RenderWindow window;
 
         // Window event tracker:
         sf::Event event;
 
         // Field:
-        Field* field;
+        Field field;
 
         // Background:
         sf::RectangleShape background;
