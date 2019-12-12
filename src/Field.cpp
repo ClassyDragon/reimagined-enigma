@@ -12,7 +12,7 @@ Field::Field(sf::RenderWindow* window) : window(window) {
         for (int j = 0; j < field_height; j++) {
             blocks[i][j] = Block();
             blocks[i][j].setTexture(&textures['w']);
-            blocks[i][j].set_screen_position(sf::Vector2f(50 + (50 * i), 50 + (50 * j)));
+            blocks[i][j].setScreenPosition(sf::Vector2f(50 + (50 * i), 50 + (50 * j)));
         }
     }
 
@@ -214,12 +214,12 @@ void Field::updateGhostPiece() {
     for (int i = 0; i < 4; i++) {
         sf::Vector2i pos = currentPiece->getFieldPosition(i, 0);
         sf::Vector2i pos2 = currentPiece->getDefaultPosition(i, 0);
-        ghostPiece[i].set_field_position(sf::Vector2f(
+        ghostPiece[i].setFieldPosition(sf::Vector2f(
                     pos.x,
                     pos2.y + down
                     )
                 );
-        ghostPiece[i].set_screen_position(sf::Vector2f(
+        ghostPiece[i].setScreenPosition(sf::Vector2f(
                     horizontal_offset + 50 * pos.x,
                     vertical_offset + 50 * (pos2.y + down)
                     )
@@ -326,12 +326,12 @@ void Field::initGhostPiece() {
     for (int i = 0; i < 4; i++) {
         sf::Vector2i pos = currentPiece->getFieldPosition(i, 0);
         ghostPiece[i].setTexture(&textures['a']);
-        ghostPiece[i].set_field_position(sf::Vector2f(
+        ghostPiece[i].setFieldPosition(sf::Vector2f(
                     pos.x, 
                     pos.y
                     )
                 );
-        ghostPiece[i].set_screen_position(sf::Vector2f(
+        ghostPiece[i].setScreenPosition(sf::Vector2f(
                     horizontal_offset + 50 * pos.x,
                     vertical_offset + 50 * pos.y
                     )
@@ -343,7 +343,7 @@ void Field::initGhostPiece() {
 void Field::generatePiece(int type) {
     switch (type) {
         case 0: {
-                    currentPiece = new Tetramino('S', &textures['r']);
+                    currentPiece = new Tetramino('S', &textures['g']);
                     break;
                 }
         case 1: {
@@ -359,7 +359,7 @@ void Field::generatePiece(int type) {
                     break;
                 }
         case 4: {
-                    currentPiece = new Tetramino('Z', &textures['g']);
+                    currentPiece = new Tetramino('Z', &textures['r']);
                     break;
                 }
         case 5: {
