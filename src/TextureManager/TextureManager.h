@@ -26,7 +26,7 @@
 #include <map>
 #include <SFML/Graphics.hpp>
 
-const bool debug_mode = true;
+const bool debug_mode = false;
 
 class TextureManager {
     public:

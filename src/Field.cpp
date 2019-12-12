@@ -4,6 +4,36 @@ Field::Field() {
 }
 
 Field::Field(sf::RenderWindow* window) : window(window) {
+
+    initTextures();
+    initKeys();
+
+    for (int i = 0; i < field_width; i++) {
+        for (int j = 0; j < field_height; j++) {
+            blocks[i][j] = Block();
+            blocks[i][j].setTexture(&textures['w']);
+            blocks[i][j].set_screen_position(sf::Vector2f(50 + (50 * i), 50 + (50 * j)));
+        }
+    }
+
+    initRNG();
+
+    generatePiece(rngBag.back());    
+    rngBag.pop_back();
+    initGhostPiece();
+
+    GameOver = false;
+    initNextPieceQueue();
+    initLineClearAnimations();
+}
+
+Field::~Field() {
+    delete currentPiece;
+}
+
+// Init Functions:
+void Field::initTextures() {
+    // Init Textures:
     textures.insert(std::pair<char, sf::Texture>('r', sf::Texture()));
     textures.insert(std::pair<char, sf::Texture>('p', sf::Texture()));
     textures.insert(std::pair<char, sf::Texture>('y', sf::Texture()));
@@ -26,27 +56,17 @@ Field::Field(sf::RenderWindow* window) : window(window) {
     textures['a'].loadFromFile("resources/clear.png");
 
     TextureManager::load("resources/nextPieces.png");
+    TextureManager::load("resources/line_clear.png");
+}
 
+void Field::initKeys() {
     // Initialize keys:
     for (int i = 0; i < 3; i++)
         keyPressed[i] = 0;
+}
 
-    for (int i = 0; i < field_width; i++) {
-        for (int j = 0; j < field_height; j++) {
-            blocks[i][j] = Block();
-            blocks[i][j].setTexture(&textures['w']);
-            blocks[i][j].set_screen_position(sf::Vector2f(50 + (50 * i), 50 + (50 * j)));
-        }
-    }
-
-    initRNG();
-
-    generatePiece(rngBag.back());    
-    rngBag.pop_back();
-    initGhostPiece();
-
-    GameOver = false;
-
+void Field::initNextPieceQueue() {
+    // Init Next Piece Queue:
     nextQueue.resize(3);    
     for (int i = 0; i < 3; i++) {
         nextQueue[i].setSize(sf::Vector2f(100, 100));
@@ -75,8 +95,13 @@ Field::Field(sf::RenderWindow* window) : window(window) {
     nextQueue[2].move(0, 300);
 }
 
-Field::~Field() {
-    delete currentPiece;
+void Field::initLineClearAnimations() {
+    lineClearAnimate = false;
+    for (int i = 0; i < 4; i++) {
+        lineClearAnimations[i].setSize(sf::Vector2f(500, 50));
+        lineClearAnimations[i].setTexture(TextureManager::get_texture("resources/line_clear.png"));
+        lineClearAnimations[i].setTextureRect(noAnimation);
+    }
 }
 
 void Field::render() {
@@ -91,12 +116,16 @@ void Field::render() {
     for (int i = 0; i < 3; i++) {
         window->draw(nextQueue[i]);
     }
+    for (int i = 0; i < 4; i++) {
+        window->draw(lineClearAnimations[i]);
+    }
     currentPiece->render(window);
 }
 
 void Field::update() {
     updateInput();
     updatePiece();
+    updateLineClearAnimations();
 }
 
 void Field::updateInput() {
@@ -254,6 +283,17 @@ void Field::updateQueue() {
                     break;
         }
         nextQueue[i].setTextureRect(sf::IntRect(x, 0, 100, 100));
+    }
+}
+
+void Field::updateLineClearAnimations() {
+    if (lineClearAnimate) {
+        for (int i = 0; i < toAnimate; i++) {
+            lineClearAnimations[i].setTextureRect(sf::IntRect(noAnimation.left, lineClearAnimations[i].getTextureRect().top + 50, noAnimation.width, noAnimation.height));
+            if (lineClearAnimations[i].getTextureRect().top >= noAnimation.top) {
+                lineClearAnimate = false;
+            }
+        }
     }
 }
 
@@ -417,21 +457,23 @@ void Field::moveRight() {
 }
 
 void Field::moveDown() {
-    bool moveDown = true;
-    for (int i = 0; i < 4; i++) {
-        sf::Vector2i fpos = currentPiece->getFieldPosition(i, 0);
-        if (fpos.y == field_height - 1) {
-            moveDown = false;
-            break;
+    if (!lineClearAnimate) {
+        bool moveDown = true;
+        for (int i = 0; i < 4; i++) {
+            sf::Vector2i fpos = currentPiece->getFieldPosition(i, 0);
+            if (fpos.y == field_height - 1) {
+                moveDown = false;
+                break;
+            }
+            else if (this->blocks[fpos.x][fpos.y + 1].isSolid()) {
+                moveDown = false;
+                break;
+            }
         }
-        else if (this->blocks[fpos.x][fpos.y + 1].isSolid()) {
-            moveDown = false;
-            break;
+        if (moveDown) {
+            currentPiece->moveDown();
+            timeStill.restart();
         }
-    }
-    if (moveDown) {
-        currentPiece->moveDown();
-        timeStill.restart();
     }
 }
 
@@ -696,6 +738,18 @@ void Field::clearLines(std::set<int>& linesAffected) {
             // Remove line from set:
             toClear.insert(line);
         }
+    }
+    for (int i = 0; i < toClear.size(); i++) {
+        lineClearAnimations[i].setTextureRect(animationBegin);
+    }
+    int j = 0;
+    for (auto& line : toClear) {
+        lineClearAnimations[j].setPosition(sf::Vector2f(50, 50 + (50 * line)));
+        j++;
+    }
+    if (toClear.size() > 0) {
+        lineClearAnimate = true;
+        toAnimate = toClear.size();
     }
     for (auto& line : toClear) {
         for (int i = line - 1; i >= 0; i--) {

@@ -16,6 +16,8 @@ const int horizontal_offset = 50;
 const int move_time_1 = 380;
 const int move_time_2 = 450;
 const int move_time_3 = 60;
+const sf::IntRect noAnimation(0, 500, 500, 50);
+const sf::IntRect animationBegin(0, 0, 500, 50);
 
 class Tetramino;
 
@@ -42,10 +44,15 @@ class Field {
         void updateGhostPiece();
         void updateRNG();
         void updateQueue();
+        void updateLineClearAnimations();
 
         // Initialize the piece bag with a seed based on the time:
+        void initTextures();
+        void initKeys();
+        void initNextPieceQueue();
         void initRNG();
         void initGhostPiece();
+        void initLineClearAnimations();
 
         // Generate a piece based on the current bag:
         void generatePiece(int type);
@@ -115,4 +122,12 @@ class Field {
 
         // Next Piece Queue:
         std::vector<sf::RectangleShape> nextQueue;
+
+        // Hold Piece:
+        int holdPiece;
+
+        // Line Clear Animation:
+        sf::RectangleShape lineClearAnimations[4];
+        bool lineClearAnimate;
+        int toAnimate;
 };
