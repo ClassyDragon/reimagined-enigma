@@ -126,6 +126,7 @@ void Field::update() {
     updateInput();
     updatePiece();
     updateLineClearAnimations();
+    pollClearLines();
 }
 
 void Field::updateInput() {
@@ -396,7 +397,7 @@ bool Field::canMoveLeft() {
 
 void Field::moveLeft() {   
     
-    if (canMoveLeft()) {
+    if (canMoveLeft() && !lineClearAnimate) {
         if (keyPressed[0] == 0) {
             movementDelay.restart();
             currentPiece->moveLeft();
@@ -434,7 +435,7 @@ bool Field::canMoveRight() {
 
 void Field::moveRight() {
 
-    if (canMoveRight()) {
+    if (canMoveRight() && !lineClearAnimate) {
         if (keyPressed[1] == 0) {
             movementDelay.restart();
             currentPiece->moveRight();
@@ -715,16 +716,18 @@ void Field::lockPiece() {
         GameOver = true;
     }
     else {
-        clearLines(linesAffected);
+        setClearLines(linesAffected);
+        /*
         generatePiece(rngBag.back());    
         rngBag.pop_back();
         timeStill.restart();
         updateGhostPiece();
         updateQueue();
+        */
     }
 }
 
-void Field::clearLines(std::set<int>& linesAffected) {
+void Field::setClearLines(std::set<int>& linesAffected) {
     std::set<int> toClear;
     for (auto& line : linesAffected) {
         bool lineCleared = true;
@@ -747,10 +750,19 @@ void Field::clearLines(std::set<int>& linesAffected) {
         lineClearAnimations[j].setPosition(sf::Vector2f(50, 50 + (50 * line)));
         j++;
     }
+    generatePiece(rngBag.back());    
     if (toClear.size() > 0) {
         lineClearAnimate = true;
         toAnimate = toClear.size();
+        polledLinesForClearing = toClear;
     }
+    else {
+        rngBag.pop_back();
+        timeStill.restart();
+        updateGhostPiece();
+        updateQueue();
+    }
+    /*
     for (auto& line : toClear) {
         for (int i = line - 1; i >= 0; i--) {
             for (int j = 0; j < field_width; j++) {
@@ -773,6 +785,40 @@ void Field::clearLines(std::set<int>& linesAffected) {
     *LinesCleared = *LinesCleared + toClear.size();
     this->fScore->setString(std::to_string(*Score));
     this->fLinesCleared->setString(std::to_string(*LinesCleared));
+    */
+}
+
+void Field::pollClearLines() {
+    if (!polledLinesForClearing.empty() && !lineClearAnimate) {
+        for (auto& line : polledLinesForClearing) {
+            for (int i = line - 1; i >= 0; i--) {
+                for (int j = 0; j < field_width; j++) {
+                    blocks[j][i + 1].setTexture(blocks[j][i].getTexture());
+                    blocks[j][i + 1].setSolid(blocks[j][i].isSolid());
+                    blocks[j][i].setTexture(&textures['w']);
+                    blocks[j][i].setEmpty();
+                }
+            }
+        }
+        switch (polledLinesForClearing.size()) {
+            case 1: *Score = *Score + 100;
+                    break;
+            case 2: *Score = *Score + 300;
+                    break;
+            case 3: *Score = *Score + 500;
+                    break;
+            case 4: *Score = *Score + 800;
+        }
+        *LinesCleared = *LinesCleared + polledLinesForClearing.size();
+        this->fScore->setString(std::to_string(*Score));
+        this->fLinesCleared->setString(std::to_string(*LinesCleared));
+//        generatePiece(rngBag.back());    
+        rngBag.pop_back();
+        timeStill.restart();
+        updateGhostPiece();
+        updateQueue();
+        polledLinesForClearing.clear();
+    }
 }
 
 // Game Over Check:

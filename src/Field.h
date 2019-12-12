@@ -73,7 +73,8 @@ class Field {
         void lockPiece();
 
         // Clear specified lines
-        void clearLines(std::set<int>& linesAffected);
+        void setClearLines(std::set<int>& linesAffected);
+        void pollClearLines();
 
         // Game Over Check
         bool isGameOver();
@@ -130,4 +131,5 @@ class Field {
         sf::RectangleShape lineClearAnimations[4];
         bool lineClearAnimate;
         int toAnimate;
+        std::set<int> polledLinesForClearing;
 };
