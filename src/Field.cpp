@@ -110,7 +110,7 @@ void Field::render() {
             blocks[i][j].render(window);
         }
     }
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         ghostPiece[i].render(window);
     }
     for (int i = 0; i < 3; i++) {
@@ -186,8 +186,11 @@ void Field::updatePiece() {
 
 void Field::updateGhostPiece() {
     // Field height = 18 (0 - 17)
+    ghostPiece.clear();
+    ghostPiece.resize(currentPiece->getNumBlocks());
     int toFloor = field_height - 1;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
+        ghostPiece[i] = clearBlock;
         int yPos = currentPiece->getDefaultPosition(i, 0).y;
         int xPos = currentPiece->getFieldPosition(i, 0).x;
         if (field_height - 1 - yPos < toFloor) {
@@ -196,7 +199,7 @@ void Field::updateGhostPiece() {
     }
     bool temp = false;
     int down = toFloor;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         int yPos = currentPiece->getDefaultPosition(i, 0).y;
         sf::Vector2i fp  = currentPiece->getFieldPosition(i, 0);
         for (int j = 0; j < field_height; j++) {
@@ -211,7 +214,7 @@ void Field::updateGhostPiece() {
     if (temp) {
         down--;
     }
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         sf::Vector2i pos = currentPiece->getFieldPosition(i, 0);
         sf::Vector2i pos2 = currentPiece->getDefaultPosition(i, 0);
         ghostPiece[i].setFieldPosition(sf::Vector2f(
@@ -322,10 +325,14 @@ void Field::initRNG() {
 }
 
 void Field::initGhostPiece() {
-    ghostPiece.resize(4);
+    //clearBlock.setSize(sf::Vector2f(50, 50));
+    clearBlock.setTexture(&textures['a']);
+    /*
+    ghostPiece.resize(currentPiece->getNumBlocks());
     for (int i = 0; i < 4; i++) {
         sf::Vector2i pos = currentPiece->getFieldPosition(i, 0);
-        ghostPiece[i].setTexture(&textures['a']);
+        ghostPiece[i] = clearBlock;
+        //ghostPiece[i].setTexture(&textures['a']);
         ghostPiece[i].setFieldPosition(sf::Vector2f(
                     pos.x, 
                     pos.y
@@ -337,6 +344,7 @@ void Field::initGhostPiece() {
                     )
         );
     }
+    */
     updateGhostPiece();
 }
 
@@ -383,7 +391,7 @@ void Field::setWindow(sf::RenderWindow* window) {
 
 // Current Piece Functions:
 bool Field::canMoveLeft() {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         sf::Vector2i fpos = currentPiece->getFieldPosition(i, 0);
         if (fpos.x == 0) {
             return false;
@@ -421,7 +429,7 @@ void Field::moveLeft() {
 }
 
 bool Field::canMoveRight() {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         sf::Vector2i fpos = currentPiece->getFieldPosition(i, 0);
         if (fpos.x == field_width - 1) {
             return false;
@@ -460,7 +468,7 @@ void Field::moveRight() {
 void Field::moveDown() {
     if (!lineClearAnimate) {
         bool moveDown = true;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
             sf::Vector2i fpos = currentPiece->getFieldPosition(i, 0);
             if (fpos.y == field_height - 1) {
                 moveDown = false;
@@ -482,7 +490,7 @@ void Field::hardDrop() {
     if (keyPressed[4] == 0) {
         keyPressed[4] = 1;
         std::set<int> indexes;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
             sf::Vector2i position = currentPiece->getFieldPosition(i, 0);
             int x = position.x;
             int y = position.y;
@@ -527,7 +535,7 @@ int Field::canRotate(int r) {
     rotated_pos[3] = (currentPiece->getFieldPosition(3, r));
     bool valid = true;
     // Case 1: In place
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         if (rotated_pos[i].y >= field_height || rotated_pos[i].x >= field_width || rotated_pos[i].x < 0) {
             valid = false;
             break;
@@ -542,7 +550,7 @@ int Field::canRotate(int r) {
     }
     valid = true;
     // Case 2: Down
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         if (rotated_pos[i].y + 1 >= field_height || rotated_pos[i].x >= field_width || rotated_pos[i].x < 0) {
             valid = false;
             break;
@@ -555,7 +563,7 @@ int Field::canRotate(int r) {
     if (valid) return 2;
     valid = true;
     // Case 4: Left
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         if (rotated_pos[i].y >= field_height || rotated_pos[i].x - 1 >= field_width || rotated_pos[i].x - 1 < 0) {
             valid = false;
             break;
@@ -568,7 +576,7 @@ int Field::canRotate(int r) {
     if (valid) return 4;
     valid = true;
     // Case 5: Right
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         if (rotated_pos[i].y >= field_height || rotated_pos[i].x + 1 >= field_width || rotated_pos[i].x + 1 < 0) {
             valid = false;
             break;
@@ -581,7 +589,7 @@ int Field::canRotate(int r) {
     if (valid) return 5;
     valid = true;
     // Case 8: Down Left
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         if (rotated_pos[i].y + 1 >= field_height || rotated_pos[i].x - 1 >= field_width || rotated_pos[i].x - 1 < 0) {
             valid = false;
             break;
@@ -594,7 +602,7 @@ int Field::canRotate(int r) {
     if (valid) return 8;
     valid = true;
     // Case 9: Down Right
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         if (rotated_pos[i].y >= field_height + 1 || rotated_pos[i].x + 1 >= field_width || rotated_pos[i].x + 1 < 0) {
             valid = false;
             break;
@@ -607,7 +615,7 @@ int Field::canRotate(int r) {
     if (valid) return 9;
     valid = true;
     // Case 10: Down 2 left
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         if (rotated_pos[i].y + 2 >= field_height || rotated_pos[i].x - 1 >= field_width || rotated_pos[i].x - 1 < 0) {
             valid = false;
             break;
@@ -620,7 +628,7 @@ int Field::canRotate(int r) {
     if (valid) return 10;
     valid = true;
     // Case 11: Down 2 Right
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         if (rotated_pos[i].y + 2 >= field_height || rotated_pos[i].x + 1 >= field_width || rotated_pos[i].x + 1 < 0) {
             valid = false;
             break;
@@ -633,7 +641,7 @@ int Field::canRotate(int r) {
     if (valid) return 11;
     valid = true;
     // Case 3: Up
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         if (rotated_pos[i].y - 1 >= field_height || rotated_pos[i].x >= field_width || rotated_pos[i].x < 0) {
             valid = false;
             break;
@@ -646,7 +654,7 @@ int Field::canRotate(int r) {
     if (valid) return 3;
     valid = true;
     // Case 6: Up Left
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         if (rotated_pos[i].y - 1 >= field_height || rotated_pos[i].x - 1 >= field_width || rotated_pos[i].x - 1 < 0) {
             valid = false;
             break;
@@ -659,7 +667,7 @@ int Field::canRotate(int r) {
     if (valid) return 6;
     valid = true;
     // Case 7: Up Right
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         if (rotated_pos[i].y - 1 >= field_height || rotated_pos[i].x + 1 >= field_width || rotated_pos[i].x + 1 < 0) {
             valid = false;
             break;
@@ -689,7 +697,7 @@ void Field::lockPiece() {
     // Transfer the attributes
     std::set<int> linesAffected;
     bool dropDown = true;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         sf::Vector2i fpos = currentPiece->getFieldPosition(i, 0);
         if (fpos.y == field_height - 1) {
             dropDown = false;
@@ -704,7 +712,7 @@ void Field::lockPiece() {
         timeStill.restart();
         return;
     }
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         sf::Vector2i fpos = currentPiece->getFieldPosition(i, 0);
         Block* b = currentPiece->getBlock(i);
         this->blocks[fpos.x][fpos.y].setTexture(b->getTexture());
@@ -714,6 +722,7 @@ void Field::lockPiece() {
     delete currentPiece;
     if (linesAffected.find(0) != linesAffected.end()) {
         GameOver = true;
+        generatePiece(rngBag.back());    
     }
     else {
         setClearLines(linesAffected);

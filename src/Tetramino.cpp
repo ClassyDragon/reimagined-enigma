@@ -48,7 +48,7 @@ void Tetramino::initBlockLayout() {
                           'X', '_', '_',
                           'X', 'X', 'X',
                           '_', '_', '_'
-                      }; 
+                      };   
                       blockPositions = {0, 3, 4, 5};
                       break;
                   }
@@ -107,7 +107,7 @@ void Tetramino::initBlockLayout() {
 
 void Tetramino::initBlockPositions(sf::Texture* texture) {
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < getNumBlocks(); i++) {
         blocks.emplace_back(new Block());
     }
     for (auto& block : blocks) {
@@ -122,7 +122,7 @@ void Tetramino::initBlockPositions(sf::Texture* texture) {
 
     switch (initPos.size()) {
         case 9 : {
-                     for (int i = 0; i < 4; i++) {
+                     for (int i = 0; i < getNumBlocks(); i++) {
                          blocks[i]->setScreenPosition(sf::Vector2f(
                                      horizontal_offset + 50 * (blockPositions[i] % 3) + 50 * (horizontalPosition),
                                      vertical_offset + 50 * (blockPositions[i] / 3) + 50 * (verticalPosition)
@@ -136,7 +136,7 @@ void Tetramino::initBlockPositions(sf::Texture* texture) {
                      break;
                  }
         case 16 : {
-                      for (int i = 0; i < 4; i++) {
+                      for (int i = 0; i < getNumBlocks(); i++) {
                          blocks[i]->setScreenPosition(sf::Vector2f(
                                      horizontal_offset + 50 * (blockPositions[i] % 4) + 50 * (horizontalPosition),
                                      vertical_offset + 50 * (blockPositions[i] / 4) + 50 * (verticalPosition)
@@ -454,4 +454,9 @@ sf::Vector2i Tetramino::getDefaultPosition(int block, int rotation_offset) {
         }
         return sf::Vector2i((pos % 4), (pos / 4));
     }
+}
+
+// Get Num Blocks (Usually 4):
+int Tetramino::getNumBlocks() {
+    return blockPositions.size();
 }

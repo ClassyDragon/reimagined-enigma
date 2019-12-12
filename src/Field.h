@@ -103,6 +103,7 @@ class Field {
 
         // Graphical representation of where the piece will land:
         std::vector<Block> ghostPiece;
+        Block clearBlock;
 
         // Clocks:
         sf::Clock movementDelay; // For fluid piece movement

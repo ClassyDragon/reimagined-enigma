@@ -50,6 +50,9 @@ class Tetramino {
         //int getFieldPosition(int block, int rotation_offset); // using an integer is confusing, instead use a Vector2f
         sf::Vector2i getFieldPosition(int block, int rotation_offset);
         sf::Vector2i getDefaultPosition(int block, int rotation_offset);
+
+        // Get Num Blocks (Usually 4):
+        int getNumBlocks();
     protected:
         // Position of individual blocks:
         std::vector<char> initPos;
