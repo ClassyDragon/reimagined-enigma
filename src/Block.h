@@ -16,27 +16,33 @@ class Block {
         // Default Constructor:
         Block();
         ~Block();
+
         // Display the block to the window:
         void render(sf::RenderWindow* window); 
+        
         // Set Texture of block:
         void setTexture(sf::Texture* texture); // from std::map textures in Field object
         sf::Texture* getTexture();
+
         // Set Screen Position:
-        void set_screen_position(sf::Vector2f pos);
-        sf::Vector2f get_screen_position();
-        // Set Field Position:
-        void set_field_position(sf::Vector2f field_position);
+        void setScreenPosition(sf::Vector2f pos);
+        sf::Vector2f getScreenPosition();
+
+        // Field Position:
+        void setFieldPosition(sf::Vector2f fieldPosition);
         sf::Vector2f getFieldPosition();
+
+        // Movement:
         bool canMoveLeft();
         bool canMoveRight();
         void moveLeft();
         void moveRight();
         bool canMoveDown();
         void moveDown();
-        // Move screen_position:
-        void move_screen_position(sf::Vector2f offset);
-        // Rotation:
-        void update_rotation(int current_rotation, int tetramino_size);
+
+        // Move screenPosition:
+        void moveScreenPosition(sf::Vector2f offset);
+
         // Is block solid:
         bool isSolid();
         void setSolid();
@@ -46,10 +52,13 @@ class Block {
         // Sprite:
         sf::RectangleShape sprite;
         sf::Texture* texture;
+
         // Coordinate Position on Screen:
-        sf::Vector2f screen_position;
+        sf::Vector2f screenPosition;
+
         // Field Position:
-        sf::Vector2f field_position;
+        sf::Vector2f fieldPosition;
+        
         // Represents a solid block:
         bool solid;
 };

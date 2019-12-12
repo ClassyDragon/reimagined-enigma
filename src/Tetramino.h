@@ -27,11 +27,11 @@ class Tetramino {
         void render(sf::RenderWindow* window);
 
         // Return character at rotated index:
-        char get_block(int x, int y);
+        char getBlock(int x, int y);
 
         // Rotation functions:
         void rotate(int r, int offset); // Clock-wise
-        void rotate_blocks(int offset);
+        void rotateBlocks(int offset);
 
         // Positional functions:
         void move(sf::Vector2f offset);
@@ -52,19 +52,19 @@ class Tetramino {
         sf::Vector2i getDefaultPosition(int block, int rotation_offset);
     protected:
         // Position of individual blocks:
-        std::vector<char> init_pos;
-        std::vector<int> block_positions;
+        std::vector<char> initPos;
+        std::vector<int> blockPositions;
 
         // Rotation representation:
-        int current_rotation; // Range [0-4]
+        int currentRotation; // Range [0-4]
 
         // Tetramino Location:
-        int vertical_position; // Range [0 - field_height]
-        int horizontal_position; // Range [0 - field_width]
+        int verticalPosition; // Range [0 - field_height]
+        int horizontalPosition; // Range [0 - field_width]
 
         // Graphical Representation:
         std::vector<Block*> blocks; // size 4
 
         // Tetramino Type:
-        char tetramino_type;
+        char tetraminoType;
 };

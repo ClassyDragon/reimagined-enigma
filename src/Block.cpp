@@ -13,87 +13,62 @@ void Block::render(sf::RenderWindow* window) {
 
 void Block::setTexture(sf::Texture* texture) {
     this->texture = texture;
-    sprite.setTexture(this->texture);
+    sprite.setTexture(texture);
     sprite.setSize(static_cast<sf::Vector2f>(texture->getSize()));
 }
 
 sf::Texture* Block::getTexture() {
-    return this->texture;
+    return texture;
 }
 
-void Block::set_screen_position(sf::Vector2f pos) {
+void Block::setScreenPosition(sf::Vector2f pos) {
     sprite.setPosition(pos);
 }
 
-void Block::set_field_position(sf::Vector2f field_position) {
-    this->field_position = field_position;
+void Block::setFieldPosition(sf::Vector2f fieldPosition) {
+    this->fieldPosition = fieldPosition;
 }
 
-sf::Vector2f Block::get_screen_position() {
-    return screen_position;
+sf::Vector2f Block::getScreenPosition() {
+    return screenPosition;
 }
 
 sf::Vector2f Block::getFieldPosition() {
-    return field_position;
+    return fieldPosition;
 }
 
 bool Block::canMoveLeft() {
-    if (field_position.x - 1 < 0)
+    if (fieldPosition.x - 1 < 0)
         return false;
     return true;
 }
 
 bool Block::canMoveRight() {
-    if (field_position.x + 1 >= field_width_v)
+    if (fieldPosition.x + 1 >= field_width_v)
         return false;
     return true;
 }
 
 void Block::moveLeft() {
-    field_position = sf::Vector2f(field_position.x - 1, field_position.y);
+    fieldPosition = sf::Vector2f(fieldPosition.x - 1, fieldPosition.y);
 }
 
 void Block::moveRight() {
-    field_position = sf::Vector2f(field_position.x + 1, field_position.y);
+    fieldPosition = sf::Vector2f(fieldPosition.x + 1, fieldPosition.y);
 }
 
 bool Block::canMoveDown() {
-    if (field_position.y + 1 >= field_height_v)
+    if (fieldPosition.y + 1 >= field_height_v)
         return false;
     return true;
 }
 
 void Block::moveDown() {
-    field_position = sf::Vector2f(field_position.x, field_position.y + 1);
+    fieldPosition = sf::Vector2f(fieldPosition.x, fieldPosition.y + 1);
 }
 
-void Block::move_screen_position(sf::Vector2f offset) {
+void Block::moveScreenPosition(sf::Vector2f offset) {
     sprite.move(offset);
-}
-
-void Block::update_rotation(int current_rotation, int tetramino_size) {
-    switch (tetramino_size) {
-        case 9: {
-                    switch (current_rotation) {
-                        case 0: {
-                                    break;
-                                }
-                        case 1: {
-                                    break;
-                                }
-                        case 2: break;
-                        case 3: break;
-                    }
-                }
-        case 16: {
-                     switch (current_rotation) {
-                         case 0: break;
-                         case 1: break;
-                         case 2: break;
-                         case 3: break;
-                     }
-                 }
-    }
 }
 
 bool Block::isSolid() {
