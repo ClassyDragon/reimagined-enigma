@@ -717,13 +717,6 @@ void Field::lockPiece() {
     }
     else {
         setClearLines(linesAffected);
-        /*
-        generatePiece(rngBag.back());    
-        rngBag.pop_back();
-        timeStill.restart();
-        updateGhostPiece();
-        updateQueue();
-        */
     }
 }
 
@@ -762,30 +755,6 @@ void Field::setClearLines(std::set<int>& linesAffected) {
         updateGhostPiece();
         updateQueue();
     }
-    /*
-    for (auto& line : toClear) {
-        for (int i = line - 1; i >= 0; i--) {
-            for (int j = 0; j < field_width; j++) {
-                blocks[j][i + 1].setTexture(blocks[j][i].getTexture());
-                blocks[j][i + 1].setSolid(blocks[j][i].isSolid());
-                blocks[j][i].setTexture(&textures['w']);
-                blocks[j][i].setEmpty();
-            }
-        }
-    }
-    switch (toClear.size()) {
-        case 1: *Score = *Score + 100;
-                break;
-        case 2: *Score = *Score + 300;
-                break;
-        case 3: *Score = *Score + 500;
-                break;
-        case 4: *Score = *Score + 800;
-    }
-    *LinesCleared = *LinesCleared + toClear.size();
-    this->fScore->setString(std::to_string(*Score));
-    this->fLinesCleared->setString(std::to_string(*LinesCleared));
-    */
 }
 
 void Field::pollClearLines() {
@@ -812,7 +781,6 @@ void Field::pollClearLines() {
         *LinesCleared = *LinesCleared + polledLinesForClearing.size();
         this->fScore->setString(std::to_string(*Score));
         this->fLinesCleared->setString(std::to_string(*LinesCleared));
-//        generatePiece(rngBag.back());    
         rngBag.pop_back();
         timeStill.restart();
         updateGhostPiece();

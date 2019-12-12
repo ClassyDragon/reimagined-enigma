@@ -185,7 +185,6 @@ char Tetramino::get_block(int x, int y) {
 void Tetramino::rotate(int r, int offset) {
     current_rotation = (current_rotation + r) % 4;
     rotate_blocks(offset);
-    //std::cout << "Current Rotation: " << current_rotation << std::endl;
 }
 
 void Tetramino::rotate_blocks(int offset) {
@@ -354,7 +353,6 @@ void Tetramino::moveRight() {
     for (auto& i : blocks) {
         i->move_screen_position(sf::Vector2f(50, 0));
         i->moveRight();
-        //sf::Vector2f pos = i->getFieldPosition();
     }
     move(sf::Vector2f(50, 0));
 }
