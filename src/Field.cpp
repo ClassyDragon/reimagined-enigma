@@ -208,45 +208,32 @@ void Field::updateGhostPiece() {
     // Field height = 18 (0 - 17)
     ghostPiece.clear();
     ghostPiece.resize(currentPiece->getNumBlocks());
-    int toFloor = field_height - 1;
+    std::set<int> drops;
     for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         ghostPiece[i] = clearBlock;
-        int yPos = currentPiece->getDefaultPosition(i, 0).y;
-        int xPos = currentPiece->getFieldPosition(i, 0).x;
-        if (field_height - 1 - yPos < toFloor) {
-            toFloor = field_height - 1 - yPos;
-        }
-    }
-    bool temp = false;
-    int down = toFloor;
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
-        int yPos = currentPiece->getDefaultPosition(i, 0).y;
-        sf::Vector2i fp  = currentPiece->getFieldPosition(i, 0);
-        for (int j = 0; j < field_height; j++) {
-            if (blocks[fp.x][j].isSolid()) {
-                temp = true;
-                if (j - yPos < down) {
-                    down = j - yPos;
-                }
+        int xPosition = currentPiece->getFieldPosition(i, 0).x;
+        int yPosition = currentPiece->getDefaultPosition(i, 0).y;
+        int dropDistance = 0;
+        while (true) {
+            if (dropDistance >= field_height) {
+                dropDistance--;
+                dropDistance = dropDistance - yPosition;
+                break;
             }
+            else if (blocks[xPosition][dropDistance].isSolid()) {
+                dropDistance--;
+                dropDistance = dropDistance - yPosition;
+                break;
+            }
+            dropDistance++;
         }
-    }
-    if (temp) {
-        down--;
+        drops.insert(dropDistance);
     }
     for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
-        sf::Vector2i pos = currentPiece->getFieldPosition(i, 0);
-        sf::Vector2i pos2 = currentPiece->getDefaultPosition(i, 0);
-        ghostPiece[i].setFieldPosition(sf::Vector2f(
-                    pos.x,
-                    pos2.y + down
-                    )
-                );
-        ghostPiece[i].setScreenPosition(sf::Vector2f(
-                    horizontal_offset + 50 * pos.x,
-                    vertical_offset + 50 * (pos2.y + down)
-                    )
-                );
+        sf::Vector2i fp = currentPiece->getFieldPosition(i, 0);
+        sf::Vector2i dp = currentPiece->getDefaultPosition(i, 0);
+        ghostPiece[i].setFieldPosition(sf::Vector2f(fp.x, dp.y + *drops.begin()));
+        ghostPiece[i].setScreenPosition(sf::Vector2f(horizontal_offset + 50 * fp.x, vertical_offset + 50 * (dp.y + *drops.begin())));
     }
 }
 
