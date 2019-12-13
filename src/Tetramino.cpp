@@ -460,3 +460,16 @@ sf::Vector2i Tetramino::getDefaultPosition(int block, int rotation_offset) {
 int Tetramino::getNumBlocks() {
     return blockPositions.size();
 }
+
+// Get Tetramino type:
+int Tetramino::getType() {
+    switch (tetraminoType) {
+        case 'S': return 0;
+        case 'T': return 1;
+        case 'J': return 2;
+        case 'L': return 3;
+        case 'Z': return 4;
+        case 'O': return 5;
+        case 'I': return 6;
+    }
+}

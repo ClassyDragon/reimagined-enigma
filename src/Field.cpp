@@ -1,5 +1,7 @@
 #include "Field.h"
 
+enum Piece {S, T, J, L, Z, O, I};
+
 Field::Field() {
 }
 
@@ -12,7 +14,7 @@ Field::Field(sf::RenderWindow* window) : window(window) {
         for (int j = 0; j < field_height; j++) {
             blocks[i][j] = Block();
             blocks[i][j].setTexture(&textures['w']);
-            blocks[i][j].setScreenPosition(sf::Vector2f(50 + (50 * i), 50 + (50 * j)));
+            blocks[i][j].setScreenPosition(sf::Vector2f(horizontal_offset + (50 * i), vertical_offset + (50 * j)));
         }
     }
 
@@ -25,6 +27,7 @@ Field::Field(sf::RenderWindow* window) : window(window) {
     GameOver = false;
     initNextPieceQueue();
     initLineClearAnimations();
+    initHoldPiece();
 }
 
 Field::~Field() {
@@ -61,7 +64,7 @@ void Field::initTextures() {
 
 void Field::initKeys() {
     // Initialize keys:
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 7; i++)
         keyPressed[i] = 0;
 }
 
@@ -89,7 +92,7 @@ void Field::initNextPieceQueue() {
                     break;
         }
         nextQueue[i].setTextureRect(sf::IntRect(x, 0, 100, 100));
-        nextQueue[i].setPosition(sf::Vector2f(570, 100));
+        nextQueue[i].setPosition(sf::Vector2f(670, 100));
     }
     nextQueue[1].move(0, 150);
     nextQueue[2].move(0, 300);
@@ -102,6 +105,14 @@ void Field::initLineClearAnimations() {
         lineClearAnimations[i].setTexture(TextureManager::get_texture("resources/line_clear.png"));
         lineClearAnimations[i].setTextureRect(noAnimation);
     }
+}
+
+void Field::initHoldPiece() {
+    holdPiece = -1;
+    vHoldPiece.setSize(sf::Vector2f(100, 100));
+    vHoldPiece.setTexture(TextureManager::get_texture("resources/nextPieces.png"));
+    vHoldPiece.setTextureRect(sf::IntRect(700, 0, 100, 100));
+    vHoldPiece.move(sf::Vector2f(25, 45));
 }
 
 void Field::render() {
@@ -119,6 +130,7 @@ void Field::render() {
     for (int i = 0; i < 4; i++) {
         window->draw(lineClearAnimations[i]);
     }
+    window->draw(vHoldPiece);
     currentPiece->render(window);
 }
 
@@ -171,6 +183,14 @@ void Field::updateInput() {
     }
     else {
         keyPressed[5] = 0;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+        if (keyPressed[6] == 0) {
+            holdCurrentPiece();
+        }
+    }
+    else {
+        keyPressed[6] = 0;
     }
 }
 
@@ -298,6 +318,27 @@ void Field::updateLineClearAnimations() {
                 lineClearAnimate = false;
             }
         }
+    }
+}
+
+void Field::updateHoldPiece() {
+    switch (holdPiece) {
+        case Piece::Z: vHoldPiece.setTextureRect(zPieceTexture);
+                       break;
+        case Piece::S: vHoldPiece.setTextureRect(sPieceTexture);
+                       break;
+        case Piece::L: vHoldPiece.setTextureRect(lPieceTexture);
+                       break;
+        case Piece::O: vHoldPiece.setTextureRect(oPieceTexture);
+                       break;
+        case Piece::I: vHoldPiece.setTextureRect(iPieceTexture);
+                       break;
+        case Piece::T: vHoldPiece.setTextureRect(tPieceTexture);
+                       break;
+        case Piece::J: vHoldPiece.setTextureRect(jPieceTexture);
+                       break;
+        case -1: break;
+        default: break;
     }
 }
 
@@ -528,11 +569,16 @@ int Field::canRotate(int r) {
     // -1: Can't rotate
     // Check that after rotation, all blocks will be within the field and not intersect other blocks.
     // Get field position of all blocks in piece
-    std::vector<sf::Vector2i> rotated_pos(4);
+    std::vector<sf::Vector2i> rotated_pos(currentPiece->getNumBlocks());
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
+        rotated_pos[i] = currentPiece->getFieldPosition(0, r);
+    }
+    /*
     rotated_pos[0] = (currentPiece->getFieldPosition(0, r));
     rotated_pos[1] = (currentPiece->getFieldPosition(1, r));
     rotated_pos[2] = (currentPiece->getFieldPosition(2, r));
     rotated_pos[3] = (currentPiece->getFieldPosition(3, r));
+    */
     bool valid = true;
     // Case 1: In place
     for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
@@ -727,6 +773,7 @@ void Field::lockPiece() {
     else {
         setClearLines(linesAffected);
     }
+    hasPieceBeenSwapped = false;
 }
 
 void Field::setClearLines(std::set<int>& linesAffected) {
@@ -749,17 +796,18 @@ void Field::setClearLines(std::set<int>& linesAffected) {
     }
     int j = 0;
     for (auto& line : toClear) {
-        lineClearAnimations[j].setPosition(sf::Vector2f(50, 50 + (50 * line)));
+        lineClearAnimations[j].setPosition(sf::Vector2f(150, 50 + (50 * line)));
         j++;
     }
     generatePiece(rngBag.back());    
+    rngBag.pop_back();
     if (toClear.size() > 0) {
         lineClearAnimate = true;
         toAnimate = toClear.size();
         polledLinesForClearing = toClear;
     }
     else {
-        rngBag.pop_back();
+        //rngBag.pop_back();
         timeStill.restart();
         updateGhostPiece();
         updateQueue();
@@ -790,7 +838,6 @@ void Field::pollClearLines() {
         *LinesCleared = *LinesCleared + polledLinesForClearing.size();
         this->fScore->setString(std::to_string(*Score));
         this->fLinesCleared->setString(std::to_string(*LinesCleared));
-        rngBag.pop_back();
         timeStill.restart();
         updateGhostPiece();
         updateQueue();
@@ -815,4 +862,25 @@ void Field::setLinesClearedRef(int* LinesCleared) {
 void Field::setTextRef(sf::Text* fScore, sf::Text* fLinesCleared) {
     this->fScore = fScore;
     this->fLinesCleared = fLinesCleared;
+}
+
+// Hold current piece:
+void Field::holdCurrentPiece() {
+    keyPressed[6] = 1;
+    if (!hasPieceBeenSwapped) {
+        hasPieceBeenSwapped = true;
+        int temp = currentPiece->getType();
+        delete currentPiece;
+        if (holdPiece == -1) {
+            generatePiece(rngBag.back());
+            rngBag.pop_back();
+        }
+        else {
+            generatePiece(holdPiece);
+        }
+        holdPiece = temp;
+        updateQueue();
+        updateGhostPiece();
+        updateHoldPiece();
+    }
 }

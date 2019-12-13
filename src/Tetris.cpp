@@ -33,7 +33,7 @@ TetrisGame::TetrisGame(int width, int height, std::string title) : field(&window
     std::map<std::string, Sprite::Animation> animations;
     animations.insert(std::pair<std::string, Sprite::Animation>("Idle", a1)); 
     kirby = Sprite::anim_sprite("resources/kirby.png", 200, 200, animations);
-    kirby.setPosition(sf::Vector2f(650, 600));
+    kirby.setPosition(sf::Vector2f(750, 600));
     kirby.set_speed_ms(200);    
 }
 
@@ -52,13 +52,13 @@ void TetrisGame::initText() {
     this->text.insert(std::pair<std::string, sf::Text>("Lines Cleared", sf::Text("Lines Cleared:", this->font)));
     this->text.insert(std::pair<std::string, sf::Text>("Score", sf::Text("Score:", this->font)));
     text["vScore"].setFillColor(sf::Color::White);
-    text["vScore"].setPosition(sf::Vector2f(1000, 246));
+    text["vScore"].setPosition(sf::Vector2f(1100, 246));
     text["vLines"].setFillColor(sf::Color::White);
-    text["vLines"].setPosition(sf::Vector2f(1000, 300));
+    text["vLines"].setPosition(sf::Vector2f(1100, 300));
     text["Score"].setFillColor(sf::Color::White);
-    text["Score"].setPosition(sf::Vector2f(870, 246));
+    text["Score"].setPosition(sf::Vector2f(970, 246));
     text["Lines Cleared"].setFillColor(sf::Color::White);
-    text["Lines Cleared"].setPosition(sf::Vector2f(750, 300));
+    text["Lines Cleared"].setPosition(sf::Vector2f(850, 300));
 }
 
 // main game loop:

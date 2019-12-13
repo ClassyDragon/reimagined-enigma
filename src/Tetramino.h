@@ -53,6 +53,9 @@ class Tetramino {
 
         // Get Num Blocks (Usually 4):
         int getNumBlocks();
+
+        // Get Tetramino type:
+        int getType();
     protected:
         // Position of individual blocks:
         std::vector<char> initPos;
@@ -70,4 +73,5 @@ class Tetramino {
 
         // Tetramino Type:
         char tetraminoType;
+        int type;
 };
