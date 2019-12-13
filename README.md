@@ -1,6 +1,8 @@
 # reimagined-enigma
 Simple open-source Tetris Game made using C++ and the SFML Library.
 
+![Screenshot](media/screenshot1.png)
+
 ## Current Progress:
 * Piece movement and rotation.
 * Line clearing and clear animation.
@@ -17,6 +19,8 @@ Simple open-source Tetris Game made using C++ and the SFML Library.
 
 ## BUGS:
 1. In some situations, rotating while moving can cause blocks to rotate where they should not be able to.
+2. Ghost Piece is sometimes inaccurate if near the bottom.
+3. Ghost Piece does not account for spins.
 
 ## Needs Improved:
 1. Representation of solid tiles in field.
