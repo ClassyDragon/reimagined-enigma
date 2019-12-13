@@ -1,10 +1,9 @@
-
 #pragma once
 #include <iostream>
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "Field.h" // field_width and field_height
 #include "Block.h"
+#include "precomp.h"
 
 class Block;
 

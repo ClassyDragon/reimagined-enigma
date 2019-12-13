@@ -3,6 +3,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Animation.h"
+#include "../TextureManager/TextureManager.h"
 #include "../precomp.h"
 
 namespace Sprite {

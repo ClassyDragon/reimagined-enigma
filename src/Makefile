@@ -1,33 +1,35 @@
-lib = -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system
+lib = -lsfml-window -lsfml-system -lsfml-graphics
+flags = -Wall
+EXEC = Tetris
+COMP = g++
 
-Tetris: Block.o Tetris.o Tetramino.o Field.o precomp.o TextureManager.o Sprite.o Animation.o source.o
-	g++ *.o -o Tetris $(lib)
-	@echo "Compiled successfully!"
+$(EXEC): source.o Tetris.o Field.o Tetramino.o Block.o Sprite.o Animation.o TextureManager.o precomp.o
+	$(COMP) $^ -o $(EXEC) $(lib)
 
-Tetris.o: Tetris.cpp Tetris.h Field.o Block.o Tetramino.o TextureManager.o Sprite.o
-	g++ Tetris.cpp -c $(lib)
+source.o: source.cpp Tetris.o
+	$(COMP) -c $<
 
-Tetramino.o: Tetramino.cpp Tetramino.h Block.o
-	g++ Tetramino.cpp -c $(lib)
+Tetris.o: Tetris.cpp Tetris.h TextureManager.o Sprite.o Field.o
+	$(COMP) -c $<
+
+Field.o: Field.cpp Field.h Tetramino.o Block.o TextureManager.o precomp.o
+	$(COMP) -c $<
+
+Tetramino.o: Tetramino.cpp Tetramino.h Block.o precomp.o
+	$(COMP) -c $<
 
 Block.o: Block.cpp Block.h
-	g++ Block.cpp -c $(lib)
+	$(COMP) -c $<
 
-Field.o: Field.cpp Field.h Tetramino.o Block.o TextureManager.o
-	g++ Field.cpp -c $(lib)
+Sprite.o: Sprite/Sprite.cpp Sprite/Sprite.h Sprite/Animation.cpp Sprite/Animation.h TextureManager.o precomp.o
+	$(COMP) -c Sprite/Animation.cpp
+	$(COMP) -c Sprite/Sprite.cpp
 
-precomp.o: Dbg_Log/Dbg_Log.*
-	g++ Dbg_Log/*.cpp -c -o precomp.o
+TextureManager.o: TextureManager/TextureManager.cpp TextureManager/TextureManager.h
+	$(COMP) -c $<
 
-TextureManager.o: TextureManager/*
-	g++ TextureManager/TextureManager.cpp -c -o TextureManager.o
-
-Sprite.o: Sprite/Sprite.* Sprite/Animation.*
-	g++ Sprite/Sprite.cpp -c
-	g++ Sprite/Animation.cpp -c
-
-source.o: source.cpp
-	g++ source.cpp -c $(lib) 
+precomp.o: Dbg_Log/Dbg_Log.cpp Dbg_Log/Dbg_Log.h
+	$(COMP) -c Dbg_Log/Dbg_Log.cpp -c -o $@
 
 clean:
-	rm *.o
+	rm ./*.o ./*/*.o

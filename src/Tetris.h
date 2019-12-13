@@ -2,10 +2,8 @@
 #include <iostream>
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "Tetramino.h"
 #include "Field.h"
-#include "Block.h"
-#include "Sprite/Sprite.h"
+#include "Sprite/Sprite.h" // for anim_sprite
 #include "TextureManager/TextureManager.h"
 
 class TetrisGame {
