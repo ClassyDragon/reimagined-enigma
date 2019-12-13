@@ -366,7 +366,6 @@ void Field::initRNG() {
 }
 
 void Field::initGhostPiece() {
-    //clearBlock.setSize(sf::Vector2f(50, 50));
     clearBlock.setTexture(&textures['a']);
     updateGhostPiece();
 }
@@ -553,7 +552,7 @@ int Field::canRotate(int r) {
     // Get field position of all blocks in piece
     std::vector<sf::Vector2i> rotated_pos(currentPiece->getNumBlocks());
     for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
-        rotated_pos[i] = currentPiece->getFieldPosition(0, r);
+        rotated_pos[i] = currentPiece->getFieldPosition(i, r);
     }
     bool valid = true;
     // Case 1: In place
@@ -582,7 +581,10 @@ int Field::canRotate(int r) {
             break;
         }
     }
-    if (valid) return 2;
+    if (valid) {
+        std::cout << 2 << std::endl;
+        return 2;
+    }
     valid = true;
     // Case 4: Left
     for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
@@ -595,7 +597,10 @@ int Field::canRotate(int r) {
             break;
         }
     }
-    if (valid) return 4;
+    if (valid) {
+        std::cout << 4 << std::endl;
+        return 4;
+    }
     valid = true;
     // Case 5: Right
     for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
@@ -608,7 +613,10 @@ int Field::canRotate(int r) {
             break;
         }
     }
-    if (valid) return 5;
+    if (valid) {
+        std::cout << 5 << std::endl;
+        return 5;
+    }
     valid = true;
     // Case 8: Down Left
     for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
@@ -621,11 +629,14 @@ int Field::canRotate(int r) {
             break;
         }
     }
-    if (valid) return 8;
+    if (valid) {
+        std::cout << 8 << std::endl;
+        return 8;
+    }
     valid = true;
     // Case 9: Down Right
     for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
-        if (rotated_pos[i].y >= field_height + 1 || rotated_pos[i].x + 1 >= field_width || rotated_pos[i].x + 1 < 0) {
+        if (rotated_pos[i].y + 1 >= field_height || rotated_pos[i].x + 1 >= field_width || rotated_pos[i].x + 1 < 0) {
             valid = false;
             break;
         }
@@ -634,7 +645,10 @@ int Field::canRotate(int r) {
             break;
         }
     }
-    if (valid) return 9;
+    if (valid) {
+        std::cout << 9 << std::endl;
+        return 9;
+    }
     valid = true;
     // Case 10: Down 2 left
     for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
