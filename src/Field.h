@@ -9,6 +9,9 @@
 #include "TextureManager/TextureManager.h"
 #include "precomp.h"
 
+const int numKeys = 7;
+enum Piece {S, T, J, L, Z, O, I};
+
 class Tetramino;
 
 //class Block;
@@ -82,9 +85,6 @@ class Field {
         // Field Array:
         Block blocks[field_width][field_height];
 
-        // Block textures:
-        std::map<char, sf::Texture> textures;
-
         // Pointer to drawing window:
         sf::RenderWindow* window;
 
@@ -105,7 +105,7 @@ class Field {
         sf::Clock softDropClock; // Determines how quickly the piece falls when holding down
 
         // States of keys:
-        int keyPressed[7]; // 0: Not pressed, 1: Pressed shortly, 2: Pressed Long
+        int keyPressed[numKeys]; // 0: Not pressed, 1: Pressed shortly, 2: Pressed Long
         
         // Represents whether the game is over:
         bool GameOver;

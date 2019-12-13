@@ -1,32 +1,43 @@
 #include "Field.h"
 
-enum Piece {S, T, J, L, Z, O, I};
-
 Field::Field() {
 }
 
 Field::Field(sf::RenderWindow* window) : window(window) {
-
+    // Load Textures:
     initTextures();
+
+    // Set keys as not pressed:
     initKeys();
 
+    // Create empty blocks on field:
     for (int i = 0; i < field_width; i++) {
         for (int j = 0; j < field_height; j++) {
             blocks[i][j] = Block();
-            blocks[i][j].setTexture(&textures['w']);
+            blocks[i][j].setTexture(TextureManager::get_texture("resources/white.png"));
             blocks[i][j].setScreenPosition(sf::Vector2f(horizontal_offset + (50 * i), vertical_offset + (50 * j)));
         }
     }
 
+    // Create the initial rng bag:
     initRNG();
 
+    // Generate the first piece:
     generatePiece(rngBag.back());    
     rngBag.pop_back();
+
+    // Create the ghost piece and set its initial position:
     initGhostPiece();
 
     GameOver = false;
+
+    // Initialize the next piece queue:
     initNextPieceQueue();
+
+    // Set line clear animation textures and positions:
     initLineClearAnimations();
+
+    // Set hold piece to be empty:
     initHoldPiece();
 }
 
@@ -37,34 +48,22 @@ Field::~Field() {
 // Init Functions:
 void Field::initTextures() {
     // Init Textures:
-    textures.insert(std::pair<char, sf::Texture>('r', sf::Texture()));
-    textures.insert(std::pair<char, sf::Texture>('p', sf::Texture()));
-    textures.insert(std::pair<char, sf::Texture>('y', sf::Texture()));
-    textures.insert(std::pair<char, sf::Texture>('g', sf::Texture()));
-    textures.insert(std::pair<char, sf::Texture>('o', sf::Texture()));
-    textures.insert(std::pair<char, sf::Texture>('b', sf::Texture()));
-    textures.insert(std::pair<char, sf::Texture>('c', sf::Texture()));
-    textures.insert(std::pair<char, sf::Texture>('w', sf::Texture()));
-    textures.insert(std::pair<char, sf::Texture>('a', sf::Texture())); // Alpha (clear)
-
-    // Load textures:
-    textures['r'].loadFromFile("resources/red.png");
-    textures['p'].loadFromFile("resources/purple.png");
-    textures['y'].loadFromFile("resources/yellow.png");
-    textures['g'].loadFromFile("resources/green.png");
-    textures['o'].loadFromFile("resources/orange.png");
-    textures['b'].loadFromFile("resources/blue.png");
-    textures['c'].loadFromFile("resources/cyan.png");
-    textures['w'].loadFromFile("resources/white.png");
-    textures['a'].loadFromFile("resources/clear.png");
-
+    TextureManager::load("resources/red.png");
+    TextureManager::load("resources/purple.png");
+    TextureManager::load("resources/yellow.png");
+    TextureManager::load("resources/green.png");
+    TextureManager::load("resources/orange.png");
+    TextureManager::load("resources/blue.png");
+    TextureManager::load("resources/cyan.png");
+    TextureManager::load("resources/white.png");
+    TextureManager::load("resources/clear.png");
     TextureManager::load("resources/nextPieces.png");
     TextureManager::load("resources/line_clear.png");
 }
 
 void Field::initKeys() {
     // Initialize keys:
-    for (int i = 0; i < 7; i++)
+    for (int i = 0; i < numKeys; i++)
         keyPressed[i] = 0;
 }
 
@@ -353,42 +352,42 @@ void Field::initRNG() {
 }
 
 void Field::initGhostPiece() {
-    clearBlock.setTexture(&textures['a']);
+    clearBlock.setTexture(TextureManager::get_texture("resources/clear.png"));
     updateGhostPiece();
 }
 
 void Field::generatePiece(int type) {
     switch (type) {
         case 0: {
-                    currentPiece = new Tetramino('S', &textures['g']);
+                    currentPiece = new Tetramino('S', TextureManager::get_texture("resources/green.png"));
                     break;
                 }
         case 1: {
-                    currentPiece = new Tetramino('T', &textures['p']);
+                    currentPiece = new Tetramino('T', TextureManager::get_texture("resources/purple.png"));
                     break;
                 }
         case 2: {
-                    currentPiece = new Tetramino('J', &textures['b']);
+                    currentPiece = new Tetramino('J', TextureManager::get_texture("resources/blue.png"));
                     break;
                 }
         case 3: {
-                    currentPiece = new Tetramino('L', &textures['o']);
+                    currentPiece = new Tetramino('L', TextureManager::get_texture("resources/orange.png"));
                     break;
                 }
         case 4: {
-                    currentPiece = new Tetramino('Z', &textures['r']);
+                    currentPiece = new Tetramino('Z', TextureManager::get_texture("resources/red.png"));
                     break;
                 }
         case 5: {
-                    currentPiece = new Tetramino('O', &textures['y']);
+                    currentPiece = new Tetramino('O', TextureManager::get_texture("resources/yellow.png"));
                     break;
                 }
         case 6: {
-                    currentPiece = new Tetramino('I', &textures['c']);
+                    currentPiece = new Tetramino('I', TextureManager::get_texture("resources/cyan.png"));
                     break;
                 }
         default: {
-                    currentPiece = new Tetramino('I', &textures['r']);
+                    currentPiece = new Tetramino('I', TextureManager::get_texture("resources/red.png"));
                     break;
                  }
     }
@@ -792,7 +791,7 @@ void Field::pollClearLines() {
                 for (int j = 0; j < field_width; j++) {
                     blocks[j][i + 1].setTexture(blocks[j][i].getTexture());
                     blocks[j][i + 1].setSolid(blocks[j][i].isSolid());
-                    blocks[j][i].setTexture(&textures['w']);
+                    blocks[j][i].setTexture(TextureManager::get_texture("resources/white.png"));
                     blocks[j][i].setEmpty();
                 }
             }
