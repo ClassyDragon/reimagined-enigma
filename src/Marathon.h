@@ -10,13 +10,22 @@
 
 class Marathon : public State {
     public:
+        // Constructors:
         Marathon();
         Marathon(sf::RenderWindow* window);
-        void initText();
+
+        // Virtual Overrides:
         void update();
-        void updateDrop();
         void render();
         int isOver();
+        void setWindow(sf::RenderWindow* window);
+
+        // Init Functions:
+        void initText();
+
+        // Updates:
+        void updateDrop();
+
     private:
         // Window Pointer:
         sf::RenderWindow* window;

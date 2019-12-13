@@ -5,22 +5,17 @@ TetrisGame::TetrisGame() {
 }
 
 // constructor with window size:
-TetrisGame::TetrisGame(int width, int height, std::string title) {
+TetrisGame::TetrisGame(int width, int height, std::string title) : menu(&window), marathon(&window) {
     // Initialize Window:
     this->window.create(sf::VideoMode(width, height), title);
     window.setFramerateLimit(30);
 
     // Initial State:
-    state.push_back(new Menu(&window));
-}
-
-// default destructor:
-TetrisGame::~TetrisGame() {
+    state.push_back(&menu);
 }
 
 // main game loop:
 void TetrisGame::TetrisMain() {
-
     // Update and render the window every frame the window
     // is still open:
     while (this->window.isOpen()) {
@@ -66,8 +61,7 @@ void TetrisGame::checkState() {
         window.close();
     }
     else if (status == 2) {
-        delete state.front();
         state.clear();
-        state.push_back(new Marathon(&window));
+        state.push_back(&marathon);
     }
 }
