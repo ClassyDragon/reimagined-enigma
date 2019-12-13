@@ -65,7 +65,6 @@ void Marathon::updateDrop() {
 }
 
 void Marathon::render() {
-    //window.clear();
     // Render all objects:
     window->draw(background);
     field.render();
@@ -77,4 +76,8 @@ void Marathon::render() {
 
 int Marathon::isOver() {
     return field.isGameOver();
+}
+
+void Marathon::setWindow(sf::RenderWindow* window) {
+    this->window = window;
 }

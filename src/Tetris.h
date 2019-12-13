@@ -18,8 +18,6 @@ class TetrisGame {
         TetrisGame();
         // Constructor with window size:
         TetrisGame(int width, int height, std::string title);
-        // Default destructor:
-        ~TetrisGame();
 
         // Init Functions
         void initText();
@@ -47,27 +45,8 @@ class TetrisGame {
         // Window event tracker:
         sf::Event event;
 
-        // Field:
-//        Field field;
-
         // Current State:
-//        State state;
+        Menu menu;
+        Marathon marathon;
         std::vector<State*> state;
-
-        // Background:
-//        sf::RectangleShape background;
-//        sf::Texture bg_texture;
-
-        // Clock
-//        sf::Clock drop_delay;
-//        int dropDelay_ms;
-
-        // Score-Related
-//        int Score;
-//        int LinesCleared;
-//        std::map<std::string, sf::Text> text;
-//        sf::Font font;
-
-        // Kirby
-//        Sprite::anim_sprite kirby;
 };
