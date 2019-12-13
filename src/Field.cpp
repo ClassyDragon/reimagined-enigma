@@ -45,7 +45,33 @@ Field::~Field() {
     delete currentPiece;
 }
 
-// Init Functions:
+// Draw Field and Current Piece:
+void Field::render() {
+    // Render blocks in field:
+    for (int i = 0; i < field_width; i++) {
+        for (int j = 0; j < field_height; j++) {
+            blocks[i][j].render(window);
+        }
+    }
+    // Render ghost piece:
+    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
+        ghostPiece[i].render(window);
+    }
+    // Render next piece queue:
+    for (int i = 0; i < 3; i++) {
+        window->draw(nextQueue[i]);
+    }
+    // Render line clear animations:
+    for (int i = 0; i < 4; i++) {
+        window->draw(lineClearAnimations[i]);
+    }
+    // Render hold piece slot:
+    window->draw(vHoldPiece);
+    // Render current piece:
+    currentPiece->render(window);
+}
+
+// Initialization:
 void Field::initTextures() {
     // Init Textures:
     TextureManager::load("resources/red.png");
@@ -97,6 +123,17 @@ void Field::initNextPieceQueue() {
     nextQueue[2].move(0, 300);
 }
 
+void Field::initRNG() {
+    srand(time(NULL));
+    populateBag(rngBag);
+    populateBag(nextBag);
+}
+
+void Field::initGhostPiece() {
+    clearBlock.setTexture(TextureManager::get_texture("resources/clear.png"));
+    updateGhostPiece();
+}
+
 void Field::initLineClearAnimations() {
     lineClearAnimate = false;
     for (int i = 0; i < 4; i++) {
@@ -114,25 +151,7 @@ void Field::initHoldPiece() {
     vHoldPiece.move(sf::Vector2f(25, 45));
 }
 
-void Field::render() {
-    for (int i = 0; i < field_width; i++) {
-        for (int j = 0; j < field_height; j++) {
-            blocks[i][j].render(window);
-        }
-    }
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
-        ghostPiece[i].render(window);
-    }
-    for (int i = 0; i < 3; i++) {
-        window->draw(nextQueue[i]);
-    }
-    for (int i = 0; i < 4; i++) {
-        window->draw(lineClearAnimations[i]);
-    }
-    window->draw(vHoldPiece);
-    currentPiece->render(window);
-}
-
+// Updates:
 void Field::update() {
     updateInput();
     updatePiece();
@@ -214,13 +233,11 @@ void Field::updateGhostPiece() {
         int yPosition = currentPiece->getDefaultPosition(i, 0).y;
         int dropDistance = 0;
         while (true) {
-            if (dropDistance >= field_height) {
-                dropDistance--;
+            if (dropDistance + 1 >= field_height) {
                 dropDistance = dropDistance - yPosition;
                 break;
             }
-            else if (blocks[xPosition][dropDistance].isSolid()) {
-                dropDistance--;
+            else if (blocks[xPosition][dropDistance + 1].isSolid()) {
                 dropDistance = dropDistance - yPosition;
                 break;
             }
@@ -238,20 +255,9 @@ void Field::updateGhostPiece() {
 
 void Field::updateRNG() {
     if (rngBag.size() == 0) {
-        rngBag = nextBag;
+        rngBag = nextBag; // set current bag to bag on standby
         nextBag.clear();
-        srand(time(NULL));
-        std::vector<int> temp_bag;
-        for (int i = 0; i < 7; i++) {
-            temp_bag.push_back(i);
-        }
-
-        int tempint;
-        while (!temp_bag.empty()) {
-            tempint = rand() % temp_bag.size();
-            nextBag.push_back(temp_bag[tempint]);
-            temp_bag.erase(temp_bag.begin() + tempint);
-        }
+        populateBag(nextBag);
     }
 }
 
@@ -328,34 +334,7 @@ void Field::updateHoldPiece() {
     }
 }
 
-void Field::initRNG() {
-    srand(time(NULL));
-    std::vector<int> temp_bag;
-    for (int i = 0; i < 7; i++) {
-        temp_bag.push_back(i);
-    }
-
-    int tempint;
-    while (!temp_bag.empty()) {
-        tempint = rand() % temp_bag.size();
-        rngBag.push_back(temp_bag[tempint]);
-        temp_bag.erase(temp_bag.begin() + tempint);
-    }
-    for (int i = 0; i < 7; i++) {
-        temp_bag.push_back(i);
-    }
-    while (!temp_bag.empty()) {
-        tempint = rand() % temp_bag.size();
-        nextBag.push_back(temp_bag[tempint]);
-        temp_bag.erase(temp_bag.begin() + tempint);
-    }
-}
-
-void Field::initGhostPiece() {
-    clearBlock.setTexture(TextureManager::get_texture("resources/clear.png"));
-    updateGhostPiece();
-}
-
+// Generate a piece based on a number:
 void Field::generatePiece(int type) {
     switch (type) {
         case 0: {
@@ -393,6 +372,7 @@ void Field::generatePiece(int type) {
     }
 }
 
+// Set active window pointer:
 void Field::setWindow(sf::RenderWindow* window) {
     this->window = window;
 }
@@ -747,6 +727,7 @@ void Field::lockPiece() {
     hasPieceBeenSwapped = false;
 }
 
+// Clear specified lines:
 void Field::setClearLines(std::set<int>& linesAffected) {
     std::set<int> toClear;
     for (auto& line : linesAffected) {
@@ -834,7 +815,7 @@ void Field::setTextRef(sf::Text* fScore, sf::Text* fLinesCleared) {
     this->fLinesCleared = fLinesCleared;
 }
 
-// Hold current piece:
+// Swap current piece with hold piece:
 void Field::holdCurrentPiece() {
     keyPressed[6] = 1;
     if (!hasPieceBeenSwapped) {
@@ -852,5 +833,19 @@ void Field::holdCurrentPiece() {
         updateQueue();
         updateGhostPiece();
         updateHoldPiece();
+    }
+}
+
+// Populate bag with random numbers:
+void Field::populateBag(std::vector<int>& bag) {
+    std::vector<int> tempBag(7);
+    for (int i = 0; i < 7; i++) {
+        tempBag[i] = i;
+    }
+    int tempint;
+    while (!tempBag.empty()) {
+        tempint = rand() % tempBag.size();
+        bag.push_back(tempBag[tempint]);
+        tempBag.erase(tempBag.begin() + tempint);
     }
 }

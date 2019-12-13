@@ -30,6 +30,15 @@ class Field {
         // Draw Field and Current Piece:
         void render();
 
+        // Initialization:
+        void initTextures();
+        void initKeys();
+        void initNextPieceQueue();
+        void initRNG();
+        void initGhostPiece();
+        void initLineClearAnimations();
+        void initHoldPiece();
+
         // Updates:
         void update();
         void updateInput();
@@ -40,16 +49,7 @@ class Field {
         void updateLineClearAnimations();
         void updateHoldPiece();
 
-        // Initialize the piece bag with a seed based on the time:
-        void initTextures();
-        void initKeys();
-        void initNextPieceQueue();
-        void initRNG();
-        void initGhostPiece();
-        void initLineClearAnimations();
-        void initHoldPiece();
-
-        // Generate a piece based on the current bag:
+        // Generate a piece based on a number:
         void generatePiece(int type);
 
         // Set active window pointer:
@@ -81,6 +81,9 @@ class Field {
 
         // Swap current piece with hold piece:
         void holdCurrentPiece();
+
+        // Poplulate Bag with random numbers:
+        void populateBag(std::vector<int>& bag);
     private:
         // Field Array:
         Block blocks[field_width][field_height];
