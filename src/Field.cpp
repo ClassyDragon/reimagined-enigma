@@ -582,7 +582,6 @@ int Field::canRotate(int r) {
         }
     }
     if (valid) {
-        std::cout << 2 << std::endl;
         return 2;
     }
     valid = true;
@@ -598,7 +597,6 @@ int Field::canRotate(int r) {
         }
     }
     if (valid) {
-        std::cout << 4 << std::endl;
         return 4;
     }
     valid = true;
@@ -614,7 +612,6 @@ int Field::canRotate(int r) {
         }
     }
     if (valid) {
-        std::cout << 5 << std::endl;
         return 5;
     }
     valid = true;
@@ -630,7 +627,6 @@ int Field::canRotate(int r) {
         }
     }
     if (valid) {
-        std::cout << 8 << std::endl;
         return 8;
     }
     valid = true;
@@ -646,7 +642,6 @@ int Field::canRotate(int r) {
         }
     }
     if (valid) {
-        std::cout << 9 << std::endl;
         return 9;
     }
     valid = true;
