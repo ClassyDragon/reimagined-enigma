@@ -797,8 +797,8 @@ void Field::pollClearLines() {
 }
 
 // Game Over Check:
-bool Field::isGameOver() {
-    return GameOver;
+int Field::isGameOver() {
+    return (GameOver ? 1 : 0);
 }
 
 // Set Score and Line Cleared Ref:
