@@ -368,24 +368,6 @@ void Field::initRNG() {
 void Field::initGhostPiece() {
     //clearBlock.setSize(sf::Vector2f(50, 50));
     clearBlock.setTexture(&textures['a']);
-    /*
-    ghostPiece.resize(currentPiece->getNumBlocks());
-    for (int i = 0; i < 4; i++) {
-        sf::Vector2i pos = currentPiece->getFieldPosition(i, 0);
-        ghostPiece[i] = clearBlock;
-        //ghostPiece[i].setTexture(&textures['a']);
-        ghostPiece[i].setFieldPosition(sf::Vector2f(
-                    pos.x, 
-                    pos.y
-                    )
-                );
-        ghostPiece[i].setScreenPosition(sf::Vector2f(
-                    horizontal_offset + 50 * pos.x,
-                    vertical_offset + 50 * pos.y
-                    )
-        );
-    }
-    */
     updateGhostPiece();
 }
 
@@ -573,12 +555,6 @@ int Field::canRotate(int r) {
     for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
         rotated_pos[i] = currentPiece->getFieldPosition(0, r);
     }
-    /*
-    rotated_pos[0] = (currentPiece->getFieldPosition(0, r));
-    rotated_pos[1] = (currentPiece->getFieldPosition(1, r));
-    rotated_pos[2] = (currentPiece->getFieldPosition(2, r));
-    rotated_pos[3] = (currentPiece->getFieldPosition(3, r));
-    */
     bool valid = true;
     // Case 1: In place
     for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
@@ -807,7 +783,6 @@ void Field::setClearLines(std::set<int>& linesAffected) {
         polledLinesForClearing = toClear;
     }
     else {
-        //rngBag.pop_back();
         timeStill.restart();
         updateGhostPiece();
         updateQueue();
