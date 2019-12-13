@@ -72,7 +72,7 @@ class Field {
         void pollClearLines();
 
         // Game Over Check
-        bool isGameOver();
+        int isGameOver();
 
         // Set Score and Line Cleared Ref:
         void setScoreRef(int* Score);

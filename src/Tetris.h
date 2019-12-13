@@ -1,10 +1,14 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <stack>
 #include <SFML/Graphics.hpp>
 #include "Field.h"
 #include "Sprite/Sprite.h" // for anim_sprite
 #include "TextureManager/TextureManager.h"
+#include "State.h"
+#include "Marathon.h"
+#include "Menu.h"
 
 class TetrisGame {
     public:
@@ -31,6 +35,9 @@ class TetrisGame {
         // RENDER FUNCTIONS:
         void render();
 
+        // Check State:
+        void checkState();
+
     private:
         // Pointer to application window:
         // This pointer will be passed to different objects as a target
@@ -41,22 +48,26 @@ class TetrisGame {
         sf::Event event;
 
         // Field:
-        Field field;
+//        Field field;
+
+        // Current State:
+//        State state;
+        std::vector<State*> state;
 
         // Background:
-        sf::RectangleShape background;
-        sf::Texture bg_texture;
+//        sf::RectangleShape background;
+//        sf::Texture bg_texture;
 
         // Clock
-        sf::Clock drop_delay;
-        int dropDelay_ms;
+//        sf::Clock drop_delay;
+//        int dropDelay_ms;
 
         // Score-Related
-        int Score;
-        int LinesCleared;
-        std::map<std::string, sf::Text> text;
-        sf::Font font;
+//        int Score;
+//        int LinesCleared;
+//        std::map<std::string, sf::Text> text;
+//        sf::Font font;
 
         // Kirby
-        Sprite::anim_sprite kirby;
+//        Sprite::anim_sprite kirby;
 };
