@@ -1,9 +1,13 @@
 # reimagined-enigma
 Simple open-source Tetris Game made using C++ and the SFML Library.
 
-Current Version: v1.0.1b
+__Current Version: v1.0.3b__
+Changes:
+1. Changed piece movement and rotation to a polling system.
+2. Fixed bug where piece could move through left wall.
+3. Fixed bug where rotation offset down and up where swapped.
 
-![Screenshot](media/screenshot1.png)
+![Screenshot](media/screenshot2.png)
 
 ## Current Progress:
 * Piece movement and rotation.
@@ -21,8 +25,7 @@ Current Version: v1.0.1b
 3. Music and SFX! :D
 
 ## BUGS:
-1. In some situations, rotating while moving can cause blocks to rotate where they should not be able to.
-2. Ghost Piece does not account for spins.
+1. Ghost Piece does not account for spins.
 
 ## Needs Improved:
 1. Representation of solid tiles in field.

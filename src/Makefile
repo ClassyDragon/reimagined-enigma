@@ -31,7 +31,7 @@ State.o: State.cpp State.h
 Marathon.o: Marathon.cpp Marathon.h State.o Field.o TextureManager.o Sprite.o
 	$(COMP) -c $< $(flags)
 
-Menu.o: Menu.cpp Menu.h State.o TextureManager.o
+Menu.o: Menu.cpp Menu.h State.o TextureManager.o precomp.h
 	$(COMP) -c $< $(flags)
 
 TextureManager.o: TextureManager/TextureManager.cpp TextureManager/TextureManager.h

@@ -11,10 +11,10 @@
 
 const int numKeys = 7;
 enum Piece {S, T, J, L, Z, O, I};
+enum Direction {NM, Right, Left};
+enum Rotation {NR, Clockwise, Counterclockwise = 3};
 
 class Tetramino;
-
-//class Block;
 
 class Field {
     public:
@@ -25,7 +25,7 @@ class Field {
         Field(sf::RenderWindow* window);
 
         // Destructor:
-        ~Field();
+//        ~Field();
 
         // Draw Field and Current Piece:
         void render();
@@ -38,6 +38,8 @@ class Field {
         void initGhostPiece();
         void initLineClearAnimations();
         void initHoldPiece();
+        void initMovement();
+        void initRotation();
 
         // Updates:
         void update();
@@ -48,6 +50,7 @@ class Field {
         void updateQueue();
         void updateLineClearAnimations();
         void updateHoldPiece();
+        void pollMovementAndRotation();
 
         // Generate a piece based on a number:
         void generatePiece(int type);
@@ -97,7 +100,7 @@ class Field {
         std::vector<int> nextBag;
 
         // Current moveable tetramino
-        Tetramino* currentPiece;
+        Tetramino currentPiece;
 
         // Graphical representation of where the piece will land:
         std::vector<Block> ghostPiece;
@@ -135,4 +138,8 @@ class Field {
         bool lineClearAnimate;
         int toAnimate;
         std::set<int> polledLinesForClearing;
+
+        // Polling
+        int pMove;
+        int pRotate;
 };

@@ -19,6 +19,10 @@ Field::Field(sf::RenderWindow* window) : window(window) {
         }
     }
 
+    // Init Polling:
+    initMovement();
+    initRotation();
+
     // Create the initial rng bag:
     initRNG();
 
@@ -41,10 +45,6 @@ Field::Field(sf::RenderWindow* window) : window(window) {
     initHoldPiece();
 }
 
-Field::~Field() {
-    delete currentPiece;
-}
-
 // Draw Field and Current Piece:
 void Field::render() {
     // Render blocks in field:
@@ -54,7 +54,7 @@ void Field::render() {
         }
     }
     // Render ghost piece:
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
         ghostPiece[i].render(window);
     }
     // Render next piece queue:
@@ -68,7 +68,7 @@ void Field::render() {
     // Render hold piece slot:
     window->draw(vHoldPiece);
     // Render current piece:
-    currentPiece->render(window);
+    currentPiece.render(window);
 }
 
 // Initialization:
@@ -151,9 +151,32 @@ void Field::initHoldPiece() {
     vHoldPiece.move(sf::Vector2f(25, 45));
 }
 
+void Field::initMovement() {
+    // Initialize poll movement to 0:
+    pMove = Direction::NM;
+
+    /* KEY:
+     * 0 - No movement polled
+     * 1 - Move right polled
+     * 2 - Move left polled
+     */
+}
+
+void Field::initRotation() {
+    // Initalize poll rotation to 0:
+    pRotate = Rotation::NR;
+
+    /* KEY:
+     * 0 - No rotation polled
+     * 1 - Clockwise Rotation polled
+     * 3 - Counterclockwise Rotation polled
+     */
+}
+
 // Updates:
 void Field::update() {
     updateInput();
+    pollMovementAndRotation();
     updatePiece();
     updateLineClearAnimations();
     pollClearLines();
@@ -161,12 +184,10 @@ void Field::update() {
 
 void Field::updateInput() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        moveLeft();
-        updateGhostPiece();
+        pMove = Direction::Left;
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        moveRight();
-        updateGhostPiece();
+        pMove = Direction::Right;
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
         hardDrop();
@@ -177,16 +198,10 @@ void Field::updateInput() {
         keyPressed[4] = 0;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-        if (keyPressed[2] == 0) {
-            rotate(1);
-            updateGhostPiece();
-        }
+        if (keyPressed[2] == 0) pRotate = Rotation::Clockwise;
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
-        if (keyPressed[3] == 0) {
-            rotate(3);
-            updateGhostPiece();
-        }
+        if (keyPressed[3] == 0) pRotate = Rotation::Counterclockwise;
     }
     else {
         keyPressed[2] = 0;
@@ -225,12 +240,12 @@ void Field::updatePiece() {
 void Field::updateGhostPiece() {
     // Field height = 18 (0 - 17)
     ghostPiece.clear();
-    ghostPiece.resize(currentPiece->getNumBlocks());
+    ghostPiece.resize(currentPiece.getNumBlocks());
     std::set<int> drops;
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
         ghostPiece[i] = clearBlock;
-        int xPosition = currentPiece->getFieldPosition(i, 0).x;
-        int yPosition = currentPiece->getDefaultPosition(i, 0).y;
+        int xPosition = currentPiece.getFieldPosition(i, 0).x;
+        int yPosition = currentPiece.getDefaultPosition(i, 0).y;
         int dropDistance = 0;
         while (true) {
             if (dropDistance + 1 >= field_height) {
@@ -245,9 +260,9 @@ void Field::updateGhostPiece() {
         }
         drops.insert(dropDistance);
     }
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
-        sf::Vector2i fp = currentPiece->getFieldPosition(i, 0);
-        sf::Vector2i dp = currentPiece->getDefaultPosition(i, 0);
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
+        sf::Vector2i fp = currentPiece.getFieldPosition(i, 0);
+        sf::Vector2i dp = currentPiece.getDefaultPosition(i, 0);
         ghostPiece[i].setFieldPosition(sf::Vector2f(fp.x, dp.y + *drops.begin()));
         ghostPiece[i].setScreenPosition(sf::Vector2f(horizontal_offset + 50 * fp.x, vertical_offset + 50 * (dp.y + *drops.begin())));
     }
@@ -334,39 +349,70 @@ void Field::updateHoldPiece() {
     }
 }
 
+void Field::pollMovementAndRotation() {
+    if (pMove != Direction::NM || pRotate != Rotation::NR) {
+        if (pMove != Direction::NM && pRotate != Rotation::NR) {
+            // Move and rotate simultaneously
+            rotate(pRotate);
+            pRotate = Rotation::NR;
+            if (pMove == Direction::Left) {
+                moveLeft();
+            }
+            else {
+                moveRight();
+            }
+            pMove = Direction::NM;
+        }
+        else if (pMove != Direction::NM) {
+            if (pMove == Direction::Left) {
+                moveLeft();
+            }
+            else {
+                moveRight();
+            }
+            pMove = Direction::NM;
+        }
+        else if (pRotate != Rotation::NR) {
+            rotate(pRotate);
+            pRotate = Rotation::NR;
+        }
+        updateGhostPiece();
+    }
+}
+
 // Generate a piece based on a number:
 void Field::generatePiece(int type) {
     switch (type) {
         case 0: {
-                    currentPiece = new Tetramino('S', TextureManager::get_texture("resources/green.png"));
+                    currentPiece = Tetramino('S', TextureManager::get_texture("resources/green.png"));
                     break;
                 }
         case 1: {
-                    currentPiece = new Tetramino('T', TextureManager::get_texture("resources/purple.png"));
+                    currentPiece = Tetramino('T', TextureManager::get_texture("resources/purple.png"));
                     break;
                 }
         case 2: {
-                    currentPiece = new Tetramino('J', TextureManager::get_texture("resources/blue.png"));
+                    currentPiece = Tetramino('J', TextureManager::get_texture("resources/blue.png"));
                     break;
                 }
         case 3: {
-                    currentPiece = new Tetramino('L', TextureManager::get_texture("resources/orange.png"));
+                    currentPiece = Tetramino('L', TextureManager::get_texture("resources/orange.png"));
                     break;
                 }
         case 4: {
-                    currentPiece = new Tetramino('Z', TextureManager::get_texture("resources/red.png"));
+                    currentPiece = Tetramino('Z', TextureManager::get_texture("resources/red.png"));
                     break;
                 }
         case 5: {
-                    currentPiece = new Tetramino('O', TextureManager::get_texture("resources/yellow.png"));
+                    currentPiece = Tetramino('O', TextureManager::get_texture("resources/yellow.png"));
                     break;
                 }
         case 6: {
-                    currentPiece = new Tetramino('I', TextureManager::get_texture("resources/cyan.png"));
+                    currentPiece = Tetramino('I', TextureManager::get_texture("resources/cyan.png"));
                     break;
                 }
         default: {
-                    currentPiece = new Tetramino('I', TextureManager::get_texture("resources/red.png"));
+                    currentPiece = Tetramino('I', TextureManager::get_texture("resources/red.png"));
                     break;
                  }
     }
@@ -379,8 +425,8 @@ void Field::setWindow(sf::RenderWindow* window) {
 
 // Current Piece Functions:
 bool Field::canMoveLeft() {
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
-        sf::Vector2i fpos = currentPiece->getFieldPosition(i, 0);
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
+        sf::Vector2i fpos = currentPiece.getFieldPosition(i, 0);
         if (fpos.x == 0) {
             return false;
         }
@@ -395,20 +441,20 @@ void Field::moveLeft() {
     if (canMoveLeft() && !lineClearAnimate) {
         if (keyPressed[0] == 0) {
             movementDelay.restart();
-            currentPiece->moveLeft();
+            currentPiece.moveLeft();
             keyPressed[0] = 1;
         }
-        if (keyPressed[0] == 1 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_1) {
-            currentPiece->moveLeft();
+        else if (keyPressed[0] == 1 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_1) {
+            currentPiece.moveLeft();
             keyPressed[0] = 2;
         }
-        if (keyPressed[0] == 2 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_2) {
-            currentPiece->moveLeft();
+        else if (keyPressed[0] == 2 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_2) {
+            currentPiece.moveLeft();
             keyPressed[0] = 3;
             movementDelay.restart();
         }
-        if (keyPressed[0] == 3 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_3) {
-            currentPiece->moveLeft();
+        else if (keyPressed[0] == 3 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_3) {
+            currentPiece.moveLeft();
             movementDelay.restart();
         }
     }
@@ -416,8 +462,8 @@ void Field::moveLeft() {
 }
 
 bool Field::canMoveRight() {
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
-        sf::Vector2i fpos = currentPiece->getFieldPosition(i, 0);
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
+        sf::Vector2i fpos = currentPiece.getFieldPosition(i, 0);
         if (fpos.x == field_width - 1) {
             return false;
         }
@@ -433,20 +479,20 @@ void Field::moveRight() {
     if (canMoveRight() && !lineClearAnimate) {
         if (keyPressed[1] == 0) {
             movementDelay.restart();
-            currentPiece->moveRight();
+            currentPiece.moveRight();
             keyPressed[1] = 1;
         }
         else if (keyPressed[1] == 1 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_1) {
-            currentPiece->moveRight();
+            currentPiece.moveRight();
             keyPressed[1] = 2;
         }
         else if (keyPressed[1] == 2 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_2) {
-            currentPiece->moveRight();
+            currentPiece.moveRight();
             keyPressed[1] = 3;
             movementDelay.restart();
         }
         else if (keyPressed[1] == 3 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_3) {
-            currentPiece->moveRight();
+            currentPiece.moveRight();
             movementDelay.restart();
         }
     }
@@ -455,8 +501,8 @@ void Field::moveRight() {
 void Field::moveDown() {
     if (!lineClearAnimate) {
         bool moveDown = true;
-        for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
-            sf::Vector2i fpos = currentPiece->getFieldPosition(i, 0);
+        for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
+            sf::Vector2i fpos = currentPiece.getFieldPosition(i, 0);
             if (fpos.y == field_height - 1) {
                 moveDown = false;
                 break;
@@ -467,7 +513,7 @@ void Field::moveDown() {
             }
         }
         if (moveDown) {
-            currentPiece->moveDown();
+            currentPiece.moveDown();
             timeStill.restart();
         }
     }
@@ -477,8 +523,8 @@ void Field::hardDrop() {
     if (keyPressed[4] == 0) {
         keyPressed[4] = 1;
         std::set<int> indexes;
-        for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
-            sf::Vector2i position = currentPiece->getFieldPosition(i, 0);
+        for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
+            sf::Vector2i position = currentPiece.getFieldPosition(i, 0);
             int x = position.x;
             int y = position.y;
             while (y < field_height - 1) {
@@ -515,13 +561,13 @@ int Field::canRotate(int r) {
     // -1: Can't rotate
     // Check that after rotation, all blocks will be within the field and not intersect other blocks.
     // Get field position of all blocks in piece
-    std::vector<sf::Vector2i> rotated_pos(currentPiece->getNumBlocks());
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
-        rotated_pos[i] = currentPiece->getFieldPosition(i, r);
+    std::vector<sf::Vector2i> rotated_pos(currentPiece.getNumBlocks());
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
+        rotated_pos[i] = currentPiece.getFieldPosition(i, r);
     }
     bool valid = true;
     // Case 1: In place
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
         if (rotated_pos[i].y >= field_height || rotated_pos[i].x >= field_width || rotated_pos[i].x < 0) {
             valid = false;
             break;
@@ -536,7 +582,7 @@ int Field::canRotate(int r) {
     }
     valid = true;
     // Case 2: Down
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
         if (rotated_pos[i].y + 1 >= field_height || rotated_pos[i].x >= field_width || rotated_pos[i].x < 0) {
             valid = false;
             break;
@@ -551,7 +597,7 @@ int Field::canRotate(int r) {
     }
     valid = true;
     // Case 4: Left
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
         if (rotated_pos[i].y >= field_height || rotated_pos[i].x - 1 >= field_width || rotated_pos[i].x - 1 < 0) {
             valid = false;
             break;
@@ -566,7 +612,7 @@ int Field::canRotate(int r) {
     }
     valid = true;
     // Case 5: Right
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
         if (rotated_pos[i].y >= field_height || rotated_pos[i].x + 1 >= field_width || rotated_pos[i].x + 1 < 0) {
             valid = false;
             break;
@@ -581,7 +627,7 @@ int Field::canRotate(int r) {
     }
     valid = true;
     // Case 8: Down Left
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
         if (rotated_pos[i].y + 1 >= field_height || rotated_pos[i].x - 1 >= field_width || rotated_pos[i].x - 1 < 0) {
             valid = false;
             break;
@@ -596,7 +642,7 @@ int Field::canRotate(int r) {
     }
     valid = true;
     // Case 9: Down Right
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
         if (rotated_pos[i].y + 1 >= field_height || rotated_pos[i].x + 1 >= field_width || rotated_pos[i].x + 1 < 0) {
             valid = false;
             break;
@@ -611,7 +657,7 @@ int Field::canRotate(int r) {
     }
     valid = true;
     // Case 10: Down 2 left
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
         if (rotated_pos[i].y + 2 >= field_height || rotated_pos[i].x - 1 >= field_width || rotated_pos[i].x - 1 < 0) {
             valid = false;
             break;
@@ -621,10 +667,12 @@ int Field::canRotate(int r) {
             break;
         }
     }
-    if (valid) return 10;
+    if (valid) {
+        return 10;
+    }
     valid = true;
     // Case 11: Down 2 Right
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
         if (rotated_pos[i].y + 2 >= field_height || rotated_pos[i].x + 1 >= field_width || rotated_pos[i].x + 1 < 0) {
             valid = false;
             break;
@@ -634,10 +682,12 @@ int Field::canRotate(int r) {
             break;
         }
     }
-    if (valid) return 11;
+    if (valid) {
+        return 11;
+    }
     valid = true;
     // Case 3: Up
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
         if (rotated_pos[i].y - 1 >= field_height || rotated_pos[i].x >= field_width || rotated_pos[i].x < 0) {
             valid = false;
             break;
@@ -647,10 +697,12 @@ int Field::canRotate(int r) {
             break;
         }
     }
-    if (valid) return 3;
+    if (valid) {
+        return 3;
+    }
     valid = true;
     // Case 6: Up Left
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
         if (rotated_pos[i].y - 1 >= field_height || rotated_pos[i].x - 1 >= field_width || rotated_pos[i].x - 1 < 0) {
             valid = false;
             break;
@@ -660,10 +712,12 @@ int Field::canRotate(int r) {
             break;
         }
     }
-    if (valid) return 6;
+    if (valid) {
+        return 6;
+    }
     valid = true;
     // Case 7: Up Right
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
         if (rotated_pos[i].y - 1 >= field_height || rotated_pos[i].x + 1 >= field_width || rotated_pos[i].x + 1 < 0) {
             valid = false;
             break;
@@ -673,7 +727,9 @@ int Field::canRotate(int r) {
             break;
         }
     }
-    if (valid) return 7;
+    if (valid) {
+        return 7;
+    }
     valid = true;
     return -1;
 }
@@ -683,7 +739,7 @@ void Field::rotate(int r) {
     if (offset != -1 && keyPressed[2] == 0 && keyPressed[3] == 0) {
         keyPressed[2] = 1;
         keyPressed[3] = 1;
-        currentPiece->rotate(r, offset);
+        currentPiece.rotate(r, offset);
     }
 }
 
@@ -693,8 +749,8 @@ void Field::lockPiece() {
     // Transfer the attributes
     std::set<int> linesAffected;
     bool dropDown = true;
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
-        sf::Vector2i fpos = currentPiece->getFieldPosition(i, 0);
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
+        sf::Vector2i fpos = currentPiece.getFieldPosition(i, 0);
         if (fpos.y == field_height - 1) {
             dropDown = false;
             break;
@@ -708,14 +764,14 @@ void Field::lockPiece() {
         timeStill.restart();
         return;
     }
-    for (int i = 0; i < currentPiece->getNumBlocks(); i++) {
-        sf::Vector2i fpos = currentPiece->getFieldPosition(i, 0);
-        Block* b = currentPiece->getBlock(i);
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
+        sf::Vector2i fpos = currentPiece.getFieldPosition(i, 0);
+        Block* b = currentPiece.getBlock(i);
         this->blocks[fpos.x][fpos.y].setTexture(b->getTexture());
         this->blocks[fpos.x][fpos.y].setSolid();
         linesAffected.insert(fpos.y);
     }
-    delete currentPiece;
+    //delete currentPiece;
     if (linesAffected.find(0) != linesAffected.end()) {
         GameOver = true;
         generatePiece(rngBag.back());    
@@ -829,8 +885,8 @@ void Field::holdCurrentPiece() {
     keyPressed[6] = 1;
     if (!hasPieceBeenSwapped) {
         hasPieceBeenSwapped = true;
-        int temp = currentPiece->getType();
-        delete currentPiece;
+        int temp = currentPiece.getType();
+        //delete currentPiece;
         if (holdPiece == -1) {
             generatePiece(rngBag.back());
             rngBag.pop_back();
