@@ -221,8 +221,6 @@ void Tetramino::rotateBlocks(int offset) {
     for (auto& b : blocks) {
         int x;
         int y;
-        int offsetX;
-        int offsetY;
         switch (initPos.size()) {
             case 9: {
                         x = blockPositions[i] % 3;
@@ -472,4 +470,5 @@ int Tetramino::getType() {
         case 'O': return 5;
         case 'I': return 6;
     }
+    return -1;
 }

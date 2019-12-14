@@ -77,7 +77,8 @@ class Field {
         // Set Score and Line Cleared Ref:
         void setScoreRef(int* Score);
         void setLinesClearedRef(int* LinesCleared);
-        void setTextRef(sf::Text* fScore, sf::Text* fLinesCleared);
+        void setLevelRef(int* Level);
+        void setTextRef(sf::Text* fScore, sf::Text* fLinesCleared, sf::Text* fLevel);
 
         // Swap current piece with hold piece:
         void holdCurrentPiece();
@@ -116,8 +117,10 @@ class Field {
         // Reference to Score and Line Cleared counters:
         int* Score;
         int* LinesCleared;
+        int* Level;
         sf::Text* fLinesCleared;
         sf::Text* fScore;
+        sf::Text* fLevel;
 
         // Next Piece Queue:
         std::vector<sf::RectangleShape> nextQueue;

@@ -1,6 +1,8 @@
 # reimagined-enigma
 Simple open-source Tetris Game made using C++ and the SFML Library.
 
+Current Version: v1.0.1b
+
 ![Screenshot](media/screenshot1.png)
 
 ## Current Progress:
@@ -10,12 +12,13 @@ Simple open-source Tetris Game made using C++ and the SFML Library.
 * Score and total line clears displayed.
 * Next Piece queue and hold piece!
 * Ability for users to easily add new pieces... (like pentaminos!)
+* State system for menus, modes, etc.
+* Levels with varying speeds.
 
 ## TO-DO:
-1. Levels with varying speed.
-2. Title screen with game modes.
-3. High score keeping.
-4. Music and SFX! :D
+1. More game modes.
+2. High score keeping.
+3. Music and SFX! :D
 
 ## BUGS:
 1. In some situations, rotating while moving can cause blocks to rotate where they should not be able to.
