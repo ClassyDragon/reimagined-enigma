@@ -2,7 +2,6 @@
 
 // Default Constructor:
 Tetramino::Tetramino() {
-//    std::cout << "Constructed Tetramino\n";
 }
 
 // Constructor with type:
@@ -188,12 +187,12 @@ void Tetramino::rotate(int r, int offset) {
 }
 
 void Tetramino::rotateBlocks(int offset) {
-    int i = 0;
+//    int i = 0;
     switch (offset) {
         case 1: break; // in place
-        case 2: verticalPosition++; // up
+        case 3: verticalPosition--; // up
                 break;
-        case 3: verticalPosition--; // down
+        case 2: verticalPosition++; // down
                 break;
         case 4: horizontalPosition--; // left
                 break;
@@ -218,7 +217,8 @@ void Tetramino::rotateBlocks(int offset) {
                  verticalPosition += 2;
                  break;
     }
-    for (auto& b : blocks) {
+//    for (auto& b : blocks) {
+    for (int i = 0; i < getNumBlocks(); i++) {
         int x;
         int y;
         switch (initPos.size()) {
@@ -309,7 +309,6 @@ void Tetramino::rotateBlocks(int offset) {
                         break;
                      }
         }
-                i++;
     }
 }
 
@@ -471,4 +470,14 @@ int Tetramino::getType() {
         case 'I': return 6;
     }
     return -1;
+}
+
+// Testing:
+void Tetramino::printBlocks() {
+    sf::Vector2i pos;
+    for (int i = 0; i < getNumBlocks(); i++) {
+        pos = getFieldPosition(i, 0);
+        std::cout << "Block " << i << ": <" << pos.x << ", " << pos.y << ">" << std::endl;
+    }
+    std::cout << std::endl;
 }

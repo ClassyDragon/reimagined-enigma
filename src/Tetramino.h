@@ -55,6 +55,9 @@ class Tetramino {
 
         // Get Tetramino type:
         int getType();
+
+        // Testing:
+        void printBlocks();
     protected:
         // Position of individual blocks:
         std::vector<char> initPos;
