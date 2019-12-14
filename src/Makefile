@@ -4,41 +4,41 @@ EXEC = Tetris
 COMP = g++
 
 $(EXEC): source.o Tetris.o Field.o Tetramino.o Block.o Sprite.o Animation.o TextureManager.o precomp.o State.o Marathon.o Menu.o
-	$(COMP) $^ -o $(EXEC) $(lib)
+	$(COMP) $^ -o $(EXEC) $(lib) $(flags)
 
 source.o: source.cpp Tetris.o
-	$(COMP) -c $<
+	$(COMP) -c $< $(flags)
 
 Tetris.o: Tetris.cpp Tetris.h State.o Marathon.o
-	$(COMP) -c $<
+	$(COMP) -c $< $(flags)
 
-Field.o: Field.cpp Field.h Tetramino.o Block.o TextureManager.o precomp.o
-	$(COMP) -c $<
+Field.o: Field.cpp Field.h Tetramino.o Block.o TextureManager.o precomp.o precomp.h
+	$(COMP) -c $< $(flags)
 
 Tetramino.o: Tetramino.cpp Tetramino.h Block.o precomp.o
-	$(COMP) -c $<
+	$(COMP) -c $< $(flags)
 
 Block.o: Block.cpp Block.h
-	$(COMP) -c $<
+	$(COMP) -c $< $(flags)
 
 Sprite.o: Sprite/Sprite.cpp Sprite/Sprite.h Sprite/Animation.cpp Sprite/Animation.h TextureManager.o precomp.o
-	$(COMP) -c Sprite/Animation.cpp
-	$(COMP) -c Sprite/Sprite.cpp
+	$(COMP) -c Sprite/Animation.cpp $(flags)
+	$(COMP) -c Sprite/Sprite.cpp $(flags)
 
 State.o: State.cpp State.h
-	$(COMP) -c $<
+	$(COMP) -c $< $(flags)
 
 Marathon.o: Marathon.cpp Marathon.h State.o Field.o TextureManager.o Sprite.o
-	$(COMP) -c $<
+	$(COMP) -c $< $(flags)
 
 Menu.o: Menu.cpp Menu.h State.o TextureManager.o
-	$(COMP) -c $<
+	$(COMP) -c $< $(flags)
 
 TextureManager.o: TextureManager/TextureManager.cpp TextureManager/TextureManager.h
-	$(COMP) -c $<
+	$(COMP) -c $< $(flags)
 
 precomp.o: Dbg_Log/Dbg_Log.cpp Dbg_Log/Dbg_Log.h
-	$(COMP) -c Dbg_Log/Dbg_Log.cpp -c -o $@
+	$(COMP) -c Dbg_Log/Dbg_Log.cpp -c -o $@ $(flags)
 
 clean:
-	rm ./*.o ./*/*.o
+	rm ./*.o

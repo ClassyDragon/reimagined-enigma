@@ -8,12 +8,14 @@ Marathon::Marathon(sf::RenderWindow* window) : window(window), field(window) {
     // Initialize Score
     Score = 0;
     LinesCleared = 0;
+    Level = 1;
     initText();
 
     // Initialize field:
     field.setScoreRef(&Score);
     field.setLinesClearedRef(&LinesCleared);
-    field.setTextRef(&text["vScore"], &text["vLines"]);
+    field.setLevelRef(&Level);
+    field.setTextRef(&text["vScore"], &text["vLines"], &text["vLevel"]);
 
     // Initialize Background:
     this->bg_texture.loadFromFile("resources/backgrounds/mario_background.png");
@@ -40,6 +42,8 @@ void Marathon::initText() {
     this->text.insert(std::pair<std::string, sf::Text>("vLines", sf::Text("0", this->font)));
     this->text.insert(std::pair<std::string, sf::Text>("Lines Cleared", sf::Text("Lines Cleared:", this->font)));
     this->text.insert(std::pair<std::string, sf::Text>("Score", sf::Text("Score:", this->font)));
+    this->text.insert(std::pair<std::string, sf::Text>("Level", sf::Text("Level:", this->font)));
+    this->text.insert(std::pair<std::string, sf::Text>("vLevel", sf::Text("1", this->font)));
     text["vScore"].setFillColor(sf::Color::White);
     text["vScore"].setPosition(sf::Vector2f(1100, 246));
     text["vLines"].setFillColor(sf::Color::White);
@@ -48,6 +52,10 @@ void Marathon::initText() {
     text["Score"].setPosition(sf::Vector2f(970, 246));
     text["Lines Cleared"].setFillColor(sf::Color::White);
     text["Lines Cleared"].setPosition(sf::Vector2f(850, 300));
+    text["Level"].setFillColor(sf::Color::White);
+    text["Level"].setPosition(sf::Vector2f(970, 350));
+    text["vLevel"].setFillColor(sf::Color::White);
+    text["vLevel"].setPosition(sf::Vector2f(1100, 350));
 }
 
 // Updates:
@@ -62,6 +70,8 @@ void Marathon::updateDrop() {
         field.moveDown();
         drop_delay.restart();
     }
+    // Update drop delay time:
+    dropDelay_ms = (370 - (Level * 20));
 }
 
 void Marathon::render() {

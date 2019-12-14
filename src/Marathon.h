@@ -44,6 +44,7 @@ class Marathon : public State {
         // Score-Related:
         int Score;
         int LinesCleared;
+        int Level;
         std::map<std::string, sf::Text> text;
         sf::Font font;
 

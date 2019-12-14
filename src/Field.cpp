@@ -392,7 +392,6 @@ bool Field::canMoveLeft() {
 }
 
 void Field::moveLeft() {   
-    
     if (canMoveLeft() && !lineClearAnimate) {
         if (keyPressed[0] == 0) {
             movementDelay.restart();
@@ -743,7 +742,7 @@ void Field::setClearLines(std::set<int>& linesAffected) {
             toClear.insert(line);
         }
     }
-    for (int i = 0; i < toClear.size(); i++) {
+    for (unsigned i = 0; i < toClear.size(); i++) {
         lineClearAnimations[i].setTextureRect(animationBegin);
     }
     int j = 0;
@@ -787,8 +786,13 @@ void Field::pollClearLines() {
             case 4: *Score = *Score + 800;
         }
         *LinesCleared = *LinesCleared + polledLinesForClearing.size();
+        if (*LinesCleared >= MARATHON_LIMIT) {
+            GameOver = true;
+        }
+        *Level = (*LinesCleared / 10) + 1;
         this->fScore->setString(std::to_string(*Score));
         this->fLinesCleared->setString(std::to_string(*LinesCleared));
+        this->fLevel->setString(std::to_string(*Level));
         timeStill.restart();
         updateGhostPiece();
         updateQueue();
@@ -810,9 +814,14 @@ void Field::setLinesClearedRef(int* LinesCleared) {
     this->LinesCleared = LinesCleared;
 }
 
-void Field::setTextRef(sf::Text* fScore, sf::Text* fLinesCleared) {
+void Field::setLevelRef(int* Level) {
+    this->Level = Level;
+}
+
+void Field::setTextRef(sf::Text* fScore, sf::Text* fLinesCleared, sf::Text* fLevel) {
     this->fScore = fScore;
     this->fLinesCleared = fLinesCleared;
+    this->fLevel = fLevel;
 }
 
 // Swap current piece with hold piece:
