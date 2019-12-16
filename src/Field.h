@@ -12,9 +12,9 @@
 const int numKeys = 7;
 //const int numPieces = 17;
 //const int numPieces = 7;
-enum Piece {S, T, J, L, Z, O, I};
-enum Direction {NM, Right, Left};
-enum Rotation {NR, Clockwise, Counterclockwise = 3};
+enum Piece {S, T, J, L, Z, O, I, U, M, F, N, P, V, X, Y, z, t, Q, i, y, s, f};
+enum Direction {NM, Right, Left}; // NM = No Movement
+enum Rotation {NR, Clockwise, Counterclockwise = 3}; // NR = No Rotation
 
 class Tetramino;
 
