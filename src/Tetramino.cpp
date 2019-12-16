@@ -165,7 +165,7 @@ void Tetramino::initBlockLayout() {
                   };
                   blockPositions = {2, 7, 11, 12, 13};
                   break;
-        case 'Q': initPos.resize(16);
+        case 'l': initPos.resize(16);
                   initPos = {
                       '_', 'X', 'X', '_',
                       '_', '_', 'X', '_',
@@ -208,6 +208,33 @@ void Tetramino::initBlockLayout() {
                       '_', 'X', '_'
                   };
                   blockPositions = {0, 1, 4, 5, 7};
+                  break;
+        case 'Q': initPos.resize(16);
+                  initPos = {
+                      '_', '_', '_', '_',
+                      '_', 'X', 'X', '_',
+                      '_', 'X', 'X', '_',
+                      '_', '_', 'X', '_'
+                  };
+                  blockPositions = {5, 6, 9, 10, 14};
+                  break;
+        case 'j': initPos.resize(16);
+                  initPos = {
+                      '_', 'X', 'X', '_',
+                      '_', 'X', '_', '_',
+                      '_', 'X', '_', '_',
+                      '_', 'X', '_', '_'
+                  };
+                  blockPositions = {1, 2, 5, 9, 13};
+                  break;
+        case 'n': initPos.resize(16);
+                  initPos = {
+                      '_', 'X', '_', '_',
+                      '_', 'X', '_', '_',
+                      '_', 'X', 'X', '_',
+                      '_', '_', 'X', '_'
+                  };
+                  blockPositions = {1, 5, 9, 10, 14};
                   break;
         default: initPos.resize(9);
                  initPos = {
@@ -651,11 +678,14 @@ int Tetramino::getType() {
         case 'Y': return 14;
         case 'z': return 15;
         case 't': return 16;
-        case 'Q': return 17;
+        case 'l': return 17;
         case 'i': return 18;
         case 'y': return 19;
         case 's': return 20;
         case 'f': return 21;
+        case 'Q': return 22;
+        case 'j': return 23;
+        case 'n': return 24;
     }
     return -1;
 }
