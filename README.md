@@ -1,7 +1,13 @@
 # reimagined-enigma
 Simple open-source Tetris Game made using C++ and the SFML Library.
 
-__Current Version: v1.0.4b__
+__Current Version: v1.0.5b__
+Changes:
+1. Added missing pentominoes.
+2. Fixed hold piece generating incorrect pieces for some pentaminoes.
+
+__Previous Versions__
+**v1.0.4b**
 Changes:
 1. Added buttons to menu.
 2. Marathon has new options:
