@@ -7,16 +7,51 @@ Menu::Menu() {
 // Constructor:
 Menu::Menu(sf::RenderWindow* window) : window(window) {
     isDone = false;
+    menuState = 0;
+    mouseClicked = false;
     initTextures();
     initBackground();
     initText();
+    initButtons();
+}
+
+Menu::~Menu() {
+    for (auto& b : buttons) {
+        delete b;
+    }
+    buttons.clear();
 }
 
 // Virtual Overrides:
 void Menu::update() {
-    // "Press Enter to Start"
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
-        isDone = true;
+    // Update buttons if state has changed:
+    if (menuState == 1) {
+        for (auto& b : buttons) {
+            delete b;
+        }
+        buttons.clear();
+        menuState = 2;
+        buttons.emplace_back(new TetrominoButton(&this->menuState));
+        buttons.emplace_back(new PentominoButton(&this->menuState));
+        buttons.emplace_back(new BothButton(&this->menuState));
+    }
+    else if (menuState > 2) {
+        isDone = menuState;
+    }
+    // Check buttons:
+    sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+    bool isClicked = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+    if (!isClicked) {
+        mouseClicked = false;
+    }
+    else if (isClicked && !mouseClicked) {
+        mouseClicked = true;
+    }
+    else if (isClicked && mouseClicked) {
+        isClicked = false;
+    }
+    for (auto& b : buttons) {
+        b->updateState(mousePos, isClicked);
     }
 }
 
@@ -26,10 +61,13 @@ void Menu::render() {
     for (auto& t : text) {
         window->draw(t.second);
     }
+    for (auto& b : buttons) {
+        b->drawTo(window);
+    }
 }
 
 int Menu::isOver() {
-    return (isDone ? 2 : 0);
+    return menuState;
 }
 
 void Menu::setWindow(sf::RenderWindow* window) {
@@ -52,4 +90,83 @@ void Menu::initText() {
     text.insert(std::pair<std::string, sf::Text>("Credits", sf::Text(credits, this->font, 30)));
     text["Version No"].setPosition(sf::Vector2f(10, 900));
     text["Credits"].setPosition(sf::Vector2f(800, 900));
+}
+
+void Menu::initButtons() {
+    this->buttons.push_back(new MarathonButton(&this->menuState));
+}
+
+// Get Menu State:
+int Menu::getMenuState() {
+    return this->menuState;
+}
+
+
+/* MARATHON BUTTON */
+// Constructor:
+MarathonButton::MarathonButton(int* menuState) : menuState(menuState) {
+    TextureManager::load("resources/Buttons/marathonButton.png");
+    TextureManager::load("resources/Buttons/tetrominoButton.png");
+    TextureManager::load("resources/Buttons/bothButton.png");
+    TextureManager::load("resources/Buttons/pentominoButton.png");
+    this->setTexture(TextureManager::get_texture("resources/Buttons/marathonButton.png"));
+    this->setNeutralCoordinates(sf::IntRect(0, 0, 175, 50));
+    this->setHoveredCoordinates(sf::IntRect(0, 50, 175, 50));
+    this->setClickedCoordinates(sf::IntRect(0, 100, 175, 50));
+    this->setPosition(sf::Vector2f(475, 632));
+}
+
+MarathonButton::~MarathonButton() {
+}
+
+void MarathonButton::onClick() {
+    *menuState = 1;
+}
+
+/* Tetraminos */
+TetrominoButton::TetrominoButton(int* menuState) : menuState(menuState) {
+    this->setTexture(TextureManager::get_texture("resources/Buttons/tetrominoButton.png"));
+    this->setNeutralCoordinates(sf::IntRect(0, 0, 175, 50));
+    this->setHoveredCoordinates(sf::IntRect(0, 50, 175, 50));
+    this->setClickedCoordinates(sf::IntRect(0, 100, 175, 50));
+    this->setPosition(sf::Vector2f(475, 632));
+}
+
+TetrominoButton::~TetrominoButton() {
+}
+
+void TetrominoButton::onClick() {
+    *menuState = 3;
+}
+
+/* Pentominoes */
+PentominoButton::PentominoButton(int* menuState) : menuState(menuState) {
+    this->setTexture(TextureManager::get_texture("resources/Buttons/pentominoButton.png"));
+    this->setNeutralCoordinates(sf::IntRect(0, 0, 175, 50));
+    this->setHoveredCoordinates(sf::IntRect(0, 50, 175, 50));
+    this->setClickedCoordinates(sf::IntRect(0, 100, 175, 50));
+    this->setPosition(sf::Vector2f(475, 732));
+}
+
+PentominoButton::~PentominoButton() {
+}
+
+void PentominoButton::onClick() {
+    *menuState = 4;
+}
+
+/* Both */
+BothButton::BothButton(int* menuState) : menuState(menuState) {
+    this->setTexture(TextureManager::get_texture("resources/Buttons/bothButton.png"));
+    this->setNeutralCoordinates(sf::IntRect(0, 0, 175, 50));
+    this->setHoveredCoordinates(sf::IntRect(0, 50, 175, 50));
+    this->setClickedCoordinates(sf::IntRect(0, 100, 175, 50));
+    this->setPosition(sf::Vector2f(475, 832));
+}
+
+BothButton::~BothButton() {
+}
+
+void BothButton::onClick() {
+    *menuState = 5;
 }

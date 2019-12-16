@@ -20,87 +20,159 @@ Tetramino::~Tetramino() {
 // Initialize Positions of blocks:
 void Tetramino::initBlockLayout() {
     switch (tetraminoType) {
-        case 'I': {
-                      initPos.resize(16);
-                      initPos = {
-                          '_', '_', 'X', '_',
-                          '_', '_', 'X', '_',
-                          '_', '_', 'X', '_',
-                          '_', '_', 'X', '_' 
-                      };
-                      blockPositions = {2, 6, 10, 14};
-                      break;
-                  }
-        case 'T': {
-                      initPos.resize(9);
-                      initPos = {
-                          '_', 'X', '_',
-                          'X', 'X', 'X',
-                          '_', '_', '_' 
-                      }; 
-                      blockPositions = {1, 3, 4, 5};
-                      break;
-                  }
-        case 'J': {
-                      initPos.resize(9);
-                      initPos = {
-                          'X', '_', '_',
-                          'X', 'X', 'X',
-                          '_', '_', '_'
-                      };   
-                      blockPositions = {0, 3, 4, 5};
-                      break;
-                  }
-        case 'L': { 
-                      initPos.resize(9);
-                      initPos = {
-                          '_', '_', 'X',
-                          'X', 'X', 'X',
-                          '_', '_', '_'
-                      };
-                      blockPositions = {2, 3, 4, 5};
-                      break;
-                  }
-        case 'O': {
-                      initPos.resize(16);
-                      initPos = {
-                          '_', '_', '_', '_',
-                          '_', 'X', 'X', '_',
-                          '_', 'X', 'X', '_',
-                          '_', '_', '_', '_'
-                      }; 
-                      blockPositions = {5, 6, 9, 10};
-                      break;
-                  }
-        case 'S': {
-                      initPos.resize(9);
-                      initPos = {
-                          '_', 'X', 'X',
-                          'X', 'X', '_',
-                          '_', '_', '_'
-                      }; 
-                      blockPositions = {1, 2, 3, 4};
-                      break;
-                  }
-        case 'Z': {
-                      initPos.resize(9);
-                      initPos = {
-                          'X', 'X', '_',
-                          '_', 'X', 'X',
-                          '_', '_', '_'
-                      }; 
-                      blockPositions = {0, 1, 4, 5};
-                      break;
-                  }
-        default: {
-                     initPos.resize(9);
-                     initPos = {
-                          'X', 'X', '_',
-                          '_', 'X', '_',
-                          '_', '_', 'X'
-                     }; 
-                     blockPositions = {0, 1, 4, 5};
-                 }
+        case 'I': initPos.resize(16);
+                  initPos = {
+                      '_', '_', 'X', '_',
+                      '_', '_', 'X', '_',
+                      '_', '_', 'X', '_',
+                      '_', '_', 'X', '_' 
+                  };
+                  blockPositions = {2, 6, 10, 14};
+                  break;
+        case 'T': initPos.resize(9);
+                  initPos = {
+                      '_', 'X', '_',
+                      'X', 'X', 'X',
+                      '_', '_', '_' 
+                  }; 
+                  blockPositions = {1, 3, 4, 5};
+                  break;
+        case 'J': initPos.resize(9);
+                  initPos = {
+                      'X', '_', '_',
+                      'X', 'X', 'X',
+                      '_', '_', '_'
+                  };   
+                  blockPositions = {0, 3, 4, 5};
+                  break;
+        case 'L': initPos.resize(9);
+                  initPos = {
+                      '_', '_', 'X',
+                      'X', 'X', 'X',
+                      '_', '_', '_'
+                  };
+                  blockPositions = {2, 3, 4, 5};
+                  break;
+        case 'O': initPos.resize(16);
+                  initPos = {
+                      '_', '_', '_', '_',
+                      '_', 'X', 'X', '_',
+                      '_', 'X', 'X', '_',
+                      '_', '_', '_', '_'
+                  }; 
+                  blockPositions = {5, 6, 9, 10};
+                  break;
+        case 'S': initPos.resize(9);
+                  initPos = {
+                      '_', 'X', 'X',
+                      'X', 'X', '_',
+                      '_', '_', '_'
+                  }; 
+                  blockPositions = {1, 2, 3, 4};
+                  break;
+        case 'Z': initPos.resize(9);
+                  initPos = {
+                      'X', 'X', '_',
+                      '_', 'X', 'X',
+                      '_', '_', '_'
+                  }; 
+                  blockPositions = {0, 1, 4, 5};
+                  break;
+        case 'U': initPos.resize(9);
+                  initPos = {
+                      'X', '_', 'X',
+                      'X', 'X', 'X',
+                      '_', '_', '_'
+                  };
+                  blockPositions = {0, 2, 3, 4, 5};
+                  break;
+        case 'M': initPos.resize(9);
+                  initPos = {
+                      'X', '_', '_',
+                      'X', 'X', '_',
+                      '_', 'X', 'X'
+                  };
+                  blockPositions = {0, 3, 4, 7, 8};
+                  break;
+        case 'F': initPos.resize(9);
+                  initPos = {
+                      '_', 'X', 'X',
+                      'X', 'X', '_',
+                      '_', 'X', '_'
+                  };
+                  blockPositions = {1, 2, 3, 4, 7};
+                  break;
+        case 'N': initPos.resize(16);
+                  initPos = {
+                      '_', '_', 'X', '_',
+                      '_', '_', 'X', '_',
+                      '_', 'X', 'X', '_',
+                      '_', 'X', '_', '_'
+                  };
+                  blockPositions = {2, 6, 9, 10, 13};
+                  break;
+        case 'P': initPos.resize(16);
+                  initPos = {
+                      '_', '_', '_', '_',
+                      '_', 'X', 'X', '_',
+                      '_', 'X', 'X', '_',
+                      '_', 'X', '_', '_'
+                  };
+                  blockPositions = {5, 6, 9, 10, 13};
+                  break;
+        //case 'V': // needs 20 size 
+        case 'X': initPos.resize(9);
+                  initPos = {
+                      '_', 'X', '_',
+                      'X', 'X', 'X',
+                      '_', 'X', '_'
+                  };
+                  blockPositions = {1, 3, 4, 5, 7};
+                  break;
+        case 'Y': initPos.resize(16);
+                  initPos = {
+                      '_', '_', 'X', '_',
+                      '_', 'X', 'X', '_',
+                      '_', '_', 'X', '_',
+                      '_', '_', 'X', '_'
+                  };
+                  blockPositions = {2, 5, 6, 10, 14};
+                  break;
+        case 'z': initPos.resize(9);
+                  initPos = {
+                      'X', 'X', '_',
+                      '_', 'X', '_',
+                      '_', 'X', 'X'
+                  };
+                  blockPositions = {0, 1, 4, 7, 8};
+                  break;
+        //case 't': // needs 20 size
+        case 'Q': initPos.resize(16);
+                  initPos = {
+                      '_', 'X', 'X', '_',
+                      '_', '_', 'X', '_',
+                      '_', '_', 'X', '_',
+                      '_', '_', 'X', '_'
+                  };
+                  blockPositions = {1, 2, 6, 10, 14};
+                  break;
+        case 'i': initPos.resize(25);
+                  initPos = {
+                      '_', '_', 'X', '_', '_',
+                      '_', '_', 'X', '_', '_',
+                      '_', '_', 'X', '_', '_',
+                      '_', '_', 'X', '_', '_',
+                      '_', '_', 'X', '_', '_'
+                  };
+                  blockPositions = {2, 7, 12, 17, 22};
+                  break;
+        default: initPos.resize(9);
+                 initPos = {
+                      'X', 'X', '_',
+                      '_', 'X', '_',
+                      '_', '_', 'X'
+                 }; 
+                 blockPositions = {0, 1, 4, 5};
     }
 }
 
@@ -143,6 +215,20 @@ void Tetramino::initBlockPositions(sf::Texture* texture) {
                          blocks[i]->setFieldPosition(sf::Vector2f(
                                      blockPositions[i] % 4 + horizontalPosition,
                                      blockPositions[i] / 4 + verticalPosition
+                                     ));
+                         blocks[i]->setSolid();
+                      }
+                      break;
+                  }
+        case 25 : {
+                      for (int i = 0; i < getNumBlocks(); i++) {
+                         blocks[i]->setScreenPosition(sf::Vector2f(
+                                     horizontal_offset + 50 * (blockPositions[i] % 5) + 50 * (horizontalPosition),
+                                     vertical_offset + 50 * (blockPositions[i] / 5) + 50 * (verticalPosition)
+                                     ));
+                         blocks[i]->setFieldPosition(sf::Vector2f(
+                                     blockPositions[i] % 5 + horizontalPosition,
+                                     blockPositions[i] / 5 + verticalPosition
                                      ));
                          blocks[i]->setSolid();
                       }
@@ -221,93 +307,107 @@ void Tetramino::rotateBlocks(int offset) {
     for (int i = 0; i < getNumBlocks(); i++) {
         int x;
         int y;
+        int pos;
         switch (initPos.size()) {
-            case 9: {
-                        x = blockPositions[i] % 3;
-                        y = blockPositions[i] / 3;
-                        switch (currentRotation % 4) {
-                            case 0: {
-                                        int pos = x + (3 * y);
-                                        blocks[i]->setFieldPosition(sf::Vector2f((pos % 3) + horizontalPosition, (pos / 3) + verticalPosition));
-                                        blocks[i]->setScreenPosition(sf::Vector2f(
-                                                    horizontal_offset + 50 * (pos % 3) + 50 * (horizontalPosition),
-                                                    vertical_offset + 50 * (pos / 3) + 50 * (verticalPosition))
-                                                );
-                                        break;
-                                    }
-                            case 1: {
-                                        int pos = (3 * x) - y + 2;
-                                        blocks[i]->setFieldPosition(sf::Vector2f((pos % 3) + horizontalPosition, (pos / 3) + verticalPosition));
-                                        blocks[i]->setScreenPosition(sf::Vector2f(
-                                                    horizontal_offset + 50 * (pos % 3) + 50 * (horizontalPosition),
-                                                    vertical_offset + 50 * (pos / 3) + 50 * (verticalPosition))
-                                                );
-                                        break;
-                                    }
-                            case 2: {
-                                        int pos = 8 - (3 * y) - x;
-                                        blocks[i]->setFieldPosition(sf::Vector2f((pos % 3) + horizontalPosition, (pos / 3) + verticalPosition));
-                                        blocks[i]->setScreenPosition(sf::Vector2f(
-                                                    horizontal_offset + 50 * (pos % 3) + 50 * (horizontalPosition),
-                                                    vertical_offset + 50 * (pos / 3) + 50 * (verticalPosition))
-                                                );
-                                        break;
-                                    }
-                            case 3: {
-                                        int pos = 6 - (3 * x) + y;
-                                        blocks[i]->setFieldPosition(sf::Vector2f((pos % 3) + horizontalPosition, (pos / 3) + verticalPosition));
-                                        blocks[i]->setScreenPosition(sf::Vector2f(
-                                                    horizontal_offset + 50 * (pos % 3) + 50 * (horizontalPosition),
-                                                    vertical_offset + 50 * (pos / 3) + 50 * (verticalPosition))
-                                                );
-                                        break;
-                                    }
-                        }
-                        break;
-            }
-            case 16: {
-                        x = blockPositions[i] % 4;
-                        y = blockPositions[i] / 4;
-                        switch (currentRotation % 4) {
-                            case 0: {
-                                        int pos = x + (4 * y);
-                                        blocks[i]->setFieldPosition(sf::Vector2f((pos % 4) + horizontalPosition, (pos / 4) + verticalPosition));
-                                        blocks[i]->setScreenPosition(sf::Vector2f(
-                                                    horizontal_offset + 50 * (pos % 4) + 50 * (horizontalPosition),
-                                                    vertical_offset + 50 * (pos / 4) + 50 * (verticalPosition))
-                                                );
-                                        break;
-                                    }
-                            case 1: {
-                                        int pos = (4 * x) - y + 3;
-                                        blocks[i]->setFieldPosition(sf::Vector2f((pos % 4) + horizontalPosition, (pos / 4) + verticalPosition));
-                                        blocks[i]->setScreenPosition(sf::Vector2f(
-                                                    horizontal_offset + 50 * (pos % 4) + 50 * (horizontalPosition),
-                                                    vertical_offset + 50 * (pos / 4) + 50 * (verticalPosition))
-                                                );
-                                        break;
-                                    }
-                            case 2: {
-                                        int pos = 15 - (4 * y) - x;
-                                        blocks[i]->setFieldPosition(sf::Vector2f((pos % 4) + horizontalPosition, (pos / 4) + verticalPosition));
-                                        blocks[i]->setScreenPosition(sf::Vector2f(
-                                                    horizontal_offset + 50 * (pos % 4) + 50 * (horizontalPosition),
-                                                    vertical_offset + 50 * (pos / 4) + 50 * (verticalPosition))
-                                                );
-                                        break;
-                                    }
-                            case 3: {
-                                        int pos = 12 - (4 * x) + y;
-                                        blocks[i]->setFieldPosition(sf::Vector2f((pos % 4) + horizontalPosition, (pos / 4) + verticalPosition));
-                                        blocks[i]->setScreenPosition(sf::Vector2f(
-                                                    horizontal_offset + 50 * (pos % 4) + 50 * (horizontalPosition),
-                                                    vertical_offset + 50 * (pos / 4) + 50 * (verticalPosition))
-                                                );
-                                        break;
-                                    }
-                        }
-                        break;
+            case 9: x = blockPositions[i] % 3;
+                    y = blockPositions[i] / 3;
+                    switch (currentRotation % 4) {
+                        case 0: pos = x + (3 * y);
+                                blocks[i]->setFieldPosition(sf::Vector2f((pos % 3) + horizontalPosition, (pos / 3) + verticalPosition));
+                                blocks[i]->setScreenPosition(sf::Vector2f(
+                                            horizontal_offset + 50 * (pos % 3) + 50 * (horizontalPosition),
+                                            vertical_offset + 50 * (pos / 3) + 50 * (verticalPosition))
+                                        );
+                                break;
+                        case 1: pos = (3 * x) - y + 2;
+                                blocks[i]->setFieldPosition(sf::Vector2f((pos % 3) + horizontalPosition, (pos / 3) + verticalPosition));
+                                blocks[i]->setScreenPosition(sf::Vector2f(
+                                            horizontal_offset + 50 * (pos % 3) + 50 * (horizontalPosition),
+                                            vertical_offset + 50 * (pos / 3) + 50 * (verticalPosition))
+                                        );
+                                break;
+                        case 2: pos = 8 - (3 * y) - x;
+                                blocks[i]->setFieldPosition(sf::Vector2f((pos % 3) + horizontalPosition, (pos / 3) + verticalPosition));
+                                blocks[i]->setScreenPosition(sf::Vector2f(
+                                            horizontal_offset + 50 * (pos % 3) + 50 * (horizontalPosition),
+                                            vertical_offset + 50 * (pos / 3) + 50 * (verticalPosition))
+                                        );
+                                break;
+                        case 3: pos = 6 - (3 * x) + y;
+                                blocks[i]->setFieldPosition(sf::Vector2f((pos % 3) + horizontalPosition, (pos / 3) + verticalPosition));
+                                blocks[i]->setScreenPosition(sf::Vector2f(
+                                            horizontal_offset + 50 * (pos % 3) + 50 * (horizontalPosition),
+                                            vertical_offset + 50 * (pos / 3) + 50 * (verticalPosition))
+                                        );
+                                break;
+                    }
+                    break;
+            case 16: x = blockPositions[i] % 4;
+                     y = blockPositions[i] / 4;
+                     switch (currentRotation % 4) {
+                         case 0: pos = x + (4 * y);
+                                 blocks[i]->setFieldPosition(sf::Vector2f((pos % 4) + horizontalPosition, (pos / 4) + verticalPosition));
+                                 blocks[i]->setScreenPosition(sf::Vector2f(
+                                             horizontal_offset + 50 * (pos % 4) + 50 * (horizontalPosition),
+                                             vertical_offset + 50 * (pos / 4) + 50 * (verticalPosition))
+                                         );
+                                 break;
+                         case 1: pos = (4 * x) - y + 3;
+                                 blocks[i]->setFieldPosition(sf::Vector2f((pos % 4) + horizontalPosition, (pos / 4) + verticalPosition));
+                                 blocks[i]->setScreenPosition(sf::Vector2f(
+                                             horizontal_offset + 50 * (pos % 4) + 50 * (horizontalPosition),
+                                             vertical_offset + 50 * (pos / 4) + 50 * (verticalPosition))
+                                         );
+                                 break;
+                         case 2: pos = 15 - (4 * y) - x;
+                                 blocks[i]->setFieldPosition(sf::Vector2f((pos % 4) + horizontalPosition, (pos / 4) + verticalPosition));
+                                 blocks[i]->setScreenPosition(sf::Vector2f(
+                                             horizontal_offset + 50 * (pos % 4) + 50 * (horizontalPosition),
+                                             vertical_offset + 50 * (pos / 4) + 50 * (verticalPosition))
+                                         );
+                                 break;
+                         case 3: pos = 12 - (4 * x) + y;
+                                 blocks[i]->setFieldPosition(sf::Vector2f((pos % 4) + horizontalPosition, (pos / 4) + verticalPosition));
+                                 blocks[i]->setScreenPosition(sf::Vector2f(
+                                             horizontal_offset + 50 * (pos % 4) + 50 * (horizontalPosition),
+                                             vertical_offset + 50 * (pos / 4) + 50 * (verticalPosition))
+                                         );
+                                 break;
                      }
+                     break;
+            case 25: x = blockPositions[i] % 5;
+                     y = blockPositions[i] / 5;
+                     switch (currentRotation % 4) {
+                         case 0: pos = x + (5 * y);
+                                 blocks[i]->setFieldPosition(sf::Vector2f((pos % 5) + horizontalPosition, (pos / 5) + verticalPosition));
+                                 blocks[i]->setScreenPosition(sf::Vector2f(
+                                             horizontal_offset + 50 * (pos % 5) + 50 * (horizontalPosition),
+                                             vertical_offset + 50 * (pos / 5) + 50 * (verticalPosition))
+                                         );
+                                 break;
+                         case 1: pos = (5 * x) - y + 4;
+                                 blocks[i]->setFieldPosition(sf::Vector2f((pos % 5) + horizontalPosition, (pos / 5) + verticalPosition));
+                                 blocks[i]->setScreenPosition(sf::Vector2f(
+                                             horizontal_offset + 50 * (pos % 5) + 50 * (horizontalPosition),
+                                             vertical_offset + 50 * (pos / 5) + 50 * (verticalPosition))
+                                         );
+                                 break;
+                         case 2: pos = 24 - (5 * y) - x;
+                                 blocks[i]->setFieldPosition(sf::Vector2f((pos % 5) + horizontalPosition, (pos / 5) + verticalPosition));
+                                 blocks[i]->setScreenPosition(sf::Vector2f(
+                                             horizontal_offset + 50 * (pos % 5) + 50 * (horizontalPosition),
+                                             vertical_offset + 50 * (pos / 5) + 50 * (verticalPosition))
+                                         );
+                                 break;
+                         case 3: pos = 20 - (5 * x) + y;
+                                 blocks[i]->setFieldPosition(sf::Vector2f((pos % 5) + horizontalPosition, (pos / 5) + verticalPosition));
+                                 blocks[i]->setScreenPosition(sf::Vector2f(
+                                             horizontal_offset + 50 * (pos % 5) + 50 * (horizontalPosition),
+                                             vertical_offset + 50 * (pos / 5) + 50 * (verticalPosition))
+                                         );
+                                 break;
+                     }
+                     break;
         }
     }
 }
@@ -398,7 +498,7 @@ sf::Vector2i Tetramino::getFieldPosition(int block, int rotation_offset) {
         }
         return sf::Vector2i((pos % 3) + horizontalPosition, (pos / 3) + verticalPosition);
     }
-    else {
+    else if (initPos.size() == 16) {
         x = fpos % 4;
         y = fpos / 4;
         switch (rotation) {
@@ -412,6 +512,21 @@ sf::Vector2i Tetramino::getFieldPosition(int block, int rotation_offset) {
                     break;
         }
         return sf::Vector2i((pos % 4) + horizontalPosition, (pos / 4) + verticalPosition);
+    }
+    else {
+        x = fpos % 5;
+        y = fpos / 5;
+        switch (rotation) {
+            case 0: pos = 0 + x + (5 * y);
+                    break;
+            case 1: pos = 4 + (5 * x) - y;
+                    break;
+            case 2: pos = 24 - x - (5 * y);
+                    break;
+            case 3: pos = 20 - (5 * x) + y;
+                    break;
+        }
+        return sf::Vector2i((pos % 5) + horizontalPosition, (pos / 5) + verticalPosition);
     }
 }
 
@@ -436,7 +551,7 @@ sf::Vector2i Tetramino::getDefaultPosition(int block, int rotation_offset) {
         }
         return sf::Vector2i((pos % 3), (pos / 3));
     }
-    else {
+    else if (initPos.size() == 16) {
         x = fpos % 4;
         y = fpos / 4;
         switch (rotation) {
@@ -450,6 +565,21 @@ sf::Vector2i Tetramino::getDefaultPosition(int block, int rotation_offset) {
                     break;
         }
         return sf::Vector2i((pos % 4), (pos / 4));
+    }
+    else {
+        x = fpos % 5;
+        y = fpos / 5;
+        switch (rotation) {
+            case 0: pos = (x + (5 * y));
+                    break;
+            case 1: pos = (4 + (5 * x) - y);
+                    break;
+            case 2: pos = (24 - (5 * y) - x);
+                    break;
+            case 3: pos = (20 - (5 * x) + y);
+                    break;
+        }
+        return sf::Vector2i((pos % 5), (pos / 5));
     }
 }
 
@@ -468,6 +598,16 @@ int Tetramino::getType() {
         case 'Z': return 4;
         case 'O': return 5;
         case 'I': return 6;
+        case 'U': return 7;
+        case 'M': return 8;
+        case 'F': return 9;
+        case 'N': return 10;
+        case 'P': return 11;
+        case 'X': return 12;
+        case 'Y': return 13;
+        case 'z': return 14;
+        case 'Q': return 15;
+        case 'i': return 16;
     }
     return -1;
 }

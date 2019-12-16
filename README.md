@@ -1,11 +1,13 @@
 # reimagined-enigma
 Simple open-source Tetris Game made using C++ and the SFML Library.
 
-__Current Version: v1.0.3b__
+__Current Version: v1.0.4b__
 Changes:
-1. Changed piece movement and rotation to a polling system.
-2. Fixed bug where piece could move through left wall.
-3. Fixed bug where rotation offset down and up where swapped.
+1. Added buttons to menu.
+2. Marathon has new options:
+    - Tetromino mode: Play with the standard Tetrominoes
+    - Pentomino mode: Play with the 5-block Pentominoes
+    - Both mode: Play with all the pieces!
 
 ![Screenshot](media/screenshot2.png)
 
