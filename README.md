@@ -1,12 +1,19 @@
 # reimagined-enigma
 Simple open-source Tetris Game made using C++ and the SFML Library.
 
-__Current Version: v1.0.5b__
+__Current Version: v1.0.6b__
+
+Changes:
+1. Added the rest of the missing pentominoes.
+2. Changed the colors of some pentominoes.
+
+__Previous Versions__
+
+**v1.0.5b**
 Changes:
 1. Added missing pentominoes.
 2. Fixed hold piece generating incorrect pieces for some pentaminoes.
 
-__Previous Versions__
 **v1.0.4b**
 Changes:
 1. Added buttons to menu.
@@ -14,6 +21,7 @@ Changes:
     - Tetromino mode: Play with the standard Tetrominoes
     - Pentomino mode: Play with the 5-block Pentominoes
     - Both mode: Play with all the pieces!
+
 
 ![Screenshot](media/screenshot2.png)
 
