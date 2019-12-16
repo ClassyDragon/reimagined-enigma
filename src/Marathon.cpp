@@ -3,7 +3,7 @@
 Marathon::Marathon() {
 }
 
-Marathon::Marathon(sf::RenderWindow* window) : window(window), field(window) {
+Marathon::Marathon(sf::RenderWindow* window, int numPieces, int pieceOffset) : window(window), field(window, numPieces, pieceOffset) {
     TextureManager::load("resources/kirby.png");
     // Initialize Score
     Score = 0;
@@ -72,6 +72,14 @@ void Marathon::updateDrop() {
     }
     // Update drop delay time:
     dropDelay_ms = (370 - (Level * 20));
+}
+
+void Marathon::setNumPieces(int numPieces) {
+    this->field.setNumPieces(numPieces);
+}
+
+void Marathon::setPieceOffset(int pieceOffset) {
+    this->field.setPieceOffset(pieceOffset);
 }
 
 void Marathon::render() {

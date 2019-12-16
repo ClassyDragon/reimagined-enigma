@@ -12,7 +12,7 @@ class Marathon : public State {
     public:
         // Constructors:
         Marathon();
-        Marathon(sf::RenderWindow* window);
+        Marathon(sf::RenderWindow* window, int numPieces, int pieceOffset);
 
         // Virtual Overrides:
         void update();
@@ -25,6 +25,10 @@ class Marathon : public State {
 
         // Updates:
         void updateDrop();
+
+        // Set Which pieces to use
+        void setNumPieces(int numPieces);
+        void setPieceOffset(int pieceOffset);
 
     private:
         // Window Pointer:

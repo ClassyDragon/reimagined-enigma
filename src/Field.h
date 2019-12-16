@@ -10,6 +10,8 @@
 #include "precomp.h"
 
 const int numKeys = 7;
+//const int numPieces = 17;
+//const int numPieces = 7;
 enum Piece {S, T, J, L, Z, O, I};
 enum Direction {NM, Right, Left};
 enum Rotation {NR, Clockwise, Counterclockwise = 3};
@@ -22,10 +24,7 @@ class Field {
         Field();
 
         // Constructor with window pointer:
-        Field(sf::RenderWindow* window);
-
-        // Destructor:
-//        ~Field();
+        Field(sf::RenderWindow* window, int numPieces, int pieceOffset);
 
         // Draw Field and Current Piece:
         void render();
@@ -88,6 +87,8 @@ class Field {
 
         // Poplulate Bag with random numbers:
         void populateBag(std::vector<int>& bag);
+        void setNumPieces(int numPieces);
+        void setPieceOffset(int pieceOffset);
     private:
         // Field Array:
         Block blocks[field_width][field_height];
@@ -98,6 +99,8 @@ class Field {
         // The Bag TM
         std::vector<int> rngBag;
         std::vector<int> nextBag;
+        int numPieces;
+        int pieceOffset;
 
         // Current moveable tetramino
         Tetramino currentPiece;
@@ -134,7 +137,7 @@ class Field {
         sf::RectangleShape vHoldPiece;
 
         // Line Clear Animation:
-        sf::RectangleShape lineClearAnimations[4];
+        sf::RectangleShape lineClearAnimations[5];
         bool lineClearAnimate;
         int toAnimate;
         std::set<int> polledLinesForClearing;

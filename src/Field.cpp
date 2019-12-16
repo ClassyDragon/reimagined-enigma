@@ -3,7 +3,7 @@
 Field::Field() {
 }
 
-Field::Field(sf::RenderWindow* window) : window(window) {
+Field::Field(sf::RenderWindow* window, int numPieces, int pieceOffset) : window(window), numPieces(numPieces), pieceOffset(pieceOffset) {
     // Load Textures:
     initTextures();
 
@@ -62,7 +62,7 @@ void Field::render() {
         window->draw(nextQueue[i]);
     }
     // Render line clear animations:
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 5; i++) {
         window->draw(lineClearAnimations[i]);
     }
     // Render hold piece slot:
@@ -115,6 +115,8 @@ void Field::initNextPieceQueue() {
                     break;
             case 6: x = 0;
                     break;
+            default: x = 800;
+                     break;
         }
         nextQueue[i].setTextureRect(sf::IntRect(x, 0, 100, 100));
         nextQueue[i].setPosition(sf::Vector2f(670, 100));
@@ -124,6 +126,8 @@ void Field::initNextPieceQueue() {
 }
 
 void Field::initRNG() {
+    rngBag.clear();
+    nextBag.clear();
     srand(time(NULL));
     populateBag(rngBag);
     populateBag(nextBag);
@@ -136,7 +140,7 @@ void Field::initGhostPiece() {
 
 void Field::initLineClearAnimations() {
     lineClearAnimate = false;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 5; i++) {
         lineClearAnimations[i].setSize(sf::Vector2f(500, 50));
         lineClearAnimations[i].setTexture(TextureManager::get_texture("resources/line_clear.png"));
         lineClearAnimations[i].setTextureRect(noAnimation);
@@ -312,6 +316,8 @@ void Field::updateQueue() {
                     break;
             case 6: x = 0;
                     break;
+            default: x = 800;
+                     break;
         }
         nextQueue[i].setTextureRect(sf::IntRect(x, 0, 100, 100));
     }
@@ -345,7 +351,8 @@ void Field::updateHoldPiece() {
         case Piece::J: vHoldPiece.setTextureRect(jPieceTexture);
                        break;
         case -1: break;
-        default: break;
+        default: vHoldPiece.setTextureRect(unknownPieceTexture);
+                 break;
     }
 }
 
@@ -383,38 +390,42 @@ void Field::pollMovementAndRotation() {
 // Generate a piece based on a number:
 void Field::generatePiece(int type) {
     switch (type) {
-        case 0: {
-                    currentPiece = Tetramino('S', TextureManager::get_texture("resources/green.png"));
-                    break;
-                }
-        case 1: {
-                    currentPiece = Tetramino('T', TextureManager::get_texture("resources/purple.png"));
-                    break;
-                }
-        case 2: {
-                    currentPiece = Tetramino('J', TextureManager::get_texture("resources/blue.png"));
-                    break;
-                }
-        case 3: {
-                    currentPiece = Tetramino('L', TextureManager::get_texture("resources/orange.png"));
-                    break;
-                }
-        case 4: {
-                    currentPiece = Tetramino('Z', TextureManager::get_texture("resources/red.png"));
-                    break;
-                }
-        case 5: {
-                    currentPiece = Tetramino('O', TextureManager::get_texture("resources/yellow.png"));
-                    break;
-                }
-        case 6: {
-                    currentPiece = Tetramino('I', TextureManager::get_texture("resources/cyan.png"));
-                    break;
-                }
-        default: {
-                    currentPiece = Tetramino('I', TextureManager::get_texture("resources/red.png"));
-                    break;
-                 }
+        case 0: currentPiece = Tetramino('S', TextureManager::get_texture("resources/green.png"));
+                break;
+        case 1: currentPiece = Tetramino('T', TextureManager::get_texture("resources/purple.png"));
+                break;
+        case 2: currentPiece = Tetramino('J', TextureManager::get_texture("resources/blue.png"));
+                break;
+        case 3: currentPiece = Tetramino('L', TextureManager::get_texture("resources/orange.png"));
+                break;
+        case 4: currentPiece = Tetramino('Z', TextureManager::get_texture("resources/red.png"));
+                break;
+        case 5: currentPiece = Tetramino('O', TextureManager::get_texture("resources/yellow.png"));
+                break;
+        case 6: currentPiece = Tetramino('I', TextureManager::get_texture("resources/cyan.png"));
+                break;
+        case 7: currentPiece = Tetramino('U', TextureManager::get_texture("resources/purple.png"));
+                break;
+        case 8: currentPiece = Tetramino('M', TextureManager::get_texture("resources/red.png"));
+                break;
+        case 9: currentPiece = Tetramino('F', TextureManager::get_texture("resources/green.png"));
+                break;
+        case 10: currentPiece = Tetramino('N', TextureManager::get_texture("resources/blue.png"));
+                 break;
+        case 11: currentPiece = Tetramino('P', TextureManager::get_texture("resources/yellow.png"));
+                 break;
+        case 12: currentPiece = Tetramino('X', TextureManager::get_texture("resources/orange.png"));
+                 break;
+        case 13: currentPiece = Tetramino('Y', TextureManager::get_texture("resources/cyan.png"));
+                 break;
+        case 14: currentPiece = Tetramino('z', TextureManager::get_texture("resources/red.png"));
+                 break;
+        case 15: currentPiece = Tetramino('Q', TextureManager::get_texture("resources/green.png"));
+                 break;
+        case 16: currentPiece = Tetramino('i', TextureManager::get_texture("resources/orange.png"));
+                 break;
+        default: currentPiece = Tetramino('I', TextureManager::get_texture("resources/red.png"));
+                 break;
     }
 }
 
@@ -771,7 +782,6 @@ void Field::lockPiece() {
         this->blocks[fpos.x][fpos.y].setSolid();
         linesAffected.insert(fpos.y);
     }
-    //delete currentPiece;
     if (linesAffected.find(0) != linesAffected.end()) {
         GameOver = true;
         generatePiece(rngBag.back());    
@@ -858,7 +868,7 @@ void Field::pollClearLines() {
 
 // Game Over Check:
 int Field::isGameOver() {
-    return (GameOver ? 1 : 0);
+    return (GameOver ? -1 : 0);
 }
 
 // Set Score and Line Cleared Ref:
@@ -903,14 +913,27 @@ void Field::holdCurrentPiece() {
 
 // Populate bag with random numbers:
 void Field::populateBag(std::vector<int>& bag) {
-    std::vector<int> tempBag(7);
-    for (int i = 0; i < 7; i++) {
+    std::vector<int> tempBag(numPieces);
+    for (int i = 0; i < numPieces; i++) {
         tempBag[i] = i;
     }
     int tempint;
     while (!tempBag.empty()) {
         tempint = rand() % tempBag.size();
-        bag.push_back(tempBag[tempint]);
+        bag.push_back(tempBag[tempint] + pieceOffset);
         tempBag.erase(tempBag.begin() + tempint);
     }
+}
+
+void Field::setNumPieces(int numPieces) {
+    this->numPieces = numPieces;
+}
+
+void Field::setPieceOffset(int pieceOffset) {
+    this->pieceOffset = pieceOffset;
+    initRNG();
+    generatePiece(rngBag.back());
+    rngBag.pop_back();
+    updateQueue();
+    updateGhostPiece();
 }
