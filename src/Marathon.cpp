@@ -18,7 +18,7 @@ Marathon::Marathon(sf::RenderWindow* window, int numPieces, int pieceOffset) : w
     field.setTextRef(&text["vScore"], &text["vLines"], &text["vLevel"]);
 
     // Initialize Background:
-    this->bg_texture.loadFromFile("resources/backgrounds/mario_background.png");
+    this->bg_texture.loadFromFile("resources/backgrounds/kirby_background.png");
     this->background.setSize(static_cast<sf::Vector2f>(this->bg_texture.getSize()));
     this->background.setTexture(&this->bg_texture);
 

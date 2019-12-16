@@ -65,10 +65,10 @@ void TetrisGame::checkState() {
             case 3: marathon.setNumPieces(7);
                     marathon.setPieceOffset(0);
                     break;
-            case 4: marathon.setNumPieces(10);
+            case 4: marathon.setNumPieces(15);
                     marathon.setPieceOffset(7);
                     break;
-            case 5: marathon.setNumPieces(17);
+            case 5: marathon.setNumPieces(22);
                     marathon.setPieceOffset(0);
                     break;
         } 

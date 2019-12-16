@@ -120,7 +120,16 @@ void Tetramino::initBlockLayout() {
                   };
                   blockPositions = {5, 6, 9, 10, 13};
                   break;
-        //case 'V': // needs 20 size 
+        case 'V': initPos.resize(25);
+                  initPos = {
+                      '_', '_', 'X', '_', '_',
+                      '_', '_', 'X', '_', '_',
+                      'X', 'X', 'X', '_', '_',
+                      '_', '_', '_', '_', '_',
+                      '_', '_', '_', '_', '_'
+                  };
+                  blockPositions = {2, 7, 10, 11, 12};
+                  break;
         case 'X': initPos.resize(9);
                   initPos = {
                       '_', 'X', '_',
@@ -146,7 +155,16 @@ void Tetramino::initBlockLayout() {
                   };
                   blockPositions = {0, 1, 4, 7, 8};
                   break;
-        //case 't': // needs 20 size
+        case 't': initPos.resize(25);
+                  initPos = {
+                      '_', '_', 'X', '_', '_',
+                      '_', '_', 'X', '_', '_',
+                      '_', 'X', 'X', 'X', '_',
+                      '_', '_', '_', '_', '_',
+                      '_', '_', '_', '_', '_'
+                  };
+                  blockPositions = {2, 7, 11, 12, 13};
+                  break;
         case 'Q': initPos.resize(16);
                   initPos = {
                       '_', 'X', 'X', '_',
@@ -165,6 +183,31 @@ void Tetramino::initBlockLayout() {
                       '_', '_', 'X', '_', '_'
                   };
                   blockPositions = {2, 7, 12, 17, 22};
+                  break;
+        case 'y': initPos.resize(16);
+                  initPos = {
+                      '_', 'X', '_', '_',
+                      '_', 'X', 'X', '_',
+                      '_', 'X', '_', '_',
+                      '_', 'X', '_', '_'
+                  };
+                  blockPositions = {2, 5, 6, 9, 13};
+                  break;
+        case 's': initPos.resize(9);
+                  initPos = {
+                      '_', 'X', 'X',
+                      '_', 'X', '_',
+                      'X', 'X', '_'
+                  };
+                  blockPositions = {1, 2, 4, 6, 7};
+                  break;
+        case 'f': initPos.resize(9);
+                  initPos = {
+                      'X', 'X', '_',
+                      '_', 'X', 'X',
+                      '_', 'X', '_'
+                  };
+                  blockPositions = {0, 1, 4, 5, 7};
                   break;
         default: initPos.resize(9);
                  initPos = {
@@ -603,11 +646,16 @@ int Tetramino::getType() {
         case 'F': return 9;
         case 'N': return 10;
         case 'P': return 11;
-        case 'X': return 12;
-        case 'Y': return 13;
-        case 'z': return 14;
-        case 'Q': return 15;
-        case 'i': return 16;
+        case 'V': return 12;
+        case 'X': return 13;
+        case 'Y': return 14;
+        case 'z': return 15;
+        case 't': return 16;
+        case 'Q': return 17;
+        case 'i': return 18;
+        case 'y': return 19;
+        case 's': return 20;
+        case 'f': return 21;
     }
     return -1;
 }
