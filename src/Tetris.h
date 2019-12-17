@@ -20,6 +20,9 @@ class TetrisGame {
         // Constructor with window size:
         TetrisGame(int width, int height, std::string title);
 
+        // Deconstructor:
+        ~TetrisGame();
+
         // Init Functions
         void initText();
 

@@ -1,11 +1,15 @@
 # reimagined-enigma
 Simple open-source Tetris Game made using C++ and the SFML Library.
 
-__Current Version: v1.0.7b__
+__Current Version: v1.0.7.1b__
 
-Changes:
+v1.0.7.0b Changes:
 1. New Sprint Mode.
 2. Buttons on menu show description when hovering over them.
+
+v1.0.7.1b Changes:
+1. State class now has a pure virtual destructor.
+2. TetrisGame class now has a destructor to delete current state.
 
 __Previous Versions__
 

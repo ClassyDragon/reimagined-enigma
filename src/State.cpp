@@ -2,3 +2,6 @@
 
 State::State() {
 }
+
+State::~State() {
+}
