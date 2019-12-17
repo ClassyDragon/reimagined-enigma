@@ -16,6 +16,7 @@ Marathon::Marathon(sf::RenderWindow* window, int numPieces, int pieceOffset) : w
     field.setLinesClearedRef(&LinesCleared);
     field.setLevelRef(&Level);
     field.setTextRef(&text["vScore"], &text["vLines"], &text["vLevel"]);
+    field.setWinLines(200);
 
     // Initialize Background:
     this->bg_texture.loadFromFile("resources/backgrounds/kirby_background.png");
@@ -40,21 +41,21 @@ void Marathon::initText() {
     }
     this->text.insert(std::pair<std::string, sf::Text>("vScore", sf::Text("0", this->font)));
     this->text.insert(std::pair<std::string, sf::Text>("vLines", sf::Text("0", this->font)));
-    this->text.insert(std::pair<std::string, sf::Text>("Lines Cleared", sf::Text("Lines Cleared:", this->font)));
+    this->text.insert(std::pair<std::string, sf::Text>("Lines Cleared", sf::Text("Lines:", this->font)));
     this->text.insert(std::pair<std::string, sf::Text>("Score", sf::Text("Score:", this->font)));
     this->text.insert(std::pair<std::string, sf::Text>("Level", sf::Text("Level:", this->font)));
     this->text.insert(std::pair<std::string, sf::Text>("vLevel", sf::Text("1", this->font)));
-    text["vScore"].setFillColor(sf::Color::White);
+    for (auto& t : text) {
+        t.second.setFillColor(sf::Color::White);
+        t.second.setCharacterSize(45);
+        t.second.setOutlineColor(sf::Color::Black);
+        t.second.setOutlineThickness(2);
+    }
     text["vScore"].setPosition(sf::Vector2f(1100, 246));
-    text["vLines"].setFillColor(sf::Color::White);
     text["vLines"].setPosition(sf::Vector2f(1100, 300));
-    text["Score"].setFillColor(sf::Color::White);
-    text["Score"].setPosition(sf::Vector2f(970, 246));
-    text["Lines Cleared"].setFillColor(sf::Color::White);
-    text["Lines Cleared"].setPosition(sf::Vector2f(850, 300));
-    text["Level"].setFillColor(sf::Color::White);
-    text["Level"].setPosition(sf::Vector2f(970, 350));
-    text["vLevel"].setFillColor(sf::Color::White);
+    text["Score"].setPosition(sf::Vector2f(920, 246));
+    text["Lines Cleared"].setPosition(sf::Vector2f(922, 300));
+    text["Level"].setPosition(sf::Vector2f(920, 350));
     text["vLevel"].setPosition(sf::Vector2f(1100, 350));
 }
 
