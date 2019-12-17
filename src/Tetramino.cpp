@@ -22,12 +22,12 @@ void Tetramino::initBlockLayout() {
     switch (tetraminoType) {
         case 'I': initPos.resize(16);
                   initPos = {
-                      '_', '_', 'X', '_',
-                      '_', '_', 'X', '_',
-                      '_', '_', 'X', '_',
-                      '_', '_', 'X', '_' 
+                      '_', '_', '_', '_',
+                      'X', 'X', 'X', 'X',
+                      '_', '_', '_', '_',
+                      '_', '_', '_', '_' 
                   };
-                  blockPositions = {2, 6, 10, 14};
+                  blockPositions = {4, 5, 6, 7};
                   break;
         case 'T': initPos.resize(9);
                   initPos = {
@@ -53,7 +53,7 @@ void Tetramino::initBlockLayout() {
                   };
                   blockPositions = {2, 3, 4, 5};
                   break;
-        case 'O': initPos.resize(16);
+/*        case 'O': initPos.resize(16);
                   initPos = {
                       '_', '_', '_', '_',
                       '_', 'X', 'X', '_',
@@ -61,6 +61,14 @@ void Tetramino::initBlockLayout() {
                       '_', '_', '_', '_'
                   }; 
                   blockPositions = {5, 6, 9, 10};
+                  break;
+                  */
+        case 'O': initPos.resize(4);
+                  initPos = {
+                      'X', 'X',
+                      'X', 'X'
+                  };
+                  blockPositions = {0, 1, 2, 3};
                   break;
         case 'S': initPos.resize(9);
                   initPos = {
@@ -124,11 +132,11 @@ void Tetramino::initBlockLayout() {
                   initPos = {
                       '_', '_', 'X', '_', '_',
                       '_', '_', 'X', '_', '_',
-                      'X', 'X', 'X', '_', '_',
+                      '_', '_', 'X', 'X', 'X',
                       '_', '_', '_', '_', '_',
                       '_', '_', '_', '_', '_'
                   };
-                  blockPositions = {2, 7, 10, 11, 12};
+                  blockPositions = {2, 7, 12, 13, 14};
                   break;
         case 'X': initPos.resize(9);
                   initPos = {
@@ -140,12 +148,12 @@ void Tetramino::initBlockLayout() {
                   break;
         case 'Y': initPos.resize(16);
                   initPos = {
-                      '_', '_', 'X', '_',
-                      '_', 'X', 'X', '_',
-                      '_', '_', 'X', '_',
-                      '_', '_', 'X', '_'
+                      '_', '_', '_', '_',
+                      'X', 'X', 'X', 'X',
+                      '_', 'X', '_', '_',
+                      '_', '_', '_', '_'
                   };
-                  blockPositions = {2, 5, 6, 10, 14};
+                  blockPositions = {4, 5, 6, 7, 9};
                   break;
         case 'z': initPos.resize(9);
                   initPos = {
@@ -176,22 +184,22 @@ void Tetramino::initBlockLayout() {
                   break;
         case 'i': initPos.resize(25);
                   initPos = {
-                      '_', '_', 'X', '_', '_',
-                      '_', '_', 'X', '_', '_',
-                      '_', '_', 'X', '_', '_',
-                      '_', '_', 'X', '_', '_',
-                      '_', '_', 'X', '_', '_'
+                      '_', '_', '_', '_', '_',
+                      '_', '_', '_', '_', '_',
+                      'X', 'X', 'X', 'X', 'X',
+                      '_', '_', '_', '_', '_',
+                      '_', '_', '_', '_', '_'
                   };
-                  blockPositions = {2, 7, 12, 17, 22};
+                  blockPositions = {10, 11, 12, 13, 14};
                   break;
         case 'y': initPos.resize(16);
                   initPos = {
+                      '_', '_', '_', '_',
                       '_', 'X', '_', '_',
-                      '_', 'X', 'X', '_',
-                      '_', 'X', '_', '_',
-                      '_', 'X', '_', '_'
+                      'X', 'X', 'X', 'X',
+                      '_', '_', '_', '_'
                   };
-                  blockPositions = {2, 5, 6, 9, 13};
+                  blockPositions = {5, 8, 9, 10, 11};
                   break;
         case 's': initPos.resize(9);
                   initPos = {
@@ -257,53 +265,73 @@ void Tetramino::initBlockPositions(sf::Texture* texture) {
 
     // Place Tetramino at the top-center of the field:
     verticalPosition = 0;
-    horizontalPosition = field_width / 2 - (initPos.size() == 9 ? 2 : 3);
+    if (getType() == 6) {
+        verticalPosition = -1;
+    }
+    int xOff;
+    switch (initPos.size()) {
+        case 4: xOff = 4;
+                break;
+        case 9: xOff = 3;
+                break;
+        case 16: xOff = 3;
+                 break;
+        case 25: xOff = 3;
+                 break;
+    }
+    horizontalPosition = xOff;
     // I and O : 10 / 2 - 3 = 2
     // Else : 10 / 2 - 2 = 3
 
     switch (initPos.size()) {
-        case 9 : {
-                     for (int i = 0; i < getNumBlocks(); i++) {
-                         blocks[i]->setScreenPosition(sf::Vector2f(
-                                     horizontal_offset + 50 * (blockPositions[i] % 3) + 50 * (horizontalPosition),
-                                     vertical_offset + 50 * (blockPositions[i] / 3) + 50 * (verticalPosition)
-                                     ));
-                         blocks[i]->setFieldPosition(sf::Vector2f(
-                                     blockPositions[i] % 3 + horizontalPosition,
-                                     blockPositions[i] / 3 + verticalPosition
-                                     ));
-                         blocks[i]->setSolid();
-                     }
-                     break;
+        case 4: for (int i = 0; i < getNumBlocks(); i++) {
+                    blocks[i]->setScreenPosition(sf::Vector2f(
+                                horizontal_offset + 50 * (blockPositions[i] % 2) + 50 * (horizontalPosition),
+                                vertical_offset + 50 * (blockPositions[i] / 2) + 50 * (verticalPosition)
+                                ));
+                    blocks[i]->setFieldPosition(sf::Vector2f(
+                                blockPositions[i] % 2 + horizontalPosition,
+                                blockPositions[i] / 2 + verticalPosition
+                                ));
+                    blocks[i]->setSolid();
+                }
+                break;
+        case 9 : for (int i = 0; i < getNumBlocks(); i++) {
+                     blocks[i]->setScreenPosition(sf::Vector2f(
+                                 horizontal_offset + 50 * (blockPositions[i] % 3) + 50 * (horizontalPosition),
+                                 vertical_offset + 50 * (blockPositions[i] / 3) + 50 * (verticalPosition)
+                                 ));
+                     blocks[i]->setFieldPosition(sf::Vector2f(
+                                 blockPositions[i] % 3 + horizontalPosition,
+                                 blockPositions[i] / 3 + verticalPosition
+                                 ));
+                     blocks[i]->setSolid();
                  }
-        case 16 : {
-                      for (int i = 0; i < getNumBlocks(); i++) {
-                         blocks[i]->setScreenPosition(sf::Vector2f(
-                                     horizontal_offset + 50 * (blockPositions[i] % 4) + 50 * (horizontalPosition),
-                                     vertical_offset + 50 * (blockPositions[i] / 4) + 50 * (verticalPosition)
-                                     ));
-                         blocks[i]->setFieldPosition(sf::Vector2f(
-                                     blockPositions[i] % 4 + horizontalPosition,
-                                     blockPositions[i] / 4 + verticalPosition
-                                     ));
-                         blocks[i]->setSolid();
-                      }
-                      break;
+                 break;
+        case 16 : for (int i = 0; i < getNumBlocks(); i++) {
+                      blocks[i]->setScreenPosition(sf::Vector2f(
+                                  horizontal_offset + 50 * (blockPositions[i] % 4) + 50 * (horizontalPosition),
+                                  vertical_offset + 50 * (blockPositions[i] / 4) + 50 * (verticalPosition)
+                                  ));
+                      blocks[i]->setFieldPosition(sf::Vector2f(
+                                  blockPositions[i] % 4 + horizontalPosition,
+                                  blockPositions[i] / 4 + verticalPosition
+                                  ));
+                      blocks[i]->setSolid();
                   }
-        case 25 : {
-                      for (int i = 0; i < getNumBlocks(); i++) {
-                         blocks[i]->setScreenPosition(sf::Vector2f(
-                                     horizontal_offset + 50 * (blockPositions[i] % 5) + 50 * (horizontalPosition),
-                                     vertical_offset + 50 * (blockPositions[i] / 5) + 50 * (verticalPosition)
-                                     ));
-                         blocks[i]->setFieldPosition(sf::Vector2f(
-                                     blockPositions[i] % 5 + horizontalPosition,
-                                     blockPositions[i] / 5 + verticalPosition
-                                     ));
-                         blocks[i]->setSolid();
-                      }
-                      break;
+                  break;
+        case 25 : for (int i = 0; i < getNumBlocks(); i++) {
+                      blocks[i]->setScreenPosition(sf::Vector2f(
+                                  horizontal_offset + 50 * (blockPositions[i] % 5) + 50 * (horizontalPosition),
+                                  vertical_offset + 50 * (blockPositions[i] / 5) + 50 * (verticalPosition)
+                                  ));
+                      blocks[i]->setFieldPosition(sf::Vector2f(
+                                  blockPositions[i] % 5 + horizontalPosition,
+                                  blockPositions[i] / 5 + verticalPosition
+                                  ));
+                      blocks[i]->setSolid();
                   }
+                  break;
     }
 }
 
@@ -379,6 +407,39 @@ void Tetramino::rotateBlocks(int offset) {
         int y;
         int pos;
         switch (initPos.size()) {
+            case 4: x = blockPositions[i] % 2;
+                    y = blockPositions[i] / 2;
+                    switch (currentRotation % 4) {
+                        case 0: pos = x + (2 * y);
+                                blocks[i]->setFieldPosition(sf::Vector2f((pos % 2) + horizontalPosition, (pos / 2) + verticalPosition));
+                                blocks[i]->setScreenPosition(sf::Vector2f(
+                                            horizontal_offset + 50 * (pos % 2) + 50 * (horizontalPosition),
+                                            vertical_offset + 50 * (pos / 2) + 50 * (verticalPosition))
+                                        );
+                                break;
+                        case 1: pos = (2 * x) - y + 1;
+                                blocks[i]->setFieldPosition(sf::Vector2f((pos % 2) + horizontalPosition, (pos / 2) + verticalPosition));
+                                blocks[i]->setScreenPosition(sf::Vector2f(
+                                            horizontal_offset + 50 * (pos % 2) + 50 * (horizontalPosition),
+                                            vertical_offset + 50 * (pos / 2) + 50 * (verticalPosition))
+                                        );
+                                break;
+                        case 2: pos = 3 - (2 * y) - x;
+                                blocks[i]->setFieldPosition(sf::Vector2f((pos % 2) + horizontalPosition, (pos / 2) + verticalPosition));
+                                blocks[i]->setScreenPosition(sf::Vector2f(
+                                            horizontal_offset + 50 * (pos % 2) + 50 * (horizontalPosition),
+                                            vertical_offset + 50 * (pos / 2) + 50 * (verticalPosition))
+                                        );
+                                break;
+                        case 3: pos = 2 - (2 * x) + y;
+                                blocks[i]->setFieldPosition(sf::Vector2f((pos % 2) + horizontalPosition, (pos / 2) + verticalPosition));
+                                blocks[i]->setScreenPosition(sf::Vector2f(
+                                            horizontal_offset + 50 * (pos % 2) + 50 * (horizontalPosition),
+                                            vertical_offset + 50 * (pos / 2) + 50 * (verticalPosition))
+                                        );
+                                break;
+                    }
+                    break;
             case 9: x = blockPositions[i] % 3;
                     y = blockPositions[i] / 3;
                     switch (currentRotation % 4) {
@@ -553,7 +614,22 @@ sf::Vector2i Tetramino::getFieldPosition(int block, int rotation_offset) {
     int x; 
     int y; 
     int pos;
-    if (initPos.size() == 9) {
+    if (initPos.size() == 4) {
+        x = fpos % 2;
+        y = fpos / 2;
+        switch (rotation) {
+            case 0: pos = (x + (2 * y));
+                    break;
+            case 1: pos = ((2 * x) - y + 1);
+                    break;
+            case 2: pos = (3 - (2 * y) - x);
+                    break;
+            case 3: pos = (2 - (2 * x) + y);
+                    break;
+        }
+        return sf::Vector2i((pos % 2) + horizontalPosition, (pos / 2) + verticalPosition);
+    }
+    else if (initPos.size() == 9) {
         x = fpos % 3;
         y = fpos / 3;
         switch (rotation) {
@@ -606,7 +682,22 @@ sf::Vector2i Tetramino::getDefaultPosition(int block, int rotation_offset) {
     int x; 
     int y; 
     int pos;
-    if (initPos.size() == 9) {
+    if (initPos.size() == 4) {
+        x = fpos % 2;
+        y = fpos / 2;
+        switch (rotation) {
+            case 0: pos = (x + (2 * y));
+                    break;
+            case 1: pos = ((2 * x) - y + 1);
+                    break;
+            case 2: pos = (3 - (2 * y) - x);
+                    break;
+            case 3: pos = (2 - (2 * x) + y);
+                    break;
+        }
+        return sf::Vector2i((pos % 2), (pos / 2));
+    }
+    else if (initPos.size() == 9) {
         x = fpos % 3;
         y = fpos / 3;
         switch (rotation) {

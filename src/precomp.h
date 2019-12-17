@@ -19,13 +19,31 @@ const sf::IntRect noAnimation(0, 500, 500, 50);
 const sf::IntRect animationBegin(0, 0, 500, 50);
 
 // Next Piece and Hold Piece Texture Positions:
-const sf::IntRect iPieceTexture(0, 0, 100, 100);
-const sf::IntRect oPieceTexture(100, 0, 100, 100);
-const sf::IntRect lPieceTexture(200, 0, 100, 100);
-const sf::IntRect jPieceTexture(300, 0, 100, 100);
-const sf::IntRect tPieceTexture(400, 0, 100, 100);
-const sf::IntRect sPieceTexture(500, 0, 100, 100);
-const sf::IntRect zPieceTexture(600, 0, 100, 100);
+const sf::IntRect IPieceTexture(0, 0, 100, 100);
+const sf::IntRect OPieceTexture(100, 0, 100, 100);
+const sf::IntRect LPieceTexture(200, 0, 100, 100);
+const sf::IntRect JPieceTexture(300, 0, 100, 100);
+const sf::IntRect TPieceTexture(400, 0, 100, 100);
+const sf::IntRect SPieceTexture(500, 0, 100, 100);
+const sf::IntRect ZPieceTexture(600, 0, 100, 100);
+const sf::IntRect UPieceTexture(0, 100, 100, 100);
+const sf::IntRect MPieceTexture(100, 100, 100, 100);
+const sf::IntRect FPieceTexture(200, 100, 100, 100);
+const sf::IntRect NPieceTexture(300, 100, 100, 100);
+const sf::IntRect PPieceTexture(400, 100, 100, 100);
+const sf::IntRect VPieceTexture(500, 100, 100, 100);
+const sf::IntRect XPieceTexture(600, 100, 100, 100);
+const sf::IntRect YPieceTexture(700, 100, 100, 100);
+const sf::IntRect zPieceTexture(800, 100, 100, 100);
+const sf::IntRect tPieceTexture(0, 200, 100, 100);
+const sf::IntRect lPieceTexture(100, 200, 100, 100);
+const sf::IntRect iPieceTexture(200, 200, 100, 100);
+const sf::IntRect yPieceTexture(300, 200, 100, 100);
+const sf::IntRect sPieceTexture(400, 200, 100, 100);
+const sf::IntRect fPieceTexture(500, 200, 100, 100);
+const sf::IntRect QPieceTexture(600, 200, 100, 100);
+const sf::IntRect jPieceTexture(700, 200, 100, 100);
+const sf::IntRect nPieceTexture(800, 200, 100, 100);
 const sf::IntRect unknownPieceTexture(800, 0, 100, 100);
 
 // Version Number and Credits:
