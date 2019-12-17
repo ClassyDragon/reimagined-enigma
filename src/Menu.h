@@ -8,6 +8,7 @@
 #include "TextureManager/TextureManager.h"
 #include "precomp.h"
 
+
 class Menu : public State {
     public:
         // Constructor:
@@ -29,6 +30,7 @@ class Menu : public State {
 
         // Get Menu State:
         int getMenuState();
+        void setMenuState(int state);
     private:
         // Background:
         sf::RectangleShape background;
@@ -53,7 +55,7 @@ class Menu : public State {
 class MarathonButton : public Button {
     public:
         // Constructor:
-        MarathonButton(int* menuState);
+        MarathonButton(int* menuState, sf::RenderWindow* window, sf::Font* font);
 
         // Destructor:
         ~MarathonButton();
@@ -61,8 +63,41 @@ class MarathonButton : public Button {
         // OnClick:
         void onClick();
 
+        // OnHover:
+        void onHover();
+
+        void drawTo(sf::RenderWindow* window);
+
     private:
         int* menuState;
+        sf::RenderWindow* window;
+        sf::Text description;
+        sf::Font* font;
+        bool hovered;
+};
+
+class SprintButton : public Button {
+    public:
+        // Constructor:
+        SprintButton(int* menuState, sf::RenderWindow* window, sf::Font* font);
+
+        // Destructor:
+        ~SprintButton();
+
+        // OnClick:
+        void onClick();
+
+        // OnHover:
+        void onHover();
+
+        void drawTo(sf::RenderWindow* window);
+
+    private:
+        int* menuState;
+        sf::RenderWindow* window;
+        sf::Text description;
+        sf::Font* font;
+        bool hovered;
 };
 
 class TetrominoButton : public Button {
@@ -75,6 +110,9 @@ class TetrominoButton : public Button {
 
         // OnClick:
         void onClick();
+
+        // OnHover:
+        void onHover();
 
     private:
         int* menuState;
@@ -91,6 +129,9 @@ class PentominoButton : public Button {
         // OnClick:
         void onClick();
 
+        // OnHover:
+        void onHover();
+
     private:
         int* menuState;
 };
@@ -105,6 +146,9 @@ class BothButton : public Button {
 
         // OnClick:
         void onClick();
+
+        // OnHover:
+        void onHover();
 
     private:
         int* menuState;
