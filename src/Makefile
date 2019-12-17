@@ -3,13 +3,13 @@ flags = -Wall
 EXEC = Tetris
 COMP = g++
 
-$(EXEC): source.o Tetris.o Field.o Tetramino.o Block.o Button.o Sprite.o Animation.o TextureManager.o precomp.o State.o Marathon.o Menu.o
+$(EXEC): source.o Tetris.o Field.o Tetramino.o Block.o Button.o Sprite.o Animation.o TextureManager.o precomp.o State.o Marathon.o Sprint.o Menu.o
 	$(COMP) $^ -o $(EXEC) $(lib) $(flags)
 
 source.o: source.cpp Tetris.o
 	$(COMP) -c $< $(flags)
 
-Tetris.o: Tetris.cpp Tetris.h State.o Marathon.o Menu.o
+Tetris.o: Tetris.cpp Tetris.h State.o Marathon.o Sprint.o Menu.o
 	$(COMP) -c $< $(flags)
 
 Field.o: Field.cpp Field.h Tetramino.o Block.o TextureManager.o precomp.o precomp.h
@@ -28,7 +28,10 @@ Sprite.o: Sprite/Sprite.cpp Sprite/Sprite.h Sprite/Animation.cpp Sprite/Animatio
 State.o: State.cpp State.h
 	$(COMP) -c $< $(flags)
 
-Marathon.o: Marathon.cpp Marathon.h State.o Field.o TextureManager.o Sprite.o
+Marathon.o: Marathon.cpp Marathon.h State.o Field.o TextureManager.o Sprite.o precomp.h
+	$(COMP) -c $< $(flags)
+
+Sprint.o: Sprint.cpp Sprint.h State.o Field.o TextureManager.o Sprite.o precomp.h
 	$(COMP) -c $< $(flags)
 
 Menu.o: Menu.cpp Menu.h State.o Button.o TextureManager.o precomp.h
