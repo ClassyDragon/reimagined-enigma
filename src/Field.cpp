@@ -76,17 +76,6 @@ void Field::render() {
 // Initialization:
 void Field::initTextures() {
     // Init Textures:
-    TextureManager::load("resources/red.png");
-    TextureManager::load("resources/purple.png");
-    TextureManager::load("resources/yellow.png");
-    TextureManager::load("resources/green.png");
-    TextureManager::load("resources/orange.png");
-    TextureManager::load("resources/blue.png");
-    TextureManager::load("resources/cyan.png");
-    TextureManager::load("resources/white.png");
-    TextureManager::load("resources/clear.png");
-    TextureManager::load("resources/nextPieces.png");
-    TextureManager::load("resources/line_clear.png");
 }
 
 void Field::initKeys() {

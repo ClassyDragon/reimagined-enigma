@@ -4,7 +4,6 @@ Sprint::Sprint() {
 }
 
 Sprint::Sprint(sf::RenderWindow* window, int numPieces, int pieceOffset) : window(window), field(window, numPieces, pieceOffset) {
-    TextureManager::load("resources/kirby.png");
     // Initialize Score
     Score = 0;
     LinesCleared = 0;

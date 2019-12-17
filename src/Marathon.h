@@ -12,7 +12,7 @@ class Marathon : public State {
     public:
         // Constructors:
         Marathon();
-        Marathon(sf::RenderWindow* window, int numPieces, int pieceOffset);
+        Marathon(sf::RenderWindow* window, int numPieces, int pieceOffset, int* savedScore);
 
         // Virtual Overrides:
         void update();
@@ -25,6 +25,8 @@ class Marathon : public State {
 
         // Updates:
         void updateDrop();
+        void updateScore();
+        void updateText();
 
         // Set Which pieces to use
         void setNumPieces(int numPieces);
@@ -54,4 +56,7 @@ class Marathon : public State {
 
         // Kirb:
         Sprite::anim_sprite kirby;
+
+        // Pointer to high scores:
+        int* savedScore;
 };

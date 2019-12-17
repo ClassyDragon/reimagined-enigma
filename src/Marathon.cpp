@@ -3,8 +3,7 @@
 Marathon::Marathon() {
 }
 
-Marathon::Marathon(sf::RenderWindow* window, int numPieces, int pieceOffset) : window(window), field(window, numPieces, pieceOffset) {
-    TextureManager::load("resources/kirby.png");
+Marathon::Marathon(sf::RenderWindow* window, int numPieces, int pieceOffset, int* savedScore) : window(window), field(window, numPieces, pieceOffset), savedScore(savedScore) {
     // Initialize Score
     Score = 0;
     LinesCleared = 0;
@@ -45,23 +44,31 @@ void Marathon::initText() {
     this->text.insert(std::pair<std::string, sf::Text>("Score", sf::Text("Score:", this->font)));
     this->text.insert(std::pair<std::string, sf::Text>("Level", sf::Text("Level:", this->font)));
     this->text.insert(std::pair<std::string, sf::Text>("vLevel", sf::Text("1", this->font)));
+    this->text.insert(std::pair<std::string, sf::Text>("High Score", sf::Text("High Score:", this->font)));
+    this->text.insert(std::pair<std::string, sf::Text>("vHigh Score", sf::Text("0", this->font)));
     for (auto& t : text) {
         t.second.setFillColor(sf::Color::White);
         t.second.setCharacterSize(45);
         t.second.setOutlineColor(sf::Color::Black);
         t.second.setOutlineThickness(2);
     }
-    text["vScore"].setPosition(sf::Vector2f(1100, 246));
-    text["vLines"].setPosition(sf::Vector2f(1100, 300));
-    text["Score"].setPosition(sf::Vector2f(920, 246));
-    text["Lines Cleared"].setPosition(sf::Vector2f(922, 300));
-    text["Level"].setPosition(sf::Vector2f(920, 350));
-    text["vLevel"].setPosition(sf::Vector2f(1100, 350));
+    text["vScore"].setPosition(sf::Vector2f(1050, 246));
+    text["vLines"].setPosition(sf::Vector2f(1050, 300));
+    text["Score"].setPosition(sf::Vector2f(900, 246));
+    text["Lines Cleared"].setPosition(sf::Vector2f(902, 300));
+    text["Level"].setPosition(sf::Vector2f(900, 350));
+    text["vLevel"].setPosition(sf::Vector2f(1050, 350));
+    text["High Score"].setPosition(sf::Vector2f(780, 400));
+    text["vHigh Score"].setPosition(sf::Vector2f(1050, 400));
+
+    updateText();
 }
 
 // Updates:
 void Marathon::update() {
     this->updateDrop();
+    this->updateScore();
+    this->updateText();
     this->kirby.update();
     this->field.update();
 }
@@ -75,6 +82,17 @@ void Marathon::updateDrop() {
     dropDelay_ms = (370 - (Level * 20));
 }
 
+void Marathon::updateScore() {
+    if (this->Score > *savedScore) {
+        *savedScore = Score;
+    }
+}
+
+void Marathon::updateText() {
+    text["vHigh Score"].setString(std::to_string(*savedScore));
+}
+
+// Set which pieces to use:
 void Marathon::setNumPieces(int numPieces) {
     this->field.setNumPieces(numPieces);
 }
