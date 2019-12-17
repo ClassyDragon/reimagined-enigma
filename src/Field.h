@@ -89,6 +89,10 @@ class Field {
         void populateBag(std::vector<int>& bag);
         void setNumPieces(int numPieces);
         void setPieceOffset(int pieceOffset);
+
+        // Set win condition lines:
+        void setWinLines(int winLines);
+
     private:
         // Field Array:
         Block blocks[field_width][field_height];
@@ -145,4 +149,7 @@ class Field {
         // Polling
         int pMove;
         int pRotate;
+
+        // How many lines cleared to finish:
+        int winLines;
 };

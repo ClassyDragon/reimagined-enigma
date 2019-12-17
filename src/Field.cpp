@@ -43,6 +43,8 @@ Field::Field(sf::RenderWindow* window, int numPieces, int pieceOffset) : window(
 
     // Set hold piece to be empty:
     initHoldPiece();
+
+    updateQueue();
 }
 
 // Draw Field and Current Piece:
@@ -973,7 +975,7 @@ void Field::pollClearLines() {
             case 4: *Score = *Score + 800;
         }
         *LinesCleared = *LinesCleared + polledLinesForClearing.size();
-        if (*LinesCleared >= MARATHON_LIMIT) {
+        if (*LinesCleared >= this->winLines) {
             GameOver = true;
         }
         *Level = (*LinesCleared / 10) + 1;
@@ -989,7 +991,7 @@ void Field::pollClearLines() {
 
 // Game Over Check:
 int Field::isGameOver() {
-    return (GameOver ? -1 : 0);
+    return (GameOver ? 9 : 0);
 }
 
 // Set Score and Line Cleared Ref:
@@ -1057,4 +1059,8 @@ void Field::setPieceOffset(int pieceOffset) {
     rngBag.pop_back();
     updateQueue();
     updateGhostPiece();
+}
+
+void Field::setWinLines(int winLines) {
+    this->winLines = winLines;
 }
