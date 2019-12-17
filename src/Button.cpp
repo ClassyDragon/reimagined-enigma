@@ -44,6 +44,7 @@ void Button::drawTo(sf::RenderWindow* window) {
 // Updates:
 void Button::updateState(const sf::Vector2i mousePos, const bool& isClicked) {
     if (buttonShape.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
+        onHover();
         if (isClicked) {
             buttonShape.setTextureRect(clicked);
             onClick();
