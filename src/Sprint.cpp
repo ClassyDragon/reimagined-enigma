@@ -1,9 +1,9 @@
-#include "Marathon.h"
+#include "Sprint.h"
 
-Marathon::Marathon() {
+Sprint::Sprint() {
 }
 
-Marathon::Marathon(sf::RenderWindow* window, int numPieces, int pieceOffset) : window(window), field(window, numPieces, pieceOffset) {
+Sprint::Sprint(sf::RenderWindow* window, int numPieces, int pieceOffset) : window(window), field(window, numPieces, pieceOffset) {
     TextureManager::load("resources/kirby.png");
     // Initialize Score
     Score = 0;
@@ -16,7 +16,7 @@ Marathon::Marathon(sf::RenderWindow* window, int numPieces, int pieceOffset) : w
     field.setLinesClearedRef(&LinesCleared);
     field.setLevelRef(&Level);
     field.setTextRef(&text["vScore"], &text["vLines"], &text["vLevel"]);
-    field.setWinLines(200);
+    field.setWinLines(40);
 
     // Initialize Background:
     this->bg_texture.loadFromFile("resources/backgrounds/kirby_background.png");
@@ -35,7 +35,7 @@ Marathon::Marathon(sf::RenderWindow* window, int numPieces, int pieceOffset) : w
 }
 
 // Init Functions:
-void Marathon::initText() {
+void Sprint::initText() {
     if (!this->font.loadFromFile("resources/Fonts/font.ttf")) {
         std::cout << "Failed to load font.ttf." << std::endl;
     }
@@ -45,6 +45,7 @@ void Marathon::initText() {
     this->text.insert(std::pair<std::string, sf::Text>("Score", sf::Text("Score:", this->font)));
     this->text.insert(std::pair<std::string, sf::Text>("Level", sf::Text("Level:", this->font)));
     this->text.insert(std::pair<std::string, sf::Text>("vLevel", sf::Text("1", this->font)));
+    this->text.insert(std::pair<std::string, sf::Text>("Clock", sf::Text("00:00:00", this->font)));
     for (auto& t : text) {
         t.second.setFillColor(sf::Color::White);
         t.second.setCharacterSize(45);
@@ -57,16 +58,18 @@ void Marathon::initText() {
     text["Lines Cleared"].setPosition(sf::Vector2f(922, 300));
     text["Level"].setPosition(sf::Vector2f(920, 350));
     text["vLevel"].setPosition(sf::Vector2f(1100, 350));
+    text["Clock"].setPosition(sf::Vector2f(950, 400));
 }
 
 // Updates:
-void Marathon::update() {
+void Sprint::update() {
     this->updateDrop();
+    //this->updateClock();
     this->kirby.update();
     this->field.update();
 }
 
-void Marathon::updateDrop() {
+void Sprint::updateDrop() {
     if (drop_delay.getElapsedTime().asMilliseconds() >= dropDelay_ms) {
         field.moveDown();
         drop_delay.restart();
@@ -75,15 +78,33 @@ void Marathon::updateDrop() {
     dropDelay_ms = (370 - (Level * 20));
 }
 
-void Marathon::setNumPieces(int numPieces) {
+void Sprint::updateClock() {
+    std::string formattedTime = "";
+    //formatString(formattedTime);
+    //text["Clock"].setString(formattedTime);
+}
+
+void Sprint::setNumPieces(int numPieces) {
     this->field.setNumPieces(numPieces);
 }
 
-void Marathon::setPieceOffset(int pieceOffset) {
+void Sprint::setPieceOffset(int pieceOffset) {
     this->field.setPieceOffset(pieceOffset);
 }
 
-void Marathon::render() {
+void Sprint::formatString(std::string& formattedString) {
+    std::stringstream ss;
+    sf::Time currentTime = playTime.getElapsedTime();
+    int minutes = static_cast<int>(currentTime.asSeconds()) / 60;
+    int seconds = static_cast<int>(currentTime.asSeconds()) % 60;
+    int milli = currentTime.asMilliseconds() % 1000;
+    ss << std::setfill('0') << std::setw(2);
+//    formattedString = std::to_string(minutes) + ":" + std::to_string(seconds) + ":" + std::to_string(milli);
+    ss << minutes << ":" << std::setw(2) << seconds << ":" << std::setw(2) << milli;
+    ss >> formattedString;
+}
+
+void Sprint::render() {
     // Render all objects:
     window->draw(background);
     field.render();
@@ -93,10 +114,10 @@ void Marathon::render() {
     kirby.drawto(window);
 }
 
-int Marathon::isOver() {
+int Sprint::isOver() {
     return field.isGameOver();
 }
 
-void Marathon::setWindow(sf::RenderWindow* window) {
+void Sprint::setWindow(sf::RenderWindow* window) {
     this->window = window;
 }

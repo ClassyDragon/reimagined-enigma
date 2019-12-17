@@ -43,6 +43,8 @@ Field::Field(sf::RenderWindow* window, int numPieces, int pieceOffset) : window(
 
     // Set hold piece to be empty:
     initHoldPiece();
+
+    updateQueue();
 }
 
 // Draw Field and Current Piece:
@@ -300,6 +302,62 @@ void Field::updateQueue() {
     }
 
     for (int i = 0; i < 3; i++) {
+        switch (nextPiecesInQueue[i]) {
+            case Piece::Z: nextQueue[i].setTextureRect(ZPieceTexture);
+                           break;
+            case Piece::S: nextQueue[i].setTextureRect(SPieceTexture);
+                           break;
+            case Piece::L: nextQueue[i].setTextureRect(LPieceTexture);
+                           break;
+            case Piece::O: nextQueue[i].setTextureRect(OPieceTexture);
+                           break;
+            case Piece::I: nextQueue[i].setTextureRect(IPieceTexture);
+                           break;
+            case Piece::T: nextQueue[i].setTextureRect(TPieceTexture);
+                           break;
+            case Piece::J: nextQueue[i].setTextureRect(JPieceTexture);
+                           break;
+            case Piece::U: nextQueue[i].setTextureRect(UPieceTexture);
+                           break;
+            case Piece::M: nextQueue[i].setTextureRect(MPieceTexture);
+                           break;
+            case Piece::F: nextQueue[i].setTextureRect(FPieceTexture);
+                           break;
+            case Piece::N: nextQueue[i].setTextureRect(NPieceTexture);
+                           break;
+            case Piece::P: nextQueue[i].setTextureRect(PPieceTexture);
+                           break;
+            case Piece::V: nextQueue[i].setTextureRect(VPieceTexture);
+                           break;
+            case Piece::X: nextQueue[i].setTextureRect(XPieceTexture);
+                           break;
+            case Piece::Y: nextQueue[i].setTextureRect(YPieceTexture);
+                           break;
+            case Piece::z: nextQueue[i].setTextureRect(zPieceTexture);
+                           break;
+            case Piece::t: nextQueue[i].setTextureRect(tPieceTexture);
+                           break;
+            case Piece::l: nextQueue[i].setTextureRect(lPieceTexture);
+                           break;
+            case Piece::i: nextQueue[i].setTextureRect(iPieceTexture);
+                           break;
+            case Piece::y: nextQueue[i].setTextureRect(yPieceTexture);
+                           break;
+            case Piece::s: nextQueue[i].setTextureRect(sPieceTexture);
+                           break;
+            case Piece::f: nextQueue[i].setTextureRect(fPieceTexture);
+                           break;
+            case Piece::Q: nextQueue[i].setTextureRect(QPieceTexture);
+                           break;
+            case Piece::j: nextQueue[i].setTextureRect(jPieceTexture);
+                           break;
+            case Piece::n: nextQueue[i].setTextureRect(nPieceTexture);
+                           break;
+            case -1: break;
+            default: nextQueue[i].setTextureRect(unknownPieceTexture);
+                     break;
+        }
+        /*
         int x;
         switch (nextPiecesInQueue[i]) {
             case 0: x = 500;
@@ -320,6 +378,7 @@ void Field::updateQueue() {
                      break;
         }
         nextQueue[i].setTextureRect(sf::IntRect(x, 0, 100, 100));
+        */
     }
 }
 
@@ -336,19 +395,55 @@ void Field::updateLineClearAnimations() {
 
 void Field::updateHoldPiece() {
     switch (holdPiece) {
-        case Piece::Z: vHoldPiece.setTextureRect(zPieceTexture);
+        case Piece::Z: vHoldPiece.setTextureRect(ZPieceTexture);
                        break;
-        case Piece::S: vHoldPiece.setTextureRect(sPieceTexture);
+        case Piece::S: vHoldPiece.setTextureRect(SPieceTexture);
                        break;
-        case Piece::L: vHoldPiece.setTextureRect(lPieceTexture);
+        case Piece::L: vHoldPiece.setTextureRect(LPieceTexture);
                        break;
-        case Piece::O: vHoldPiece.setTextureRect(oPieceTexture);
+        case Piece::O: vHoldPiece.setTextureRect(OPieceTexture);
                        break;
-        case Piece::I: vHoldPiece.setTextureRect(iPieceTexture);
+        case Piece::I: vHoldPiece.setTextureRect(IPieceTexture);
                        break;
-        case Piece::T: vHoldPiece.setTextureRect(tPieceTexture);
+        case Piece::T: vHoldPiece.setTextureRect(TPieceTexture);
                        break;
-        case Piece::J: vHoldPiece.setTextureRect(jPieceTexture);
+        case Piece::J: vHoldPiece.setTextureRect(JPieceTexture);
+                       break;
+        case Piece::U: vHoldPiece.setTextureRect(UPieceTexture);
+                       break;
+        case Piece::M: vHoldPiece.setTextureRect(MPieceTexture);
+                       break;
+        case Piece::F: vHoldPiece.setTextureRect(FPieceTexture);
+                       break;
+        case Piece::N: vHoldPiece.setTextureRect(NPieceTexture);
+                       break;
+        case Piece::P: vHoldPiece.setTextureRect(PPieceTexture);
+                       break;
+        case Piece::V: vHoldPiece.setTextureRect(VPieceTexture);
+                       break;
+        case Piece::X: vHoldPiece.setTextureRect(XPieceTexture);
+                       break;
+        case Piece::Y: vHoldPiece.setTextureRect(YPieceTexture);
+                       break;
+        case Piece::z: vHoldPiece.setTextureRect(zPieceTexture);
+                       break;
+        case Piece::t: vHoldPiece.setTextureRect(tPieceTexture);
+                       break;
+        case Piece::l: vHoldPiece.setTextureRect(lPieceTexture);
+                       break;
+        case Piece::i: vHoldPiece.setTextureRect(iPieceTexture);
+                       break;
+        case Piece::y: vHoldPiece.setTextureRect(yPieceTexture);
+                       break;
+        case Piece::s: vHoldPiece.setTextureRect(sPieceTexture);
+                       break;
+        case Piece::f: vHoldPiece.setTextureRect(fPieceTexture);
+                       break;
+        case Piece::Q: vHoldPiece.setTextureRect(QPieceTexture);
+                       break;
+        case Piece::j: vHoldPiece.setTextureRect(jPieceTexture);
+                       break;
+        case Piece::n: vHoldPiece.setTextureRect(nPieceTexture);
                        break;
         case -1: break;
         default: vHoldPiece.setTextureRect(unknownPieceTexture);
@@ -408,9 +503,9 @@ void Field::generatePiece(int type) {
                 break;
         case 8: currentPiece = Tetramino('M', TextureManager::get_texture("resources/red.png"));
                 break;
-        case 9: currentPiece = Tetramino('F', TextureManager::get_texture("resources/orange.png"));
+        case 9: currentPiece = Tetramino('F', TextureManager::get_texture("resources/blue.png"));
                 break;
-        case 10: currentPiece = Tetramino('N', TextureManager::get_texture("resources/green.png"));
+        case 10: currentPiece = Tetramino('N', TextureManager::get_texture("resources/red.png"));
                  break;
         case 11: currentPiece = Tetramino('P', TextureManager::get_texture("resources/yellow.png"));
                  break;
@@ -426,22 +521,34 @@ void Field::generatePiece(int type) {
                  break;
         case 17: currentPiece = Tetramino('l', TextureManager::get_texture("resources/green.png"));
                  break;
-        case 18: currentPiece = Tetramino('i', TextureManager::get_texture("resources/orange.png"));
+        case 18: currentPiece = Tetramino('i', TextureManager::get_texture("resources/cyan.png"));
                  break;
         case 19: currentPiece = Tetramino('y', TextureManager::get_texture("resources/cyan.png"));
                  break;
         case 20: currentPiece = Tetramino('s', TextureManager::get_texture("resources/green.png"));
                  break;
-        case 21: currentPiece = Tetramino('f', TextureManager::get_texture("resources/blue.png"));
+        case 21: currentPiece = Tetramino('f', TextureManager::get_texture("resources/orange.png"));
                  break;
         case 22: currentPiece = Tetramino('Q', TextureManager::get_texture("resources/yellow.png"));
                  break;
         case 23: currentPiece = Tetramino('j', TextureManager::get_texture("resources/blue.png"));
                  break;
-        case 24: currentPiece = Tetramino('n', TextureManager::get_texture("resources/red.png"));
+        case 24: currentPiece = Tetramino('n', TextureManager::get_texture("resources/green.png"));
                  break;
         default: currentPiece = Tetramino('I', TextureManager::get_texture("resources/red.png"));
                  break;
+    }
+    //  Verify piece fits on board:
+    bool canFit = true;
+    for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
+        sf::Vector2i dP = currentPiece.getDefaultPosition(i, 0);
+        if (blocks[dP.x][dP.y].isSolid()) {
+            canFit = false;
+            break;
+        }
+    }
+    if (!canFit) {
+        GameOver = true;
     }
 }
 
@@ -868,7 +975,7 @@ void Field::pollClearLines() {
             case 4: *Score = *Score + 800;
         }
         *LinesCleared = *LinesCleared + polledLinesForClearing.size();
-        if (*LinesCleared >= MARATHON_LIMIT) {
+        if (*LinesCleared >= this->winLines) {
             GameOver = true;
         }
         *Level = (*LinesCleared / 10) + 1;
@@ -884,7 +991,7 @@ void Field::pollClearLines() {
 
 // Game Over Check:
 int Field::isGameOver() {
-    return (GameOver ? -1 : 0);
+    return (GameOver ? 9 : 0);
 }
 
 // Set Score and Line Cleared Ref:
@@ -952,4 +1059,8 @@ void Field::setPieceOffset(int pieceOffset) {
     rngBag.pop_back();
     updateQueue();
     updateGhostPiece();
+}
+
+void Field::setWinLines(int winLines) {
+    this->winLines = winLines;
 }

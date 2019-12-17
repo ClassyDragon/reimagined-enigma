@@ -8,6 +8,7 @@
 #include "TextureManager/TextureManager.h"
 #include "State.h"
 #include "Marathon.h"
+#include "Sprint.h"
 #include "Menu.h"
 
 class TetrisGame {
@@ -46,7 +47,5 @@ class TetrisGame {
         sf::Event event;
 
         // Current State:
-        Menu menu;
-        Marathon marathon;
         std::vector<State*> state;
 };

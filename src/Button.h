@@ -13,6 +13,9 @@ class Button {
         // Define behaviour after clicking:
         virtual void onClick() = 0;
 
+        // Define behaviour while hovering:
+        virtual void onHover() = 0;
+
         // Set texture:
         void setTexture(sf::Texture* texture);
 
@@ -29,11 +32,11 @@ class Button {
         void setClickedCoordinates(sf::IntRect clicked);
 
         // Draw:
-        void drawTo(sf::RenderWindow* window);
+        virtual void drawTo(sf::RenderWindow* window);
 
         // Updates:
         void updateState(const sf::Vector2i mousePos, const bool& isClicked);
-    private:
+    protected:
         sf::RectangleShape buttonShape;
         sf::IntRect neutral;
         sf::IntRect hovered;
