@@ -6,8 +6,21 @@
 #include <SFML/Graphics.hpp>
 #include "Dbg_Log/Dbg_Log.h"
 
-// Global Variables:
+enum MenuState {
+    CLOSE_WINDOW = -1,
+    NOSTATE = 0,
+    MARATHON_SELECT = 1,
+    SPRINT_SELECT = 2,
+    MARATHON_TETROMINO_ONLY = 3,
+    MARATHON_PENTOMINO_ONLY = 4,
+    MARATHON_BOTH = 5,
+    SPRINT_TETROMINO_ONLY = 6,
+    SPRINT_PENTOMINO_ONLY = 7,
+    SPRINT_BOTH = 8,
+    RETURN_TO_MENU = 9
+};
 
+// Global Variables:
 const int field_width = 10;
 const int field_height = 18;
 const int vertical_offset = 50;
@@ -52,3 +65,4 @@ const std::string credits = "by ClassyDragon\n(github.com/ClassyDragon)";
 
 // Lines needed to finish marathon mode:
 const int MARATHON_LIMIT = 200;
+const int SPRINT_LIMIT = 40;
