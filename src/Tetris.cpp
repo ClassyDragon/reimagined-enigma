@@ -26,6 +26,14 @@ void TetrisGame::TetrisMain() {
 
 }
 
+// Deconstructor:
+TetrisGame::~TetrisGame() {
+    for (auto& s : state) {
+        delete s;
+    }
+    state.clear();
+}
+
 // update all:
 void TetrisGame::update() {
     this->updateEvent();
@@ -62,6 +70,8 @@ void TetrisGame::checkState() {
         window.close();
     }
     else if (status > 2) {
+        for (auto& i : state)
+            delete i;
         switch (status) {
             case MenuState::MARATHON_TETROMINO_ONLY: state.clear();
                                                      state.push_back(new Marathon(&window, 7, 0));
