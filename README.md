@@ -1,7 +1,7 @@
 # reimagined-enigma
 Simple open-source Tetris Game made using C++ and the SFML Library.
 
-__Current Version: v1.0.7.1b__
+__Current Version: v1.0.7.2b__
 
 v1.0.7.0b Changes:
 1. New Sprint Mode.
@@ -10,6 +10,14 @@ v1.0.7.0b Changes:
 v1.0.7.1b Changes:
 1. State class now has a pure virtual destructor.
 2. TetrisGame class now has a destructor to delete current state.
+
+v1.0.7.2b Changes:
+1. Added pause menu that opens in game when pressing the Esc key.
+2. High score tracking!
+    - High scores for each mode are currently stored under __save/highscores.txt__.
+3. Many structural changes to how to engine works:
+    - Marathon and Sprint mode now inherit from a GameState class.
+    - Tetramino types are now stored as an integer, classified by an enum, as opposed to a char.
 
 __Previous Versions__
 
