@@ -13,7 +13,7 @@ class Tetramino {
         Tetramino();
 
         // Constructor with type:
-        Tetramino(char type, sf::Texture* texture);
+        Tetramino(int type, sf::Texture* texture);
 
         // Default Destructor:
         ~Tetramino();
@@ -33,14 +33,8 @@ class Tetramino {
         void rotateBlocks(int offset);
 
         // Positional functions:
-        void move(sf::Vector2f offset);
+        void move(int direction);
         void setPosition(sf::Vector2f position);
-        bool canMoveLeft();
-        void moveLeft();
-        bool canMoveRight();
-        void moveRight();
-        bool canMoveDown();
-        void moveDown();
 
         // Get Block pointer:
         Block* getBlock(int index);
@@ -74,6 +68,5 @@ class Tetramino {
         std::vector<Block*> blocks; // size 4
 
         // Tetramino Type:
-        char tetraminoType;
         int type;
 };
