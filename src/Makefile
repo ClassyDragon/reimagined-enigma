@@ -1,9 +1,9 @@
 lib = -lsfml-window -lsfml-system -lsfml-graphics
-flags = -Wall
+flags = -Wall -Wextra
 EXEC = Tetris
 COMP = g++
 
-$(EXEC): source.o Tetris.o Field.o Tetramino.o Block.o Button.o Sprite.o Animation.o TextureManager.o precomp.o State.o Marathon.o Sprint.o Menu.o
+$(EXEC): source.o Tetris.o Field.o Tetramino.o Block.o Button.o Sprite.o Animation.o TextureManager.o precomp.o State.o GameState.o Marathon.o Sprint.o Menu.o
 	$(COMP) $^ -o $(EXEC) $(lib) $(flags)
 
 source.o: source.cpp Tetris.o
@@ -28,10 +28,13 @@ Sprite.o: Sprite/Sprite.cpp Sprite/Sprite.h Sprite/Animation.cpp Sprite/Animatio
 State.o: State.cpp State.h
 	$(COMP) -c $< $(flags)
 
-Marathon.o: Marathon.cpp Marathon.h State.o Field.o TextureManager.o Sprite.o precomp.h
+GameState.o: GameState.cpp GameState.h State.o Field.o TextureManager.o Sprite.o precomp.h
 	$(COMP) -c $< $(flags)
 
-Sprint.o: Sprint.cpp Sprint.h State.o Field.o TextureManager.o Sprite.o precomp.h
+Marathon.o: Marathon.cpp Marathon.h State.o GameState.o
+	$(COMP) -c $< $(flags)
+
+Sprint.o: Sprint.cpp Sprint.h State.o GameState.o
 	$(COMP) -c $< $(flags)
 
 Menu.o: Menu.cpp Menu.h State.o Button.o TextureManager.o precomp.h
