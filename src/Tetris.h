@@ -1,6 +1,9 @@
 #pragma once
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <vector>
+#include <map>
 #include <stack>
 #include <SFML/Graphics.hpp>
 #include "Field.h"
@@ -24,7 +27,8 @@ class TetrisGame {
         ~TetrisGame();
 
         // Init Functions
-        void initText();
+        void initTextures();
+        void readHighScores();
 
         // MAIN GAME LOOP:
         void TetrisMain();
@@ -51,4 +55,7 @@ class TetrisGame {
 
         // Current State:
         std::vector<State*> state;
+
+        // High Score Data:
+        std::map<std::string, int> scores;
 };

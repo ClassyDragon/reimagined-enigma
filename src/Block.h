@@ -1,3 +1,4 @@
+/* Block Class */
 #pragma once
 #include <iostream>
 #include <vector>
@@ -5,17 +6,11 @@
 
 const int field_width_v = 10;
 const int field_height_v = 18;
-//const int vertical_offset = 50;
-//const int horizontal_offset = 50;
-//const int move_time_1 = 380;
-//const int move_time_2 = 450;
-//const int move_time_3 = 60;
 
 class Block {
     public:
         // Default Constructor:
         Block();
-        ~Block();
 
         // Display the block to the window:
         void render(sf::RenderWindow* window); 
@@ -29,15 +24,12 @@ class Block {
         sf::Vector2f getScreenPosition();
 
         // Field Position:
-        void setFieldPosition(sf::Vector2f fieldPosition);
-        sf::Vector2f getFieldPosition();
+        void setFieldPosition(sf::Vector2i fieldPosition);
+        sf::Vector2i getFieldPosition();
 
         // Movement:
-        bool canMoveLeft();
-        bool canMoveRight();
         void moveLeft();
         void moveRight();
-        bool canMoveDown();
         void moveDown();
 
         // Move screenPosition:
@@ -57,7 +49,7 @@ class Block {
         sf::Vector2f screenPosition;
 
         // Field Position:
-        sf::Vector2f fieldPosition;
+        sf::Vector2i fieldPosition;
         
         // Represents a solid block:
         bool solid;

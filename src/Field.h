@@ -9,12 +9,7 @@
 #include "TextureManager/TextureManager.h"
 #include "precomp.h"
 
-const int numKeys = 7;
-//const int numPieces = 17;
-//const int numPieces = 7;
-enum Piece {S, T, J, L, Z, O, I, U, M, F, N, P, V, X, Y, z, t, l, i, y, s, f, Q, j, n};
-enum Direction {NM, Right, Left}; // NM = No Movement
-enum Rotation {NR, Clockwise, Counterclockwise = 3}; // NR = No Rotation
+const int numKeys = 8;
 
 class Tetramino;
 
@@ -24,13 +19,12 @@ class Field {
         Field();
 
         // Constructor with window pointer:
-        Field(sf::RenderWindow* window, int numPieces, int pieceOffset);
+        Field(sf::RenderWindow* window, int numPieces, int pieceOffset, int* pauseState);
 
         // Draw Field and Current Piece:
         void render();
 
         // Initialization:
-        void initTextures();
         void initKeys();
         void initNextPieceQueue();
         void initRNG();
@@ -50,6 +44,7 @@ class Field {
         void updateLineClearAnimations();
         void updateHoldPiece();
         void pollMovementAndRotation();
+        void updateDropDelay();
 
         // Generate a piece based on a number:
         void generatePiece(int type);
@@ -93,6 +88,12 @@ class Field {
         // Set win condition lines:
         void setWinLines(int winLines);
 
+        // Pause Game:
+        void pause();
+
+        // Unpause Game:
+        void unPause();
+
     private:
         // Field Array:
         Block blocks[field_width][field_height];
@@ -114,6 +115,8 @@ class Field {
         Block clearBlock;
 
         // Clocks:
+        sf::Clock dropDelay;
+        int dropTime;
         sf::Clock movementDelay; // For fluid piece movement
         sf::Clock timeStill; // Checks when to lock the piece
         sf::Clock softDropClock; // Determines how quickly the piece falls when holding down
@@ -152,4 +155,8 @@ class Field {
 
         // How many lines cleared to finish:
         int winLines;
+
+        // Pause related:
+        int dropTimeRemaining;
+        int* pauseState;
 };

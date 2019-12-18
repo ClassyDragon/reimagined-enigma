@@ -1,12 +1,10 @@
 #include "Field.h"
 
+// Default Constructor:
 Field::Field() {
 }
 
-Field::Field(sf::RenderWindow* window, int numPieces, int pieceOffset) : window(window), numPieces(numPieces), pieceOffset(pieceOffset) {
-    // Load Textures:
-    initTextures();
-
+Field::Field(sf::RenderWindow* window, int numPieces, int pieceOffset, int* pauseState) : window(window), numPieces(numPieces), pieceOffset(pieceOffset), pauseState(pauseState) {
     // Set keys as not pressed:
     initKeys();
 
@@ -33,6 +31,7 @@ Field::Field(sf::RenderWindow* window, int numPieces, int pieceOffset) : window(
     // Create the ghost piece and set its initial position:
     initGhostPiece();
 
+    // Initialize GameOver state:
     GameOver = false;
 
     // Initialize the next piece queue:
@@ -43,7 +42,6 @@ Field::Field(sf::RenderWindow* window, int numPieces, int pieceOffset) : window(
 
     // Set hold piece to be empty:
     initHoldPiece();
-
     updateQueue();
 }
 
@@ -74,21 +72,6 @@ void Field::render() {
 }
 
 // Initialization:
-void Field::initTextures() {
-    // Init Textures:
-    TextureManager::load("resources/red.png");
-    TextureManager::load("resources/purple.png");
-    TextureManager::load("resources/yellow.png");
-    TextureManager::load("resources/green.png");
-    TextureManager::load("resources/orange.png");
-    TextureManager::load("resources/blue.png");
-    TextureManager::load("resources/cyan.png");
-    TextureManager::load("resources/white.png");
-    TextureManager::load("resources/clear.png");
-    TextureManager::load("resources/nextPieces.png");
-    TextureManager::load("resources/line_clear.png");
-}
-
 void Field::initKeys() {
     // Initialize keys:
     for (int i = 0; i < numKeys; i++)
@@ -101,28 +84,9 @@ void Field::initNextPieceQueue() {
     for (int i = 0; i < 3; i++) {
         nextQueue[i].setSize(sf::Vector2f(100, 100));
         nextQueue[i].setTexture(TextureManager::get_texture("resources/nextPieces.png"));
-        int x;
-        switch (rngBag[rngBag.size() - i - 1]) {
-            case 0: x = 500;
-                    break;
-            case 1: x = 400;
-                    break;
-            case 2: x = 300;
-                    break;
-            case 3: x = 200;
-                    break;
-            case 4: x = 600;
-                    break;
-            case 5: x = 100;
-                    break;
-            case 6: x = 0;
-                    break;
-            default: x = 800;
-                     break;
-        }
-        nextQueue[i].setTextureRect(sf::IntRect(x, 0, 100, 100));
         nextQueue[i].setPosition(sf::Vector2f(670, 100));
     }
+    // Move the second and third slots down:
     nextQueue[1].move(0, 150);
     nextQueue[2].move(0, 300);
 }
@@ -130,13 +94,13 @@ void Field::initNextPieceQueue() {
 void Field::initRNG() {
     rngBag.clear();
     nextBag.clear();
-    srand(time(NULL));
+    srand(time(NULL)); // srand with seed based on time
     populateBag(rngBag);
     populateBag(nextBag);
 }
 
 void Field::initGhostPiece() {
-    clearBlock.setTexture(TextureManager::get_texture("resources/clear.png"));
+    clearBlock.setTexture(TextureManager::get_texture("resources/clear.png")); // clearBlock is copied to new instances of ghost piece
     updateGhostPiece();
 }
 
@@ -179,57 +143,67 @@ void Field::initRotation() {
      */
 }
 
+
 // Updates:
 void Field::update() {
     updateInput();
     pollMovementAndRotation();
+    updateDropDelay();
     updatePiece();
     updateLineClearAnimations();
     pollClearLines();
 }
 
 void Field::updateInput() {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        pMove = Direction::Left;
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        pMove = Direction::Right;
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-        hardDrop();
-    }
-    else {
-        keyPressed[0] = 0;
-        keyPressed[1] = 0;
-        keyPressed[4] = 0;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-        if (keyPressed[2] == 0) pRotate = Rotation::Clockwise;
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
-        if (keyPressed[3] == 0) pRotate = Rotation::Counterclockwise;
-    }
-    else {
-        keyPressed[2] = 0;
-        keyPressed[3] = 0;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-        if (keyPressed[5] == 0) {
-            softDropClock.restart();
-            keyPressed[5] = 1;
+    if (*pauseState != Pause::IS_PAUSED) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+            pMove = Direction::Left;
         }
-        softDrop();
-    }
-    else {
-        keyPressed[5] = 0;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
-        if (keyPressed[6] == 0) {
-            holdCurrentPiece();
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+            pMove = Direction::Right;
         }
-    }
-    else {
-        keyPressed[6] = 0;
+        else {
+            keyPressed[0] = 0;
+            keyPressed[1] = 0;
+        }
+
+        // Rotation:
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+            if (keyPressed[2] == 0) pRotate = Rotation::Clockwise;
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
+            if (keyPressed[3] == 0) pRotate = Rotation::Counterclockwise;
+        }
+        else {
+            keyPressed[2] = 0;
+            keyPressed[3] = 0;
+        }
+
+        // Vertical Movement:
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+            if (keyPressed[5] == 0) {
+                softDropClock.restart();
+                keyPressed[5] = 1;
+            }
+            softDrop();
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+            hardDrop();
+        }
+        else {
+            keyPressed[4] = 0;
+            keyPressed[5] = 0;
+        }
+
+        // Hold Piece:
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+            if (keyPressed[6] == 0) {
+                holdCurrentPiece();
+            }
+        }
+        else {
+            keyPressed[6] = 0;
+        }
     }
 }
 
@@ -237,9 +211,24 @@ void Field::updatePiece() {
     if (timeStill.getElapsedTime().asMilliseconds() >= 800) {
         this->lockPiece();
     }
-    if (rngBag.size() == 0) {
+    if (rngBag.size() == 0) { // Repopulate bags if empty:
         updateRNG();
         updateQueue();
+    }
+    // Check if time to drop:
+    switch (*pauseState) {
+        case Pause::IS_PAUSED: break; // do not drop
+        case Pause::WAS_PAUSED: if (dropDelay.getElapsedTime().asMilliseconds() >= dropTimeRemaining) {
+                                    moveDown();
+                                    *pauseState = Pause::NOT_PAUSED;
+                                    dropDelay.restart();
+                                }
+                               break;
+        default: if (dropDelay.getElapsedTime().asMilliseconds() >= dropTime) {
+                     moveDown();
+                     dropDelay.restart();
+                 }
+                 break;
     }
 }
 
@@ -269,7 +258,7 @@ void Field::updateGhostPiece() {
     for (int i = 0; i < currentPiece.getNumBlocks(); i++) {
         sf::Vector2i fp = currentPiece.getFieldPosition(i, 0);
         sf::Vector2i dp = currentPiece.getDefaultPosition(i, 0);
-        ghostPiece[i].setFieldPosition(sf::Vector2f(fp.x, dp.y + *drops.begin()));
+        ghostPiece[i].setFieldPosition(sf::Vector2i(fp.x, dp.y + *drops.begin()));
         ghostPiece[i].setScreenPosition(sf::Vector2f(horizontal_offset + 50 * fp.x, vertical_offset + 50 * (dp.y + *drops.begin())));
     }
 }
@@ -357,28 +346,6 @@ void Field::updateQueue() {
             default: nextQueue[i].setTextureRect(unknownPieceTexture);
                      break;
         }
-        /*
-        int x;
-        switch (nextPiecesInQueue[i]) {
-            case 0: x = 500;
-                    break;
-            case 1: x = 400;
-                    break;
-            case 2: x = 300;
-                    break;
-            case 3: x = 200;
-                    break;
-            case 4: x = 600;
-                    break;
-            case 5: x = 100;
-                    break;
-            case 6: x = 0;
-                    break;
-            default: x = 800;
-                     break;
-        }
-        nextQueue[i].setTextureRect(sf::IntRect(x, 0, 100, 100));
-        */
     }
 }
 
@@ -482,60 +449,64 @@ void Field::pollMovementAndRotation() {
     }
 }
 
+void Field::updateDropDelay() {
+    dropTime = (370 - (*Level * 20));
+}
+
 // Generate a piece based on a number:
 void Field::generatePiece(int type) {
     switch (type) {
-        case 0: currentPiece = Tetramino('S', TextureManager::get_texture("resources/green.png"));
+        case Piece::S: currentPiece = Tetramino(Piece::S, TextureManager::get_texture("resources/green.png"));
                 break;
-        case 1: currentPiece = Tetramino('T', TextureManager::get_texture("resources/purple.png"));
+        case Piece::T: currentPiece = Tetramino(Piece::T, TextureManager::get_texture("resources/purple.png"));
                 break;
-        case 2: currentPiece = Tetramino('J', TextureManager::get_texture("resources/blue.png"));
+        case Piece::J: currentPiece = Tetramino(Piece::J, TextureManager::get_texture("resources/blue.png"));
                 break;
-        case 3: currentPiece = Tetramino('L', TextureManager::get_texture("resources/orange.png"));
+        case Piece::L: currentPiece = Tetramino(Piece::L, TextureManager::get_texture("resources/orange.png"));
                 break;
-        case 4: currentPiece = Tetramino('Z', TextureManager::get_texture("resources/red.png"));
+        case Piece::Z: currentPiece = Tetramino(Piece::Z, TextureManager::get_texture("resources/red.png"));
                 break;
-        case 5: currentPiece = Tetramino('O', TextureManager::get_texture("resources/yellow.png"));
+        case Piece::O: currentPiece = Tetramino(Piece::O, TextureManager::get_texture("resources/yellow.png"));
                 break;
-        case 6: currentPiece = Tetramino('I', TextureManager::get_texture("resources/cyan.png"));
+        case Piece::I: currentPiece = Tetramino(Piece::I, TextureManager::get_texture("resources/cyan.png"));
                 break;
-        case 7: currentPiece = Tetramino('U', TextureManager::get_texture("resources/blue.png"));
+        case Piece::U: currentPiece = Tetramino(Piece::U, TextureManager::get_texture("resources/blue.png"));
                 break;
-        case 8: currentPiece = Tetramino('M', TextureManager::get_texture("resources/red.png"));
+        case Piece::M: currentPiece = Tetramino(Piece::M, TextureManager::get_texture("resources/red.png"));
                 break;
-        case 9: currentPiece = Tetramino('F', TextureManager::get_texture("resources/blue.png"));
+        case Piece::F: currentPiece = Tetramino(Piece::F, TextureManager::get_texture("resources/blue.png"));
                 break;
-        case 10: currentPiece = Tetramino('N', TextureManager::get_texture("resources/red.png"));
+        case Piece::N: currentPiece = Tetramino(Piece::N, TextureManager::get_texture("resources/red.png"));
                  break;
-        case 11: currentPiece = Tetramino('P', TextureManager::get_texture("resources/yellow.png"));
+        case Piece::P: currentPiece = Tetramino(Piece::P, TextureManager::get_texture("resources/yellow.png"));
                  break;
-        case 12: currentPiece = Tetramino('V', TextureManager::get_texture("resources/blue.png"));
+        case Piece::V: currentPiece = Tetramino(Piece::V, TextureManager::get_texture("resources/blue.png"));
                  break;
-        case 13: currentPiece = Tetramino('X', TextureManager::get_texture("resources/orange.png"));
+        case Piece::X: currentPiece = Tetramino(Piece::X, TextureManager::get_texture("resources/orange.png"));
                  break;
-        case 14: currentPiece = Tetramino('Y', TextureManager::get_texture("resources/cyan.png"));
+        case Piece::Y: currentPiece = Tetramino(Piece::Y, TextureManager::get_texture("resources/cyan.png"));
                  break;
-        case 15: currentPiece = Tetramino('z', TextureManager::get_texture("resources/red.png"));
+        case Piece::z: currentPiece = Tetramino(Piece::z, TextureManager::get_texture("resources/red.png"));
                  break;
-        case 16: currentPiece = Tetramino('t', TextureManager::get_texture("resources/purple.png"));
+        case Piece::t: currentPiece = Tetramino(Piece::t, TextureManager::get_texture("resources/purple.png"));
                  break;
-        case 17: currentPiece = Tetramino('l', TextureManager::get_texture("resources/green.png"));
+        case Piece::l: currentPiece = Tetramino(Piece::l, TextureManager::get_texture("resources/green.png"));
                  break;
-        case 18: currentPiece = Tetramino('i', TextureManager::get_texture("resources/cyan.png"));
+        case Piece::i: currentPiece = Tetramino(Piece::i, TextureManager::get_texture("resources/cyan.png"));
                  break;
-        case 19: currentPiece = Tetramino('y', TextureManager::get_texture("resources/cyan.png"));
+        case Piece::y: currentPiece = Tetramino(Piece::y, TextureManager::get_texture("resources/cyan.png"));
                  break;
-        case 20: currentPiece = Tetramino('s', TextureManager::get_texture("resources/green.png"));
+        case Piece::s: currentPiece = Tetramino(Piece::s, TextureManager::get_texture("resources/green.png"));
                  break;
-        case 21: currentPiece = Tetramino('f', TextureManager::get_texture("resources/orange.png"));
+        case Piece::f: currentPiece = Tetramino(Piece::f, TextureManager::get_texture("resources/orange.png"));
                  break;
-        case 22: currentPiece = Tetramino('Q', TextureManager::get_texture("resources/yellow.png"));
+        case Piece::Q: currentPiece = Tetramino(Piece::Q, TextureManager::get_texture("resources/yellow.png"));
                  break;
-        case 23: currentPiece = Tetramino('j', TextureManager::get_texture("resources/blue.png"));
+        case Piece::j: currentPiece = Tetramino(Piece::j, TextureManager::get_texture("resources/blue.png"));
                  break;
-        case 24: currentPiece = Tetramino('n', TextureManager::get_texture("resources/green.png"));
+        case Piece::n: currentPiece = Tetramino(Piece::n, TextureManager::get_texture("resources/green.png"));
                  break;
-        default: currentPiece = Tetramino('I', TextureManager::get_texture("resources/red.png"));
+        default: currentPiece = Tetramino(Piece::Y, TextureManager::get_texture("resources/red.png"));
                  break;
     }
     //  Verify piece fits on board:
@@ -575,20 +546,20 @@ void Field::moveLeft() {
     if (canMoveLeft() && !lineClearAnimate) {
         if (keyPressed[0] == 0) {
             movementDelay.restart();
-            currentPiece.moveLeft();
+            currentPiece.move(Direction::Left);
             keyPressed[0] = 1;
         }
         else if (keyPressed[0] == 1 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_1) {
-            currentPiece.moveLeft();
+            currentPiece.move(Direction::Left);
             keyPressed[0] = 2;
         }
         else if (keyPressed[0] == 2 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_2) {
-            currentPiece.moveLeft();
+            currentPiece.move(Direction::Left);
             keyPressed[0] = 3;
             movementDelay.restart();
         }
         else if (keyPressed[0] == 3 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_3) {
-            currentPiece.moveLeft();
+            currentPiece.move(Direction::Left);
             movementDelay.restart();
         }
     }
@@ -609,24 +580,23 @@ bool Field::canMoveRight() {
 }
 
 void Field::moveRight() {
-
     if (canMoveRight() && !lineClearAnimate) {
         if (keyPressed[1] == 0) {
             movementDelay.restart();
-            currentPiece.moveRight();
+            currentPiece.move(Direction::Right);
             keyPressed[1] = 1;
         }
         else if (keyPressed[1] == 1 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_1) {
-            currentPiece.moveRight();
+            currentPiece.move(Direction::Right);
             keyPressed[1] = 2;
         }
         else if (keyPressed[1] == 2 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_2) {
-            currentPiece.moveRight();
+            currentPiece.move(Direction::Right);
             keyPressed[1] = 3;
             movementDelay.restart();
         }
         else if (keyPressed[1] == 3 && movementDelay.getElapsedTime().asMilliseconds() >= move_time_3) {
-            currentPiece.moveRight();
+            currentPiece.move(Direction::Right);
             movementDelay.restart();
         }
     }
@@ -647,7 +617,7 @@ void Field::moveDown() {
             }
         }
         if (moveDown) {
-            currentPiece.moveDown();
+            currentPiece.move(Direction::Down);
             timeStill.restart();
         }
     }
@@ -1005,6 +975,7 @@ void Field::setLinesClearedRef(int* LinesCleared) {
 
 void Field::setLevelRef(int* Level) {
     this->Level = Level;
+    updateDropDelay();
 }
 
 void Field::setTextRef(sf::Text* fScore, sf::Text* fLinesCleared, sf::Text* fLevel) {
@@ -1063,4 +1034,16 @@ void Field::setPieceOffset(int pieceOffset) {
 
 void Field::setWinLines(int winLines) {
     this->winLines = winLines;
+}
+
+// Pause Game:
+void Field::pause() {
+    this->dropTimeRemaining = dropTime - dropDelay.restart().asMilliseconds();
+    *pauseState = Pause::IS_PAUSED;
+}
+
+// Unpause Game:
+void Field::unPause() {
+    dropDelay.restart();
+    *pauseState = Pause::WAS_PAUSED;
 }

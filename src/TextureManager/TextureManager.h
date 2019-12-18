@@ -52,5 +52,4 @@ class TextureManager {
 
         // Map containing texture pointers:
         static std::map<std::string, sf::Texture> textures;
-    private:
 };

@@ -80,7 +80,6 @@ void Menu::setWindow(sf::RenderWindow* window) {
 
 // Init Functions:
 void Menu::initTextures() {
-    TextureManager::load("resources/backgrounds/menuBackground.png");
 }
 
 void Menu::initBackground() {
@@ -114,10 +113,6 @@ void Menu::setMenuState(int state) {
 /* MARATHON BUTTON */
 // Constructor:
 MarathonButton::MarathonButton(int* menuState, sf::RenderWindow* window, sf::Font* font) : menuState(menuState), window(window), font(font) {
-    TextureManager::load("resources/Buttons/marathonButton.png");
-    TextureManager::load("resources/Buttons/tetrominoButton.png");
-    TextureManager::load("resources/Buttons/bothButton.png");
-    TextureManager::load("resources/Buttons/pentominoButton.png");
     this->setTexture(TextureManager::get_texture("resources/Buttons/marathonButton.png"));
     this->setNeutralCoordinates(sf::IntRect(0, 0, 175, 50));
     this->setHoveredCoordinates(sf::IntRect(0, 50, 175, 50));
@@ -150,7 +145,6 @@ void MarathonButton::drawTo(sf::RenderWindow* window) {
 /* SPRINT BUTTON */
 // Constructor:
 SprintButton::SprintButton(int* menuState, sf::RenderWindow* window, sf::Font* font) : menuState(menuState), window(window), font(font) {
-    TextureManager::load("resources/Buttons/sprintButton.png");
     this->setTexture(TextureManager::get_texture("resources/Buttons/sprintButton.png"));
     this->setNeutralCoordinates(sf::IntRect(0, 0, 175, 50));
     this->setHoveredCoordinates(sf::IntRect(0, 50, 175, 50));
