@@ -20,6 +20,7 @@ TetrisGame::TetrisGame(int width, int height, std::string title) {
 
 // Init Functions:
 void TetrisGame::initTextures() {
+    // Every texture the game uses:
     TextureManager::load("resources/backgrounds/menuBackground.png");
     TextureManager::load("resources/Buttons/marathonButton.png");
     TextureManager::load("resources/Buttons/tetrominoButton.png");
@@ -38,6 +39,7 @@ void TetrisGame::initTextures() {
     TextureManager::load("resources/clear.png");
     TextureManager::load("resources/nextPieces.png");
     TextureManager::load("resources/line_clear.png");
+    TextureManager::load("resources/paused.png");
 }
 
 void TetrisGame::readHighScores() {
@@ -178,13 +180,13 @@ void TetrisGame::checkState() {
                                            state.push_back(new Marathon(&window, 25, 0, &scores["MARATHON_BOTH"]));
                                            break;
             case MenuState::SPRINT_TETROMINO_ONLY: state.clear();
-                                                   state.push_back(new Sprint(&window, 7, 0));
+                                                   state.push_back(new Sprint(&window, 7, 0, &scores["SPRINT_TETROMINO_ONLY"]));
                                                    break;
             case MenuState::SPRINT_PENTOMINO_ONLY: state.clear();
-                                                   state.push_back(new Sprint(&window, 18, 7));
+                                                   state.push_back(new Sprint(&window, 18, 7, &scores["SPRINT_PENTOMINO_ONLY"]));
                                                    break;
             case MenuState::SPRINT_BOTH: state.clear();
-                                         state.push_back(new Sprint(&window, 25, 0));
+                                         state.push_back(new Sprint(&window, 25, 0, &scores["SPRINT_BOTH"]));
                                          break;
             case MenuState::RETURN_TO_MENU: state.clear();
                                             state.push_back(new Menu(&window));
