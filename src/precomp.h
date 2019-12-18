@@ -20,6 +20,33 @@ enum MenuState {
     RETURN_TO_MENU = 9
 };
 
+enum Direction {
+    NM = 0,
+    Right = 1,
+    Left = 2,
+    Down = 3,
+    Up = 4
+};
+
+enum Rotation {
+    NR, // No Rotation
+    Clockwise,
+    Counterclockwise = 3
+};
+
+enum Piece {
+    /* Tetrominoes */
+    S = 0, T, J, L, Z, O, I,
+    /* Pentominoes */
+    U = 7, M, F, N, P, V, X, W, Y, z, t, l, i, y, s, f, Q, j, n
+};
+
+enum Pause {
+    NOT_PAUSED = 0,
+    IS_PAUSED = 1,
+    WAS_PAUSED = 2
+};
+
 // Global Variables:
 const int field_width = 10;
 const int field_height = 18;
@@ -60,7 +87,7 @@ const sf::IntRect nPieceTexture(800, 200, 100, 100);
 const sf::IntRect unknownPieceTexture(800, 0, 100, 100);
 
 // Version Number and Credits:
-const std::string versionNo = "Version 1.0.7.1b";
+const std::string versionNo = "Version 1.0.7.2b";
 const std::string credits = "by ClassyDragon\n(github.com/ClassyDragon)";
 
 // Lines needed to finish marathon mode:
