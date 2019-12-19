@@ -516,7 +516,7 @@ void Field::generatePiece(int type) {
                  break;
         case Piece::V: currentPiece = Tetramino(Piece::V, TextureManager::get_texture("resources/blue.png"));
                  break;
-        case Piece::X: currentPiece = Tetramino(Piece::X, TextureManager::get_texture("resources/orange.png"));
+        case Piece::X: currentPiece = Tetramino(Piece::X, TextureManager::get_texture("resources/purple.png"));
                  break;
         case Piece::Y: currentPiece = Tetramino(Piece::Y, TextureManager::get_texture("resources/cyan.png"));
                  break;

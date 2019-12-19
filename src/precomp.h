@@ -38,7 +38,7 @@ enum Piece {
     /* Tetrominoes */
     S = 0, T, J, L, Z, O, I,
     /* Pentominoes */
-    U = 7, M, F, N, P, V, X, W, Y, z, t, l, i, y, s, f, Q, j, n
+    U = 7, M, F, N, P, V, X, Y, z, t, l, i, y, s, f, Q, j, n
 };
 
 enum Pause {
