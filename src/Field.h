@@ -3,6 +3,7 @@
 #include <vector>
 #include <set>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <time.h>
 #include "Tetramino.h"
 #include "Block.h"
@@ -33,6 +34,7 @@ class Field {
         void initHoldPiece();
         void initMovement();
         void initRotation();
+        void initSounds();
 
         // Updates:
         void update();
@@ -93,6 +95,9 @@ class Field {
 
         // Unpause Game:
         void unPause();
+
+        // Play random lock noise:
+        void playRandomLock();
 
     private:
         // Field Array:
@@ -159,4 +164,9 @@ class Field {
         // Pause related:
         int dropTimeRemaining;
         int* pauseState;
+
+        // Sounds:
+        std::map<std::string, sf::SoundBuffer> soundBuffers;
+        sf::Sound clearSound;
+        std::vector<sf::Sound> lockSounds;
 };

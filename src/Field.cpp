@@ -43,6 +43,9 @@ Field::Field(sf::RenderWindow* window, int numPieces, int pieceOffset, int* paus
     // Set hold piece to be empty:
     initHoldPiece();
     updateQueue();
+
+    // Initialize Sounds:
+    initSounds();
 }
 
 // Draw Field and Current Piece:
@@ -143,6 +146,37 @@ void Field::initRotation() {
      */
 }
 
+void Field::initSounds() {
+    soundBuffers.insert(std::pair<std::string, sf::SoundBuffer>("Clear", sf::SoundBuffer()));
+    soundBuffers.insert(std::pair<std::string, sf::SoundBuffer>("Lock1", sf::SoundBuffer()));
+    soundBuffers.insert(std::pair<std::string, sf::SoundBuffer>("Lock2", sf::SoundBuffer()));
+    soundBuffers.insert(std::pair<std::string, sf::SoundBuffer>("Lock3", sf::SoundBuffer()));
+    soundBuffers.insert(std::pair<std::string, sf::SoundBuffer>("Lock4", sf::SoundBuffer()));
+    soundBuffers.insert(std::pair<std::string, sf::SoundBuffer>("Lock5", sf::SoundBuffer()));
+    soundBuffers.insert(std::pair<std::string, sf::SoundBuffer>("Lock6", sf::SoundBuffer()));
+    soundBuffers.insert(std::pair<std::string, sf::SoundBuffer>("Lock7", sf::SoundBuffer()));
+    soundBuffers["Clear"].loadFromFile("resources/Sound/clear.wav");
+    soundBuffers["Lock1"].loadFromFile("resources/Sound/lock1.wav");
+    soundBuffers["Lock2"].loadFromFile("resources/Sound/lock2.wav");
+    soundBuffers["Lock3"].loadFromFile("resources/Sound/lock3.wav");
+    soundBuffers["Lock4"].loadFromFile("resources/Sound/lock4.wav");
+    soundBuffers["Lock5"].loadFromFile("resources/Sound/lock5.wav");
+    soundBuffers["Lock6"].loadFromFile("resources/Sound/lock6.wav");
+    soundBuffers["Lock7"].loadFromFile("resources/Sound/lock7.wav");
+    lockSounds.resize(7);
+    lockSounds[0].setBuffer(soundBuffers["Lock1"]);
+    lockSounds[1].setBuffer(soundBuffers["Lock2"]);
+    lockSounds[2].setBuffer(soundBuffers["Lock3"]);
+    lockSounds[3].setBuffer(soundBuffers["Lock4"]);
+    lockSounds[4].setBuffer(soundBuffers["Lock5"]);
+    lockSounds[5].setBuffer(soundBuffers["Lock6"]);
+    lockSounds[6].setBuffer(soundBuffers["Lock7"]);
+    clearSound.setBuffer(soundBuffers["Clear"]);
+    clearSound.setVolume(25);
+    for (auto& s : lockSounds) {
+        s.setVolume(5);
+    }
+}
 
 // Updates:
 void Field::update() {
@@ -912,11 +946,13 @@ void Field::setClearLines(std::set<int>& linesAffected) {
     generatePiece(rngBag.back());    
     rngBag.pop_back();
     if (toClear.size() > 0) {
+        clearSound.play();
         lineClearAnimate = true;
         toAnimate = toClear.size();
         polledLinesForClearing = toClear;
     }
     else {
+        playRandomLock();
         timeStill.restart();
         updateGhostPiece();
         updateQueue();
@@ -1046,4 +1082,10 @@ void Field::pause() {
 void Field::unPause() {
     dropDelay.restart();
     *pauseState = Pause::WAS_PAUSED;
+}
+
+// Play random lock noise:
+void Field::playRandomLock() {
+    int randomNum = rand() % lockSounds.size();
+    lockSounds[randomNum].play();
 }

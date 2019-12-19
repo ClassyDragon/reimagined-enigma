@@ -1,4 +1,4 @@
-lib = -lsfml-window -lsfml-system -lsfml-graphics
+lib = -lsfml-window -lsfml-system -lsfml-graphics -lsfml-audio
 flags = -Wall -Wextra
 EXEC = Tetris
 COMP = g++
