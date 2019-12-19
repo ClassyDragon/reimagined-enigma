@@ -4,6 +4,7 @@ Sprint::Sprint() {
 }
 
 Sprint::Sprint(sf::RenderWindow* window, int numPieces, int pieceOffset, int* savedScore) : GameState(window, numPieces, pieceOffset, savedScore) {
+    field.setWinLines(40);
 }
 
 // Updates:

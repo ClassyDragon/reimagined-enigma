@@ -15,7 +15,6 @@ GameState::GameState(sf::RenderWindow* window, int numPieces, int pieceOffset, i
     field.setLinesClearedRef(&LinesCleared);
     field.setLevelRef(&Level);
     field.setTextRef(&text["vScore"], &text["vLines"], &text["vLevel"]);
-    field.setWinLines(200);
 
     // Initialize Background:
     this->bg_texture.loadFromFile("resources/backgrounds/kirby_background.png");

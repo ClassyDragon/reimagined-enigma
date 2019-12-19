@@ -87,7 +87,7 @@ const sf::IntRect nPieceTexture(800, 200, 100, 100);
 const sf::IntRect unknownPieceTexture(800, 0, 100, 100);
 
 // Version Number and Credits:
-const std::string versionNo = "Version 1.0.7.2b";
+const std::string versionNo = "Version 1.0";
 const std::string credits = "by ClassyDragon\n(github.com/ClassyDragon)";
 
 // Lines needed to finish marathon mode:

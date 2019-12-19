@@ -1,25 +1,52 @@
 # reimagined-enigma
 Simple open-source Tetris Game made using C++ and the SFML Library.
 
-__Current Version: v1.0.7.2b__
+__Current Version: v1.0__
+1. Finally released!
+2. Added sound effects for dropping and line clearing.
+3. Many under-the-hood changes to the engine to make the project easily expandable.
 
-v1.0.7.0b Changes:
-1. New Sprint Mode.
-2. Buttons on menu show description when hovering over them.
+![Screenshot](media/screenshot3.png)
 
-v1.0.7.1b Changes:
-1. State class now has a pure virtual destructor.
-2. TetrisGame class now has a destructor to delete current state.
+## Current Progress:
+* Piece movement and rotation.
+* Line clearing and clear animation.
+* Super Rotation System! (kinda...)
+* Score and total line clears displayed.
+* Next Piece queue and hold piece!
+* Ability for users to easily add new pieces... (like pentaminos!)
+* State system for menus, modes, etc.
+* Levels with varying speeds.
 
-v1.0.7.2b Changes:
-1. Added pause menu that opens in game when pressing the Esc key.
-2. High score tracking!
-    - High scores for each mode are currently stored under __save/highscores.txt__.
-3. Many structural changes to how to engine works:
-    - Marathon and Sprint mode now inherit from a GameState class.
-    - Tetramino types are now stored as an integer, classified by an enum, as opposed to a char.
+![Title Screen](media/titleScreen.png)
+
+## TO-DO:
+1. More game modes.
+2. High score keeping.
+3. Music and SFX! :D
+
+## BUGS:
+1. Ghost Piece does not account for spins.
+
+## Needs Improved:
+1. Representation of solid tiles in field.
+
 
 __Previous Versions__
+
+**v1.0.7b**
+
+Changes:
+1. New Sprint Mode.
+2. Buttons on menu show description when hovering over them.
+3. State class now has a pure virtual destructor.
+4. TetrisGame class now has a destructor to delete current state.
+5. Added pause menu that opens in game when pressing the Esc key.
+6. High score tracking!
+    - High scores for each mode are currently stored under __save/highscores.txt__.
+7. Many structural changes to how to engine works:
+    - Marathon and Sprint mode now inherit from a GameState class.
+    - Tetramino types are now stored as an integer, classified by an enum, as opposed to a char.
 
 **v1.0.6b**
 
@@ -40,26 +67,3 @@ Changes:
     - Pentomino mode: Play with the 5-block Pentominoes
     - Both mode: Play with all the pieces!
 
-
-![Screenshot](media/screenshot2.png)
-
-## Current Progress:
-* Piece movement and rotation.
-* Line clearing and clear animation.
-* Super Rotation System! (kinda...)
-* Score and total line clears displayed.
-* Next Piece queue and hold piece!
-* Ability for users to easily add new pieces... (like pentaminos!)
-* State system for menus, modes, etc.
-* Levels with varying speeds.
-
-## TO-DO:
-1. More game modes.
-2. High score keeping.
-3. Music and SFX! :D
-
-## BUGS:
-1. Ghost Piece does not account for spins.
-
-## Needs Improved:
-1. Representation of solid tiles in field.
