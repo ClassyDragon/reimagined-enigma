@@ -1,6 +1,7 @@
 #include "Sprint.h"
 
 Sprint::Sprint() {
+    field.setWinLines(40);
 }
 
 Sprint::Sprint(sf::RenderWindow* window, int numPieces, int pieceOffset, int* savedScore) : GameState(window, numPieces, pieceOffset, savedScore) {
